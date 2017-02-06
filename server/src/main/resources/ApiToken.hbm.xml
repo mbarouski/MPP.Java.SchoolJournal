@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="school.journal.entity.ApiToken" table="api_token" schema="school_journal_db">
+        <id name="userId">
+            <column name="user_id" sql-type="int(10) unsigned"/>
+        </id>
+        <property name="value">
+            <column name="value" sql-type="varchar(40)" length="40"/>
+        </property>
+        <property name="isActive">
+            <column name="is_active" sql-type="tinyint(1)"/>
+        </property>
+        <property name="lastUse">
+            <column name="last_use" sql-type="mediumtext"/>
+        </property>
+    </class>
+</hibernate-mapping>

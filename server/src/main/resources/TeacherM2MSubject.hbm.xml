@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="school.journal.entity.TeacherM2MSubject" table="teacher_m2m_subject" schema="school_journal_db">
+        <composite-id mapped="true" class="school.journal.entity.TeacherM2MSubjectPK">
+            <key-property name="teacherId">
+                <column name="teacher_id" sql-type="int(10) unsigned"/>
+            </key-property>
+            <key-property name="subjectId">
+                <column name="subject_id" sql-type="int(10) unsigned"/>
+            </key-property>
+        </composite-id>
+        <many-to-one name="teacherByTeacherId" class="school.journal.entity.Teacher">
+            <column name="teacher_id"/>
+        </many-to-one>
+        <many-to-one name="subjectBySubjectId" class="school.journal.entity.Subject">
+            <column name="subject_id"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>
