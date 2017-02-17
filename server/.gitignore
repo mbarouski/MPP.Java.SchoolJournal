@@ -1,0 +1,4 @@
+target/*
+.ideaDataSources/*
+dataSources/*
+school-journal.*

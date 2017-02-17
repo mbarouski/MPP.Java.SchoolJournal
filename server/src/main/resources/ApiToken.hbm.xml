@@ -1,9 +1,8 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-
     <class name="school.journal.entity.ApiToken" table="api_token" schema="school_journal_db">
         <id name="userId">
             <column name="user_id" sql-type="int(10) unsigned"/>

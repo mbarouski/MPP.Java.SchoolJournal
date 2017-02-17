@@ -2,15 +2,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Roles</title>
+    <link rel="stylesheet" href="resources/styles/roles.css" />
 </head>
 <body>
 <ul>
-    <c:forEach items="${subjects}" var="subject">
+    <c:forEach items="${roles}" var="role">
         <li>
             <div>
-                <h3>${subject.name}</h3>
-                <p>${subject.description}</p>
+                <h3>${role.name}</h3>
+                <p>${role.level}</p>
             </div>
         </li>
     </c:forEach>

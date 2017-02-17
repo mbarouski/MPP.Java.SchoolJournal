@@ -3,8 +3,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean name="/test.htm"
-          class="school.journal.controller.TestController" />
+    <bean name="/roles.htm"
+          class="school.journal.controller.RoleAPIController" />
 
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
