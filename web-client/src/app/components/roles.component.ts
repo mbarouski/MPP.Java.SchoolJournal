@@ -5,7 +5,7 @@ import {Subject, Observable} from 'rxjs';
 @Component({
   moduleId: module.id,
   selector: 'roles-component',
-  template: '<h1>Roles component</h1>'
+  templateUrl: './templates/roles.component.html'
 })
 export class RolesComponent  {
   roles: any[] = [];

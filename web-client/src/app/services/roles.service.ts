@@ -17,6 +17,7 @@ export class RolesService {
   updateRoles(){
     return this.http.get(`${this.config.apiEndpoint}/roles`)
       .map(res => {
+        debugger;
         return res.json();
       })
       .subscribe((roles) => {

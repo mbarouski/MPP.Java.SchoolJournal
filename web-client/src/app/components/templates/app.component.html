@@ -1,5 +1,22 @@
-<h1>School Journal</h1>
+<div class="row">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
 
-<a routerLink="/roles" routerLinkActive="active">Roles</a>
+      <div class="navbar-header">
+        <a class="navbar-brand" routerLink="/">School Journal</a>
+      </div>
 
-<router-outlet></router-outlet>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a routerLink="/roles">Roles component</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <router-outlet></router-outlet>
+  </div>
+</div>
