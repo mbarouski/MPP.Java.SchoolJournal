@@ -1,22 +1,3 @@
-#server
-*.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
-server/.ideaDataSources/*
-server/target/*
-server/school-journal.*
-
-#web-client
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
