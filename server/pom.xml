@@ -16,10 +16,10 @@
   </repositories>
 
   <properties>
-    <jdk.version>1.6</jdk.version>
-    <spring.version>2.5.6</spring.version>
+    <jdk.version>1.7</jdk.version>
+    <spring.version>3.2.6.RELEASE</spring.version>
     <jstl.version>1.2</jstl.version>
-    <servletapi.version>2.5</servletapi.version>
+    <javax.servlet>3.0.1</javax.servlet>
   </properties>
 
   <dependencies>
@@ -114,8 +114,14 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      <version>${servletapi.version}</version>
+      <version>${javax.servlet}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.6.3</version>
     </dependency>
 
   </dependencies>
@@ -130,6 +136,14 @@
         <configuration>
           <source>${jdk.version}</source>
           <target>${jdk.version}</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
 
