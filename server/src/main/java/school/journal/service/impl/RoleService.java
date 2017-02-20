@@ -23,7 +23,7 @@ public class RoleService extends ServiceAbstractClass implements IRoleService {
     @Override
     public List<Role> getRoles() throws ServiceException {
         try {
-            return roleRepository.read();
+            return ((RoleRepository)roleRepository).read();
         } catch (RepositoryException exc){
             return new ArrayList<Role>();
         }

@@ -6,6 +6,7 @@ import school.journal.persistence.HibernateUtil;
 import school.journal.repository.IRepository;
 import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.HibernateSpecification;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
@@ -17,17 +18,7 @@ public class RoleRepository extends RepositoryAbstractClass<Role> {
         return instance;
     }
 
-    @Override
-    public Role create(Role role) throws RepositoryException {
-        throw new NotImplementedException();
-    }
 
-    @Override
-    public Role update(Role role) throws RepositoryException {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public List<Role> read() throws RepositoryException {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -38,12 +29,22 @@ public class RoleRepository extends RepositoryAbstractClass<Role> {
     }
 
     @Override
-    public Role read(int id) throws RepositoryException {
+    public Role create(Role role, Session session) throws RepositoryException {
         return null;
     }
 
     @Override
-    public Role delete(int id) throws RepositoryException {
+    public Role update(Role role, Session session) throws RepositoryException {
+        return null;
+    }
+
+    @Override
+    public Role delete(Role role, Session session) throws RepositoryException {
+        return null;
+    }
+
+    @Override
+    public List<Role> query(HibernateSpecification specification, Session session) throws RepositoryException {
         return null;
     }
 }
