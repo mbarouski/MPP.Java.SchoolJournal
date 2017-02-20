@@ -14,3 +14,5 @@
 ##### Создано согласно следующему [методическому материалу](https://mefody.gitbooks.io/lab-tasks/content/spp_java_js_-_3_kurs_poit)
 
 ##### [Landing Page of this Project](https://maximka777.github.io/MPP.Java.SchoolJournal/)
+
+### To connect to server need to install Allow-Control-Allow-Origin plugin for Chrome browser.
