@@ -10,9 +10,6 @@ import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
-/**
- * Created by zasam on 20.02.2017.
- */
 public class TeacherM2MSubjectRepository implements IRepository<TeacherM2MSubject> {
     @Override
     public TeacherM2MSubject create(TeacherM2MSubject teacherM2MSubject, Session session) throws RepositoryException {

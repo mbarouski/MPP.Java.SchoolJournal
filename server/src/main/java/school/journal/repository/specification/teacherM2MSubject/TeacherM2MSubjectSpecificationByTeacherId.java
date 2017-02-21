@@ -4,9 +4,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import school.journal.entity.TeacherM2MSubject;
 
-/**
- * Created by zasam on 20.02.2017.
- */
 public class TeacherM2MSubjectSpecificationByTeacherId extends TeacherM2MSubjectSpecification {
     private int teacherId;
 
@@ -16,7 +13,7 @@ public class TeacherM2MSubjectSpecificationByTeacherId extends TeacherM2MSubject
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("teacher_id",teacherId);
+        return Restrictions.eq("teacher_id", teacherId);
     }
 
     @Override

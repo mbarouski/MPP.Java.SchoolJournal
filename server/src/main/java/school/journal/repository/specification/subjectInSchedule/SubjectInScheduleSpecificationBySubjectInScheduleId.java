@@ -13,7 +13,7 @@ public class SubjectInScheduleSpecificationBySubjectInScheduleId extends Subject
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("subject_in_schedule_id",subjectInScheduleId);
+        return Restrictions.eq("subject_in_schedule_id", subjectInScheduleId);
     }
 
     @Override

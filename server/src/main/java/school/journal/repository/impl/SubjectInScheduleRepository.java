@@ -10,9 +10,6 @@ import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
-/**
- * Created by zasam on 20.02.2017.
- */
 public class SubjectInScheduleRepository implements IRepository<SubjectInSchedule> {
     @Override
     public SubjectInSchedule create(SubjectInSchedule subjectInSchedule, Session session) throws RepositoryException {

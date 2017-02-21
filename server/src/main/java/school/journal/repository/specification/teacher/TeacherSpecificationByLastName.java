@@ -13,7 +13,7 @@ public class TeacherSpecificationByLastName extends TeacherSpecification {
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("last_name",lastName);
+        return Restrictions.eq("last_name", lastName);
     }
 
     @Override
