@@ -13,7 +13,7 @@ public class UserSpecificationByUsername extends UserSpecification {
 
     @Override
     public boolean specified(User user) {
-        return user.getUsername() == this.username;
+        return user.getUsername().equals(this.username);
     }
 
     @Override
