@@ -1,13 +1,15 @@
 package school.journal.repository;
 
+import org.hibernate.Session;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
 public interface IRepository<T> {
-    T create(T t) throws RepositoryException;
-    T update(T t) throws RepositoryException;
-    List<T> read() throws RepositoryException;
-    T read(int id) throws RepositoryException;
-    T delete(int id) throws RepositoryException;
+    T create(T t, Session session) throws RepositoryException;
+    T update(T t, Session session) throws RepositoryException;
+    T delete(T t, Session session) throws RepositoryException;
+
+    List<T> query(HibernateSpecification specification, Session session) throws RepositoryException;
 }

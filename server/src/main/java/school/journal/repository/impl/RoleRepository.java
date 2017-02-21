@@ -1,49 +1,43 @@
 package school.journal.repository.impl;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.springframework.stereotype.Component;
 import school.journal.entity.Role;
-import school.journal.persistence.HibernateUtil;
-import school.journal.repository.IRepository;
 import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
+@Component
 public class RoleRepository extends RepositoryAbstractClass<Role> {
-    private static final RoleRepository instance = new RoleRepository();
-
-    public static RoleRepository getInstance(){
-        return instance;
+    @Override
+    public Role create(Role role, Session session) throws RepositoryException {
+        session.save(role);
+        return role;
     }
 
     @Override
-    public Role create(Role role) throws RepositoryException {
-        throw new NotImplementedException();
+    public Role update(Role role, Session session) throws RepositoryException {
+        session.update(role);
+        return role;
     }
 
     @Override
-    public Role update(Role role) throws RepositoryException {
-        throw new NotImplementedException();
+    public Role delete(Role role, Session session) throws RepositoryException {
+        session.delete(role);
+        return role;
     }
 
     @Override
-    public List<Role> read() throws RepositoryException {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        List<Role> roles = (List<Role>)session.createCriteria(Role.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return roles;
-    }
-
-    @Override
-    public Role read(int id) throws RepositoryException {
-        return null;
-    }
-
-    @Override
-    public Role delete(int id) throws RepositoryException {
-        return null;
+    public List<Role> query(HibernateSpecification specification, Session session) throws RepositoryException {
+        Criteria criteria =  session.createCriteria(Role.class);
+        Criterion criterion = specification.toCriteria();
+        if(criterion != null){
+            criteria.add(criterion);
+        }
+        return criteria.list();
     }
 }

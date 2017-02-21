@@ -1,0 +1,26 @@
+<div class="roles-component">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="roles-list col-md-2">
+        <ul *ngIf="roles">
+          <li *ngFor="let role of roles" (click)="selectRole(role.roleId)">
+            <div class="role">
+              <h4>{{role.name}}</h4>
+            </div>
+          </li>
+        </ul>
+        <div *ngIf="roles.length == 0">
+          <h4>Roles is empty</h4>
+        </div>
+      </div>
+      <div class="role-info col-md-10">
+        <div *ngIf="selectedRole">
+          <h4>{{selectedRole.name}}</h4>
+          <p>ID: {{selectedRole.roleId}}</p>
+          <p>Level: {{selectedRole.level}}</p>
+        </div>
+        <h4 *ngIf="!selectedRole">Not selected</h4>
+      </div>
+    </div>
+  </div>
+</div>

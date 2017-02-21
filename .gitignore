@@ -1,3 +1,4 @@
+#server
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -14,3 +15,4 @@ hs_err_pid*
 server/.ideaDataSources/*
 server/target/*
 server/school-journal.*
+server/out/*
