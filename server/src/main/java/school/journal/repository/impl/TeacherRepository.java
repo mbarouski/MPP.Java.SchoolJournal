@@ -23,15 +23,6 @@ public class TeacherRepository extends RepositoryAbstractClass<Teacher> {
         return instance;
     }
 
-    public List<Teacher> read() throws RepositoryException {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        List<Teacher> teachers = (List<Teacher>) session.createCriteria(Role.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return teachers;
-    }
-
     @Override
     public Teacher create(Teacher teacher, Session session) throws RepositoryException {
         session.save(teacher);

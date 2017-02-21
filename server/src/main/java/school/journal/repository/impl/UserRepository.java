@@ -24,15 +24,6 @@ public class UserRepository extends RepositoryAbstractClass<User> {
     private UserRepository() {
     }
 
-    public List<User> read() throws RepositoryException {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        List<User> users = (List<User>) session.createCriteria(Role.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return users;
-    }
-
     @Override
     public User create(User user, Session session) throws RepositoryException {
         session.save(user);

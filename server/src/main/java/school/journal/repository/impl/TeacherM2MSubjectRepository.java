@@ -23,15 +23,6 @@ public class TeacherM2MSubjectRepository extends RepositoryAbstractClass<Teacher
     private TeacherM2MSubjectRepository() {
     }
 
-    public List<TeacherM2MSubject> read() {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        List<TeacherM2MSubject> teacherM2MSubjects = (List<TeacherM2MSubject>) session.createCriteria(Role.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return teacherM2MSubjects;
-    }
-
     @Override
     public TeacherM2MSubject create(TeacherM2MSubject teacherM2MSubject, Session session) throws RepositoryException {
         session.save(teacherM2MSubject);

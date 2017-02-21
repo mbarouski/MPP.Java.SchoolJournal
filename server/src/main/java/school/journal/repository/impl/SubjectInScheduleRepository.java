@@ -23,15 +23,6 @@ public class SubjectInScheduleRepository extends RepositoryAbstractClass<Subject
     private SubjectInScheduleRepository() {
     }
 
-    public List<SubjectInSchedule> read() {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        List<SubjectInSchedule> subjectInSchedules = (List<SubjectInSchedule>) session.createCriteria(Role.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return subjectInSchedules;
-    }
-
     @Override
     public SubjectInSchedule create(SubjectInSchedule subjectInSchedule, Session session) throws RepositoryException {
         session.save(subjectInSchedule);
