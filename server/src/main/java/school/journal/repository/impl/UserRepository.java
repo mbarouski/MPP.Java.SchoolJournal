@@ -3,15 +3,36 @@ package school.journal.repository.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import school.journal.entity.Role;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
+import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.LinkedList;
 import java.util.List;
 
-public class UserRepository implements IRepository<User> {
+public class UserRepository extends RepositoryAbstractClass<User> {
+    private static final UserRepository instance = new UserRepository();
+
+    public static UserRepository getInstance() {
+        return instance;
+    }
+
+    private UserRepository() {
+    }
+
+    public List<User> read() throws RepositoryException {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<User> users = (List<User>) session.createCriteria(Role.class).list();
+        session.getTransaction().commit();
+        session.close();
+        return users;
+    }
+
     @Override
     public User create(User user, Session session) throws RepositoryException {
         session.save(user);
@@ -32,9 +53,9 @@ public class UserRepository implements IRepository<User> {
 
     @Override
     public List<User> query(HibernateSpecification specification, Session session) throws RepositoryException {
-        Criteria criteria =  session.createCriteria(User.class);
+        Criteria criteria = session.createCriteria(User.class);
         Criterion criterion = specification.toCriteria();
-        if(criterion != null){
+        if (criterion != null) {
             criteria.add(criterion);
         }
         return criteria.list();

@@ -3,14 +3,35 @@ package school.journal.repository.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import school.journal.entity.Role;
 import school.journal.entity.SubjectInSchedule;
+import school.journal.entity.User;
 import school.journal.repository.IRepository;
+import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
-public class SubjectInScheduleRepository implements IRepository<SubjectInSchedule> {
+public class SubjectInScheduleRepository extends RepositoryAbstractClass<SubjectInSchedule> {
+    private static final SubjectInScheduleRepository instance = new SubjectInScheduleRepository();
+
+    public static SubjectInScheduleRepository getInstance() {
+        return instance;
+    }
+
+    private SubjectInScheduleRepository() {
+    }
+
+    public List<SubjectInSchedule> read() {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<SubjectInSchedule> subjectInSchedules = (List<SubjectInSchedule>) session.createCriteria(Role.class).list();
+        session.getTransaction().commit();
+        session.close();
+        return subjectInSchedules;
+    }
+
     @Override
     public SubjectInSchedule create(SubjectInSchedule subjectInSchedule, Session session) throws RepositoryException {
         session.save(subjectInSchedule);
