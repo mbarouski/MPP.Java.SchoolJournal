@@ -18,3 +18,4 @@ server/school-journal.*
 server/out/*
 */.idea/*
 .idea/*
+*.log

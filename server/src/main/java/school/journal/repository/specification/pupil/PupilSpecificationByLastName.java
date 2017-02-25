@@ -14,7 +14,7 @@ public class PupilSpecificationByLastName extends PupilSpecification {
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("last_name", this.lastName);
+        return Restrictions.ilike("last_name", this.lastName);
     }
 
     @Override
