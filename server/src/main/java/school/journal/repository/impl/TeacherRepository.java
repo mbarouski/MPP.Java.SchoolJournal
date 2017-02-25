@@ -3,26 +3,15 @@ package school.journal.repository.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
-import school.journal.entity.Role;
+import org.springframework.stereotype.Component;
 import school.journal.entity.Teacher;
-import school.journal.entity.User;
-import school.journal.repository.IRepository;
 import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
-
+@Component
 public class TeacherRepository extends RepositoryAbstractClass<Teacher> {
-    private static final TeacherRepository instance = new TeacherRepository();
-
-    private TeacherRepository() {
-    }
-
-    public static TeacherRepository getInstance() {
-        return instance;
-    }
-
     @Override
     public Teacher create(Teacher teacher, Session session) throws RepositoryException {
         session.save(teacher);
