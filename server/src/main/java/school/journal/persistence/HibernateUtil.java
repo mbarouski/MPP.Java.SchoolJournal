@@ -2,6 +2,7 @@ package school.journal.persistence;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.springframework.context.annotation.Bean;
 
 public class HibernateUtil {
     private static final SessionFactory sessionFactory = buildSessionFactory();

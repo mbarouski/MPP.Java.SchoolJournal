@@ -1,39 +1,76 @@
 package school.journal.controller;
 
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.bind.annotation.*;
 import school.journal.controller.exception.ControllerException;
 import school.journal.entity.Role;
-import school.journal.entity.Subject;
-import school.journal.persistence.HibernateUtil;
 import school.journal.service.IRoleService;
 import school.journal.service.exception.ServiceException;
-import school.journal.service.factory.ServiceFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-
-import static school.journal.utils.ViewNameStorage.ROLES_VIEW;
 
 @Controller
 @RequestMapping(value = "/api/roles")
 public class RoleAPIController {
-    private static IRoleService roleService = ServiceFactory.getInstance().getRoleService();
+    @Autowired
+    private IRoleService roleService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody List<Role> getList(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+    public @ResponseBody List<Role> get()
             throws ControllerException {
         try{
             return roleService.getRoles();
         } catch (ServiceException exc){
             return new ArrayList<>();
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity create(@RequestBody Role role)
+            throws ControllerException {
+        try{
+            return new ResponseEntity(roleService.createRole(role), HttpStatus.OK);
+        } catch (ServiceException exc){
+            return new ResponseEntity(new ErrorObject("Error in role creating"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity update(@RequestBody Role role)
+            throws ControllerException {
+        try{
+            return new ResponseEntity(roleService.updateRole(role), HttpStatus.OK);
+        } catch (ServiceException exc){
+            return new ResponseEntity(new ErrorObject("Error in role updating"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity delete(@PathVariable("roleId") int roleId)
+            throws ControllerException {
+        try{
+            return new ResponseEntity(roleService.deleteRole(roleId), HttpStatus.OK);
+        } catch (ServiceException exc){
+            return new ResponseEntity(new ErrorObject("Error in role deleting"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/{roleId}")
+    @ResponseBody
+    public ResponseEntity getOne(@PathVariable("roleId") int roleId)
+            throws ControllerException {
+        try{
+            return new ResponseEntity(roleService.getOne(roleId), HttpStatus.OK);
+        } catch (ServiceException exc){
+            return new ResponseEntity(new ErrorObject("Error in role getting"), HttpStatus.BAD_REQUEST);
         }
     }
 }
