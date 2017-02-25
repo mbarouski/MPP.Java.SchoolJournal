@@ -15,14 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserRepository extends RepositoryAbstractClass<User> {
-    private static final UserRepository instance = new UserRepository();
-
-    public static UserRepository getInstance() {
-        return instance;
-    }
-
-    private UserRepository() {
-    }
 
     @Override
     public User create(User user, Session session) throws RepositoryException {
