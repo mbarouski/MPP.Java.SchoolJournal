@@ -3,6 +3,7 @@ package school.journal.repository.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import org.springframework.stereotype.Component;
 import school.journal.entity.Role;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
@@ -13,7 +14,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.LinkedList;
 import java.util.List;
-
+@Component
 public class UserRepository extends RepositoryAbstractClass<User> {
 
     @Override
