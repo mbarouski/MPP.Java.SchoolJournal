@@ -3,14 +3,18 @@ package school.journal.repository.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import org.springframework.stereotype.Component;
+import school.journal.entity.Role;
 import school.journal.entity.TeacherM2MSubject;
+import school.journal.entity.User;
 import school.journal.repository.IRepository;
+import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
-
-public class TeacherM2MSubjectRepository implements IRepository<TeacherM2MSubject> {
+@Component
+public class TeacherM2MSubjectRepository extends RepositoryAbstractClass<TeacherM2MSubject> {
     @Override
     public TeacherM2MSubject create(TeacherM2MSubject teacherM2MSubject, Session session) throws RepositoryException {
         session.save(teacherM2MSubject);
@@ -33,7 +37,7 @@ public class TeacherM2MSubjectRepository implements IRepository<TeacherM2MSubjec
     public List<TeacherM2MSubject> query(HibernateSpecification specification, Session session) throws RepositoryException {
         Criteria criteria = session.createCriteria(TeacherM2MSubject.class);
         Criterion criterion = specification.toCriteria();
-        if (criteria!=null){
+        if (criteria != null) {
             criteria.add(criterion);
         }
         return criteria.list();
