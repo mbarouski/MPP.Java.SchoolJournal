@@ -1,4 +1,4 @@
-package school.journal.controller;
+package school.journal.controller.util;
 
 public class ErrorObject {
     private String message;

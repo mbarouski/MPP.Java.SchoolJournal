@@ -1,6 +1,7 @@
 package school.journal.repository.specification.user;
 
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import school.journal.entity.User;
 
@@ -18,6 +19,6 @@ public class UserSpecificationByUsername extends UserSpecification {
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("username", this.username);
+        return Restrictions.ilike("username", this.username);
     }
 }
