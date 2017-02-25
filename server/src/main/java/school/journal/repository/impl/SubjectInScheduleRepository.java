@@ -35,9 +35,9 @@ public class SubjectInScheduleRepository extends RepositoryAbstractClass<Subject
 
     @Override
     public List<SubjectInSchedule> query(HibernateSpecification specification, Session session) throws RepositoryException {
-        Criteria criteria = session.createCriteria(SubjectInSchedule.class);
-        Criterion criterion = specification.toCriteria();
-        if (criterion!=null){
+        Criteria criteria =  session.createCriteria(SubjectInSchedule.class);
+        Criterion criterion;
+        if((specification != null) && ((criterion = specification.toCriteria()) != null)){
             criteria.add(criterion);
         }
         return criteria.list();

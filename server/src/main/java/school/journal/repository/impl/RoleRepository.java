@@ -34,8 +34,8 @@ public class RoleRepository extends RepositoryAbstractClass<Role> {
     @Override
     public List<Role> query(HibernateSpecification specification, Session session) throws RepositoryException {
         Criteria criteria =  session.createCriteria(Role.class);
-        Criterion criterion = specification.toCriteria();
-        if(criterion != null){
+        Criterion criterion;
+        if((specification != null) && ((criterion = specification.toCriteria()) != null)){
             criteria.add(criterion);
         }
         return criteria.list();

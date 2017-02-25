@@ -35,9 +35,9 @@ public class TeacherM2MSubjectRepository extends RepositoryAbstractClass<Teacher
 
     @Override
     public List<TeacherM2MSubject> query(HibernateSpecification specification, Session session) throws RepositoryException {
-        Criteria criteria = session.createCriteria(TeacherM2MSubject.class);
-        Criterion criterion = specification.toCriteria();
-        if (criteria != null) {
+        Criteria criteria =  session.createCriteria(TeacherM2MSubject.class);
+        Criterion criterion;
+        if((specification != null) && ((criterion = specification.toCriteria()) != null)){
             criteria.add(criterion);
         }
         return criteria.list();

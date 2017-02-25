@@ -4,13 +4,10 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
-import school.journal.entity.Role;
 import school.journal.entity.User;
-import school.journal.repository.IRepository;
 import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,9 +34,9 @@ public class UserRepository extends RepositoryAbstractClass<User> {
 
     @Override
     public List<User> query(HibernateSpecification specification, Session session) throws RepositoryException {
-        Criteria criteria = session.createCriteria(User.class);
-        Criterion criterion = specification.toCriteria();
-        if (criterion != null) {
+        Criteria criteria =  session.createCriteria(User.class);
+        Criterion criterion;
+        if((specification != null) && ((criterion = specification.toCriteria()) != null)){
             criteria.add(criterion);
         }
         return criteria.list();

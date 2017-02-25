@@ -32,9 +32,9 @@ public class TeacherRepository extends RepositoryAbstractClass<Teacher> {
 
     @Override
     public List<Teacher> query(HibernateSpecification specification, Session session) throws RepositoryException {
-        Criteria criteria = session.createCriteria(Teacher.class);
-        Criterion criterion = specification.toCriteria();
-        if (criterion != null) {
+        Criteria criteria =  session.createCriteria(Teacher.class);
+        Criterion criterion;
+        if((specification != null) && ((criterion = specification.toCriteria()) != null)){
             criteria.add(criterion);
         }
         return criteria.list();
