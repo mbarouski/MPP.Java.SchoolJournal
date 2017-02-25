@@ -16,3 +16,5 @@ server/.ideaDataSources/*
 server/target/*
 server/school-journal.*
 server/out/*
+*/.idea/*
+.idea/*

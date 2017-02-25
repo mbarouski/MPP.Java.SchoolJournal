@@ -1,0 +1,41 @@
+package school.journal.repository.impl;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import school.journal.entity.Mark;
+import school.journal.repository.RepositoryAbstractClass;
+import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.HibernateSpecification;
+
+import java.util.List;
+
+public class MarkRepository extends RepositoryAbstractClass<Mark> {
+    @Override
+    public Mark create(Mark mark, Session session) throws RepositoryException {
+        session.save(mark);
+        return mark;
+    }
+
+    @Override
+    public Mark update(Mark mark, Session session) throws RepositoryException {
+        session.update(mark);
+        return mark;
+    }
+
+    @Override
+    public Mark delete(Mark mark, Session session) throws RepositoryException {
+        session.delete(mark);
+        return mark;
+    }
+
+    @Override
+    public List<Mark> query(HibernateSpecification specification, Session session) throws RepositoryException {
+        Criteria criteria =  session.createCriteria(Mark.class);
+        Criterion criterion;
+        if((specification != null) && ((criterion = specification.toCriteria()) != null)){
+            criteria.add(criterion);
+        }
+        return criteria.list();
+    }
+}
