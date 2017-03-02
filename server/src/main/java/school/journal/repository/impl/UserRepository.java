@@ -9,7 +9,6 @@ import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
-import java.util.LinkedList;
 import java.util.List;
 @Component
 public class UserRepository extends RepositoryAbstractClass<User> {
