@@ -4,6 +4,7 @@ public class User {
     private int userId;
     private String username;
     private String passHash;
+    private String password;
     private byte locked;
     private String email;
     private ApiToken apiTokenByUserId;
@@ -33,6 +34,14 @@ public class User {
 
     public void setPassHash(String passHash) {
         this.passHash = passHash;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public byte getLocked() {

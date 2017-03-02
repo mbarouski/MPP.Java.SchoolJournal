@@ -18,8 +18,7 @@ public class TeacherService implements ITeacherService {
     }
 
     @Override
-    public Teacher delete(int id) throws ServiceException {
-        return null;
+    public void delete(int id) throws ServiceException {
     }
 
     @Override
