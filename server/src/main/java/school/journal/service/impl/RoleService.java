@@ -28,7 +28,7 @@ public class RoleService extends ServiceAbstractClass implements IRoleService {
         session.beginTransaction();
         try {
             return roleRepository.query(null, session);
-        } catch (RepositoryException exc){
+        } catch (RepositoryException exc) {
             throw new ServiceException();
         }
     }
@@ -37,10 +37,10 @@ public class RoleService extends ServiceAbstractClass implements IRoleService {
     public Role createRole(Role role) throws ServiceException {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        if(role.getName().isEmpty()){
+        if (role.getName().isEmpty()) {
             throw new ServiceException("Invalid name");
         }
-        if(role.getLevel() <= 0){
+        if (role.getLevel() <= 0) {
             throw new ServiceException("Invalid level");
         }
         try {
@@ -56,13 +56,13 @@ public class RoleService extends ServiceAbstractClass implements IRoleService {
     public Role updateRole(Role role) throws ServiceException {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        if(role.getName().isEmpty()){
+        if (role.getName().isEmpty()) {
             throw new ServiceException("Invalid name");
         }
-        if(role.getLevel() <= 0){
+        if (role.getLevel() <= 0) {
             throw new ServiceException("Invalid level");
         }
-        if(role.getRoleId() <= 0){
+        if (role.getRoleId() <= 0) {
             throw new ServiceException("Invalid id");
         }
         try {
@@ -78,7 +78,7 @@ public class RoleService extends ServiceAbstractClass implements IRoleService {
     public Role deleteRole(int roleId) throws ServiceException {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        if(roleId <= 0){
+        if (roleId <= 0) {
             throw new ServiceException("Invalid id");
         }
         Role role = new Role();
@@ -96,15 +96,15 @@ public class RoleService extends ServiceAbstractClass implements IRoleService {
     public Role getOne(int roleId) throws ServiceException {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        if(roleId <= 0){
+        if (roleId <= 0) {
             throw new ServiceException("Invalid id");
         }
         RoleSpecification specification = new RoleSpecificationByRoleId(roleId);
         Role role = null;
         try {
             List list = roleRepository.query(specification, session);
-            if(list.size() > 0){
-                role = (Role)list.get(0);
+            if (list.size() > 0) {
+                role = (Role) list.get(0);
             }
         } catch (RepositoryException exc) {
         }
