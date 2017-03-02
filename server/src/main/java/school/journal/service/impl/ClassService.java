@@ -3,6 +3,7 @@ package school.journal.service.impl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import school.journal.entity.Clazz;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
@@ -14,6 +15,7 @@ import school.journal.service.exception.ServiceException;
 
 import java.util.List;
 
+@Component
 public class ClassService extends ServiceAbstractClass implements ICLassService {
     @Autowired
     private IRepository<Clazz> clazzIRepository;

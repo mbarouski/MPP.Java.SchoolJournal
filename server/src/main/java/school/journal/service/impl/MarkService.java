@@ -3,6 +3,7 @@ package school.journal.service.impl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import school.journal.entity.Clazz;
 import school.journal.entity.Mark;
 import school.journal.repository.IRepository;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+@Component
 public class MarkService extends ServiceAbstractClass implements IMarkService {
     @Autowired
     private IRepository<Mark> markIRepository;
