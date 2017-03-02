@@ -2,19 +2,16 @@ package school.journal.service.impl;
 
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Role;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
-import school.journal.repository.impl.RoleRepository;
 import school.journal.repository.specification.role.RoleSpecification;
 import school.journal.repository.specification.role.RoleSpecificationByRoleId;
 import school.journal.service.IRoleService;
 import school.journal.service.ServiceAbstractClass;
 import school.journal.service.exception.ServiceException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component

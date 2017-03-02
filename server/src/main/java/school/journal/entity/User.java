@@ -2,15 +2,12 @@ package school.journal.entity;
 
 public class User {
     private int userId;
+    private int roleId;
     private String username;
     private String passHash;
     private String password;
     private byte locked;
     private String email;
-    private ApiToken apiTokenByUserId;
-    private Pupil pupilByUserId;
-    private Teacher teacherByUserId;
-    private Role roleByRoleId;
 
     public int getUserId() {
         return userId;
@@ -18,6 +15,14 @@ public class User {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
     public String getUsername() {
@@ -68,6 +73,7 @@ public class User {
         User user = (User) o;
 
         if (userId != user.userId) return false;
+        if (roleId != user.roleId) return false;
         if (locked != user.locked) return false;
         if (username != null ? !username.equals(user.username) : user.username != null) return false;
         if (passHash != null ? !passHash.equals(user.passHash) : user.passHash != null) return false;
@@ -79,42 +85,11 @@ public class User {
     @Override
     public int hashCode() {
         int result = userId;
+        result = 31 * result + roleId;
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (passHash != null ? passHash.hashCode() : 0);
         result = 31 * result + (int) locked;
         result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
-    }
-
-    public ApiToken getApiTokenByUserId() {
-        return apiTokenByUserId;
-    }
-
-    public void setApiTokenByUserId(ApiToken apiTokenByUserId) {
-        this.apiTokenByUserId = apiTokenByUserId;
-    }
-
-    public Pupil getPupilByUserId() {
-        return pupilByUserId;
-    }
-
-    public void setPupilByUserId(Pupil pupilByUserId) {
-        this.pupilByUserId = pupilByUserId;
-    }
-
-    public Teacher getTeacherByUserId() {
-        return teacherByUserId;
-    }
-
-    public void setTeacherByUserId(Teacher teacherByUserId) {
-        this.teacherByUserId = teacherByUserId;
-    }
-
-    public Role getRoleByRoleId() {
-        return roleByRoleId;
-    }
-
-    public void setRoleByRoleId(Role roleByRoleId) {
-        this.roleByRoleId = roleByRoleId;
     }
 }

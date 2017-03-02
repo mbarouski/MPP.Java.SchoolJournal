@@ -8,6 +8,12 @@
         <id name="subectInScheduleId">
             <column name="subect_in_schedule_id" sql-type="int(10) unsigned"/>
         </id>
+        <property name="subjectId">
+            <column name="subject_id" sql-type="int(10) unsigned"/>
+        </property>
+        <property name="teacherId">
+            <column name="teacher_id" sql-type="int(10) unsigned" not-null="true"/>
+        </property>
         <property name="dayOfWeek">
             <column name="day_of_week" sql-type="set('mon', 'tue', 'wed', 'thu', 'fri', 'sut')"/>
         </property>
@@ -17,17 +23,8 @@
         <property name="place">
             <column name="place" sql-type="varchar(45)" length="45"/>
         </property>
-        <property name="isDeleted">
-            <column name="isDeleted" sql-type="tinyint(1)"/>
+        <property name="classId">
+            <column name="class_id" sql-type="int(10) unsigned"/>
         </property>
-        <many-to-one name="subjectBySubjectId" class="school.journal.entity.Subject">
-            <column name="subject_id"/>
-        </many-to-one>
-        <many-to-one name="teacherByTeacherId" class="school.journal.entity.Teacher">
-            <column name="teacher_id"/>
-        </many-to-one>
-        <many-to-one name="clazzByClassId" class="school.journal.entity.Clazz">
-            <column name="class_id"/>
-        </many-to-one>
     </class>
 </hibernate-mapping>
