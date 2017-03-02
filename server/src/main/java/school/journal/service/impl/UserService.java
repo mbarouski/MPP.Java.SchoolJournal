@@ -9,7 +9,7 @@ import java.util.List;
 public class UserService implements IUserService {
     @Override
     public User create(User obj) throws ServiceException {
-        if((obj.getUsername() == null) || ())
+        return null;
     }
 
     @Override
