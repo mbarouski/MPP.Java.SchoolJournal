@@ -1,5 +1,9 @@
 package school.journal.controller;
 
+
+import org.apache.log4j.Logger;
+import org.hibernate.Session;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,8 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/api/roles")
 public class RoleAPIController {
+    private Logger LOGGER = Logger.getLogger(RoleAPIController.class);
+
     @Autowired
     private IRoleService roleService;
 
@@ -25,6 +31,7 @@ public class RoleAPIController {
     public @ResponseBody List<Role> get(HttpServletRequest req)
             throws ControllerException {
         try{
+            LOGGER.info("get role list controller method");
             return roleService.getRoles();
         } catch (ServiceException exc){
             return new ArrayList<>();
