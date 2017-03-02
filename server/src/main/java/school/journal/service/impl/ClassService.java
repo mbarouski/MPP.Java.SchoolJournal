@@ -21,23 +21,25 @@ public class ClassService extends ServiceAbstractClass implements ICLassService 
     private IRepository<Clazz> clazzIRepository;
 
     @Override
-    public List<Clazz> getClasses() throws ServiceException {
+    public List<Clazz> read() throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
+        List<Clazz> clazzList;
         try {
-            List<Clazz> clazzList = clazzIRepository.query(null, session);
+            clazzList = clazzIRepository.query(null, session);
             transaction.commit();
-            return clazzList;
+
         } catch (RepositoryException e) {
             transaction.rollback();
-            throw new ServiceException("Repository query exception", e);
+            throw new ServiceException("Repository read exception", e);
         } finally {
             session.close();
         }
+        return clazzList;
     }
 
     @Override
-    public Clazz createClass(Clazz clazz) throws ServiceException {
+    public Clazz create(Clazz clazz) throws ServiceException {
         if (clazz.getNumber() <= 0) {
             throw new ServiceException("Invalid class number");
         } else if (clazz.getLetterMark().isEmpty()) {
@@ -48,17 +50,17 @@ public class ClassService extends ServiceAbstractClass implements ICLassService 
         try {
             clazz = clazzIRepository.create(clazz, session);
             transaction.commit();
-            return clazz;
         } catch (RepositoryException e) {
             transaction.rollback();
             throw new ServiceException("Repository create exception", e);
         } finally {
             session.close();
         }
+        return clazz;
     }
 
     @Override
-    public Clazz updateClass(Clazz clazz) throws ServiceException {
+    public Clazz update(Clazz clazz) throws ServiceException {
         if (clazz.getNumber() <= 0 || clazz.getNumber() >= 12) {
             throw new ServiceException("Invalid class number");
         } else if (clazz.getLetterMark().isEmpty()) {
@@ -79,12 +81,7 @@ public class ClassService extends ServiceAbstractClass implements ICLassService 
     }
 
     @Override
-    public Clazz deleteClass(int classId) throws ServiceException {
-        if (classId <= 0) {
-            throw new ServiceException("Invalid class number");
-        }
-        Clazz clazz = new Clazz();
-        clazz.setClassId(classId);
+    public Clazz delete(Clazz clazz) throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -114,12 +111,12 @@ public class ClassService extends ServiceAbstractClass implements ICLassService 
                 clazz = clazzList.get(0);
             }
             transaction.commit();
-            return clazz;
         } catch (RepositoryException e) {
             transaction.rollback();
             throw new ServiceException("Repository query exception", e);
         } finally {
             session.close();
         }
+        return clazz;
     }
 }

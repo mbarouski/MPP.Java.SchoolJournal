@@ -6,16 +6,8 @@ import school.journal.service.exception.ServiceException;
 
 import java.util.List;
 
-public interface ICLassService {
-
-
-    List<Clazz> getClasses() throws ServiceException;
-
-    Clazz createClass(Clazz clazz) throws ServiceException;
-
-    Clazz updateClass(Clazz clazz) throws ServiceException;
-
-    Clazz deleteClass(int classId) throws ServiceException;
+public interface ICLassService extends IService<Clazz> {
 
     Clazz getOne(int classId) throws ServiceException;
+
 }
