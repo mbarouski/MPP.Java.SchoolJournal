@@ -57,9 +57,7 @@ public class PupilService extends ServiceAbstractClass implements IPupilService 
 
     @Override
     public Pupil getOne(int pupilId) throws ServiceException {
-        if (pupilId <= 0) {
-            throw new ServiceException("Invalid id");
-        }
+        validateId(pupilId);
         PupilSpecification specification = new PupilSpecificationByPupilId(pupilId);
         Pupil pupil = null;
         Session session = sessionFactory.openSession();
@@ -72,7 +70,8 @@ public class PupilService extends ServiceAbstractClass implements IPupilService 
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();
-            throw new ServiceException("Repository query exception", exc);
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
         } finally {
             session.close();
         }
