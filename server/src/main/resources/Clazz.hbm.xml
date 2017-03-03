@@ -14,8 +14,5 @@
         <property name="letterMark">
             <column name="letter_mark" sql-type="varchar(45)" length="45"/>
         </property>
-        <property name="isDeleted">
-            <column name="isDeleted" sql-type="tinyint(1)"/>
-        </property>
     </class>
 </hibernate-mapping>

@@ -4,7 +4,6 @@ public class Clazz {
     private int classId;
     private int number;
     private String letterMark;
-    private byte isDeleted;
 
     public int getClassId() {
         return classId;
@@ -30,14 +29,6 @@ public class Clazz {
         this.letterMark = letterMark;
     }
 
-    public byte getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(byte isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,7 +38,6 @@ public class Clazz {
 
         if (classId != clazz.classId) return false;
         if (number != clazz.number) return false;
-        if (isDeleted != clazz.isDeleted) return false;
         if (letterMark != null ? !letterMark.equals(clazz.letterMark) : clazz.letterMark != null) return false;
 
         return true;
@@ -58,7 +48,6 @@ public class Clazz {
         int result = classId;
         result = 31 * result + number;
         result = 31 * result + (letterMark != null ? letterMark.hashCode() : 0);
-        result = 31 * result + (int) isDeleted;
         return result;
     }
 }

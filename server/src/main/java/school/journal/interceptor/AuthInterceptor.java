@@ -14,11 +14,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter{
     
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object o) throws Exception {
-        String token = req.getHeader("Authorization");
-        User user;
-        if((user = authService.checkToken(token)) != null) {
-            req.setAttribute("user", user);
-        }
-        return user != null;
+//        String token = req.getHeader("Authorization");
+//        User user;
+//        if((user = authService.checkToken(token)) != null) {
+//            req.setAttribute("user", user);
+//        }
+//        return user != null;
+        return true;
     }
 }

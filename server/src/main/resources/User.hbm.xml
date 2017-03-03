@@ -8,6 +8,9 @@
         <id name="userId">
             <column name="user_id" sql-type="int(10) unsigned"/>
         </id>
+        <property name="roleId">
+            <column name="role_id" sql-type="int(10) unsigned"/>
+        </property>
         <property name="username">
             <column name="username" sql-type="varchar(30)" length="30"/>
         </property>
@@ -20,11 +23,5 @@
         <property name="email">
             <column name="email" sql-type="varchar(200)" length="200"/>
         </property>
-        <many-to-one name="roleByRoleId" class="school.journal.entity.Role">
-            <column name="role_id"/>
-        </many-to-one>
-        <one-to-one name="apiTokenByUserId" class="school.journal.entity.ApiToken"/>
-        <one-to-one name="pupilByUserId" class="school.journal.entity.Pupil"/>
-        <one-to-one name="teacherByUserId" class="school.journal.entity.Teacher"/>
     </class>
 </hibernate-mapping>

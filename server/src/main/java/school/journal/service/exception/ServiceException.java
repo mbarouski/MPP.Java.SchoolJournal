@@ -1,9 +1,5 @@
 package school.journal.service.exception;
 
-import school.journal.entity.Role;
-import school.journal.service.IRoleService;
-import school.journal.service.ServiceAbstractClass;
-
 import java.util.ArrayList;
 import java.util.List;
 
