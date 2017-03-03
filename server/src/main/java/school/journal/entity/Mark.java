@@ -2,7 +2,7 @@ package school.journal.entity;
 
 import java.sql.Date;
 
-public class Mark {
+public class Mark implements IId<Mark>{
     private int markId;
     private int pupilId;
     private Integer value;
@@ -10,6 +10,7 @@ public class Mark {
     private Date date;
     private int subjectId;
     private Integer teacherId;
+
 
     public int getMarkId() {
         return markId;
@@ -95,5 +96,19 @@ public class Mark {
         result = 31 * result + subjectId;
         result = 31 * result + (teacherId != null ? teacherId.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int getId() {
+        return 0;
+    }
+
+    @Override
+    public void setId() {
+
+    }
+
+    public Mark create(){
+        return new Mark();
     }
 }
