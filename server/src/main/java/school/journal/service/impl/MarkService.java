@@ -1,16 +1,13 @@
 package school.journal.service.impl;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Mark;
-import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.mark.MarkSpecificationByMarkId;
 import school.journal.service.IMarkService;
-import school.journal.service.ServiceAbstractClass;
+import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
 
 import java.util.Calendar;
@@ -19,10 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 @Component
-public class MarkService extends ServiceAbstractClass implements IMarkService {
-    @Autowired
-    private IRepository<Mark> markRepository;
-    private static final Logger LOGGER = Logger.getLogger(ClassService.class);
+public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Override
     public Mark create(Mark mark) throws ServiceException {
@@ -31,19 +25,7 @@ public class MarkService extends ServiceAbstractClass implements IMarkService {
         validateId(mark.getTeacherId());
         validateValue(mark.getValue());
         validateDate(mark.getDate());
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            mark = markRepository.create(mark, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return mark;
+        return super.create(mark);
     }
 
     @Override
@@ -54,19 +36,7 @@ public class MarkService extends ServiceAbstractClass implements IMarkService {
         validateId(mark.getTeacherId());
         validateValue(mark.getValue());
         validateDate(mark.getDate());
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            mark = markRepository.update(mark, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return mark;
+        return super.update(mark);
     }
 
     @Override
@@ -74,37 +44,13 @@ public class MarkService extends ServiceAbstractClass implements IMarkService {
         validateId(id);
         Mark mark = new Mark();
         mark.setMarkId(id);
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            markRepository.delete(mark, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
+        delete(mark);
     }
 
 
     @Override
     public List<Mark> read() throws ServiceException {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        List<Mark> markList;
-        try {
-            markList = markRepository.query(null, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return markList;
+        return super.read();
     }
 
     @Override
@@ -113,7 +59,7 @@ public class MarkService extends ServiceAbstractClass implements IMarkService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            List<Mark> markList = markRepository.query(
+            List<Mark> markList = repository.query(
                     new MarkSpecificationByMarkId(id), session);
             transaction.commit();
             return markList.size() > 0 ? markList.get(0) : null;
