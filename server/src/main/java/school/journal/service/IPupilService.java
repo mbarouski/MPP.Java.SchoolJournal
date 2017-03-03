@@ -10,7 +10,7 @@ public interface IPupilService extends IService<Pupil>{
 
     List<Pupil> getListOfPupils(int clazzId) throws ServiceException;
 
-    Pupil movePupulToAnotherClass(Pupil pupil, Clazz clazz) throws ServiceException;
+    Pupil movePupilToAnotherClass(Pupil pupil, Clazz clazz) throws ServiceException;
 
     Pupil getOne(int pupilId) throws ServiceException;
 

@@ -1,15 +1,13 @@
 package school.journal.service.impl;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import school.journal.entity.Clazz;
 import school.journal.entity.Mark;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
-import school.journal.repository.impl.MarkRepository;
-import school.journal.repository.specification.Specification;
 import school.journal.repository.specification.mark.MarkSpecificationByMarkId;
 import school.journal.service.IMarkService;
 import school.journal.service.ServiceAbstractClass;
@@ -21,77 +19,75 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 @Component
-public class MarkService extends ServiceAbstractClass implements IMarkService{
+public class MarkService extends ServiceAbstractClass implements IMarkService {
     @Autowired
-    private IRepository<Mark> markIRepository;
+    private IRepository<Mark> markRepository;
+    private static final Logger LOGGER = Logger.getLogger(ClassService.class);
 
     @Override
-    public Mark create(Mark obj) throws ServiceException {
-        if (obj.getValue() <= 0) {
-            throw new ServiceException("Invalid value");
-        } else {
-            Calendar c = new GregorianCalendar();
-            c.add(Calendar.DAY_OF_YEAR, 1);
-            if (obj.getDate().after(c.getTime())) {
-                throw new ServiceException("Invalid date");
-            }
-        }
+    public Mark create(Mark mark) throws ServiceException {
+        validateId(mark.getPupilId());
+        validateId(mark.getSubjectId());
+        validateId(mark.getTeacherId());
+        validateValue(mark.getValue());
+        validateDate(mark.getDate());
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            obj = markIRepository.create(obj, session);
+            mark = markRepository.create(mark, session);
             transaction.commit();
-        } catch (RepositoryException e) {
+        } catch (RepositoryException exc) {
             transaction.rollback();
-            throw new ServiceException("Repository create exception", e);
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
         } finally {
             session.close();
         }
-        return obj;
+        return mark;
     }
 
     @Override
-    public Mark update(Mark obj) throws ServiceException {
-        if (obj.getMarkId() <= 0) {
-            throw new ServiceException("Invalid id");
-        } else if (obj.getValue() <= 0) {
-            throw new ServiceException("Invalid value");
-        } else {
-            Calendar c = new GregorianCalendar();
-            c.add(Calendar.DAY_OF_YEAR, 1);
-            if (obj.getDate().after(c.getTime())) {
-                throw new ServiceException("Invalid date");
-            }
-        }
+    public Mark update(Mark mark) throws ServiceException {
+        validateId(mark.getMarkId());
+        validateId(mark.getPupilId());
+        validateId(mark.getSubjectId());
+        validateId(mark.getTeacherId());
+        validateValue(mark.getValue());
+        validateDate(mark.getDate());
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            obj = markIRepository.update(obj, session);
+            mark = markRepository.update(mark, session);
             transaction.commit();
-        } catch (RepositoryException e) {
+        } catch (RepositoryException exc) {
             transaction.rollback();
-            throw new ServiceException("Repository update exception", e);
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
         } finally {
             session.close();
         }
-        return obj;
+        return mark;
     }
 
     @Override
-    public Mark delete(Mark obj) throws ServiceException {
+    public void delete(int id) throws ServiceException {
+        validateId(id);
+        Mark mark = new Mark();
+        mark.setMarkId(id);
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            obj = markIRepository.delete(obj, session);
+            markRepository.delete(mark, session);
             transaction.commit();
-        } catch (RepositoryException e) {
+        } catch (RepositoryException exc) {
             transaction.rollback();
-            throw new ServiceException("Repository delete exception", e);
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
         } finally {
             session.close();
         }
-        return obj;
     }
+
 
     @Override
     public List<Mark> read() throws ServiceException {
@@ -99,15 +95,53 @@ public class MarkService extends ServiceAbstractClass implements IMarkService{
         Transaction transaction = session.beginTransaction();
         List<Mark> markList;
         try {
-            markList = markIRepository.query(null, session);
+            markList = markRepository.query(null, session);
             transaction.commit();
-        } catch (RepositoryException e) {
+        } catch (RepositoryException exc) {
             transaction.rollback();
-            throw new ServiceException("Repository read exception", e);
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
         } finally {
             session.close();
         }
         return markList;
+    }
+
+    @Override
+    public Mark getOne(int id) throws ServiceException {
+        validateId(id);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            List<Mark> markList = markRepository.query(
+                    new MarkSpecificationByMarkId(id), session);
+            transaction.commit();
+            return markList.size() > 0 ? markList.get(0) : null;
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+    }
+
+    private void validateId(int id) throws ServiceException {
+        if (id <= 0) throw new ServiceException("Invalid Id");
+    }
+
+    private void validateDate(Date date) throws ServiceException {
+        Calendar c = new GregorianCalendar();
+        c.add(Calendar.DAY_OF_YEAR, 1);
+        if (date.after(c.getTime())) {
+            throw new ServiceException("Invalid date");
+        }
+    }
+
+    private void validateValue(int value) throws ServiceException {
+        if (value <= 0 || value >= 11) {
+            throw new ServiceException("Invalid value");
+        }
     }
 
 }
