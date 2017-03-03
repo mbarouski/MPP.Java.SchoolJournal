@@ -10,30 +10,23 @@ import school.journal.repository.exception.RepositoryException;
 import school.journal.service.ISubjectService;
 import school.journal.service.ServiceAbstractClass;
 import school.journal.service.exception.ServiceException;
+import static school.journal.utils.ValidateServiceUtils.*;
 
 import java.util.List;
 
 @Component
 public class SubjectService extends ServiceAbstractClass implements ISubjectService {
 
-    private static final Logger LOGGER = Logger.getLogger(UserService.class);
+    private static final Logger LOGGER = Logger.getLogger(SubjectService.class);
 
     @Autowired
     private IRepository<Subject> subjectRepository;
 
-    private void CheckSubject(Subject subject) throws ServiceException{
-        if( (subject.getName() == null) || (subject.getName().isEmpty()) ){
-            throw new ServiceException("Invalid name");
-        }
-        if( (subject.getDescription() == null)||(subject.getDescription().isEmpty()) ){
-            throw new ServiceException("Empty description of subject");
-        }
-    }
-
     @Override
     public Subject create(Subject subject) throws ServiceException {
 
-        CheckSubject(subject);
+        validateString(subject.getName(),"Invalid name");
+        validateString(subject.getDescription(),"Empty description of subject");
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -54,7 +47,10 @@ public class SubjectService extends ServiceAbstractClass implements ISubjectServ
     @Override
     public Subject update(Subject subject) throws ServiceException {
 
-        CheckSubject(subject);
+        validateId(subject.getSubjectId(),"Subject");
+        validateString(subject.getName(),"Invalid name");
+        validateString(subject.getDescription(),"Empty description of subject");
+
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         try {
@@ -73,9 +69,8 @@ public class SubjectService extends ServiceAbstractClass implements ISubjectServ
     @Override
     public void delete(int subjectId) throws ServiceException {
 
-        if(subjectId <= 0){
-            throw new ServiceException("Invalid id");
-        }
+        validateId(subjectId,"Subject");
+
         Subject subject = new Subject();
         subject.setSubjectId(subjectId);
 

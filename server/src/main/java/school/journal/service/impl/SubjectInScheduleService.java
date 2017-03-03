@@ -9,13 +9,14 @@ import school.journal.repository.exception.RepositoryException;
 import school.journal.service.ISubjectInScheduleService;
 import school.journal.service.ServiceAbstractClass;
 import school.journal.service.exception.ServiceException;
+import static school.journal.utils.ValidateServiceUtils.*;
 
 import java.sql.Time;
 import java.util.List;
 
 public class SubjectInScheduleService extends ServiceAbstractClass implements ISubjectInScheduleService {
     
-    private static final Logger LOGGER = Logger.getLogger(UserService.class);
+    private static final Logger LOGGER = Logger.getLogger(SubjectInScheduleService.class);
 
     public enum Day {
         SUNDAY, MONDAY, TUESDAY, WEDNESDAY,
@@ -23,21 +24,9 @@ public class SubjectInScheduleService extends ServiceAbstractClass implements IS
     }
 
     @Autowired
-    private IRepository<SubjectInSchedule> subjectRepository;
+    private IRepository<SubjectInSchedule> subjectInScheduleRepository;
 
-    private void CheckId(int id, String column) throws ServiceException{
-        if (id <= 0){
-            throw new ServiceException("Invalid " + column + "Id");
-        }
-    }
-
-    private void CheckPlace(SubjectInSchedule subject) throws ServiceException{
-        if( (subject.getPlace() == null) || (subject.getPlace().isEmpty())){
-            throw new ServiceException("Invalid place");
-        }
-
-    }
-    private void CheckTime(Time time) throws ServiceException{
+    private void checkTime(Time time) throws ServiceException{
         if(time.before(new Time(7,0,0)) || time.after(new Time(20,0,0)) ){
             throw new ServiceException("Invalid begin time of subject");
         }
@@ -46,17 +35,16 @@ public class SubjectInScheduleService extends ServiceAbstractClass implements IS
     @Override
     public SubjectInSchedule create(SubjectInSchedule subjectInSchedule) throws ServiceException {
 
-        CheckId(subjectInSchedule.getSubectInScheduleId(),"SubjectInSchedule");
-        CheckId(subjectInSchedule.getClassId(),"Class");
-        CheckId(subjectInSchedule.getTeacherId(),"Teacher");
-        CheckPlace(subjectInSchedule);
-        CheckTime(subjectInSchedule.getBeginTime());
+        validateId(subjectInSchedule.getClassId(),"Class");
+        validateId(subjectInSchedule.getTeacherId(),"Teacher");
+        validateString(subjectInSchedule.getPlace(),"Place");
+        checkTime(subjectInSchedule.getBeginTime());
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         try {
-            subjectRepository.create(subjectInSchedule, session);
+            subjectInScheduleRepository.create(subjectInSchedule, session);
             session.getTransaction().commit();
         } catch (RepositoryException exc) {
             session.getTransaction().rollback();
@@ -72,15 +60,16 @@ public class SubjectInScheduleService extends ServiceAbstractClass implements IS
     @Override
     public SubjectInSchedule update(SubjectInSchedule subjectInSchedule) throws ServiceException {
 
-        CheckId(subjectInSchedule.getSubectInScheduleId(),"SubjectInSchedule");
-        CheckId(subjectInSchedule.getClassId(),"Class");
-        CheckId(subjectInSchedule.getTeacherId(),"Teacher");
-        CheckPlace(subjectInSchedule);
-        CheckTime(subjectInSchedule.getBeginTime());
+        validateId(subjectInSchedule.getSubectInScheduleId(),"SubjectInSchedule");
+        validateId(subjectInSchedule.getClassId(),"Class");
+        validateId(subjectInSchedule.getTeacherId(),"Teacher");
+        validateString(subjectInSchedule.getPlace(),"Place");
+        checkTime(subjectInSchedule.getBeginTime());
+
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         try {
-            subjectRepository.update(subjectInSchedule, session);
+            subjectInScheduleRepository.update(subjectInSchedule, session);
             session.getTransaction().commit();
         } catch (RepositoryException exc) {
             session.getTransaction().rollback();
@@ -96,13 +85,15 @@ public class SubjectInScheduleService extends ServiceAbstractClass implements IS
     @Override
     public void delete(int id) throws ServiceException {
 
+        validateId(id, "SubjectInSchedule");
+
         SubjectInSchedule subject = new SubjectInSchedule();
         subject.setSubectInScheduleId(id);
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         try {
-            subjectRepository.delete(subject, session);
+            subjectInScheduleRepository.delete(subject, session);
             session.getTransaction().commit();
         } catch (RepositoryException exc) {
             session.getTransaction().rollback();
@@ -118,7 +109,7 @@ public class SubjectInScheduleService extends ServiceAbstractClass implements IS
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         try {
-            return subjectRepository.query(null, session);
+            return subjectInScheduleRepository.query(null, session);
         } catch (RepositoryException exc){
             LOGGER.error(exc);
             throw new ServiceException();
