@@ -1,26 +1,15 @@
 package school.journal.service.impl;
 
-import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import school.journal.entity.User;
-import school.journal.repository.IRepository;
-import school.journal.repository.exception.RepositoryException;
+import school.journal.service.CRUDService;
 import school.journal.service.IUserService;
-import school.journal.service.ServiceAbstractClass;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.MD5Generator;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UserService extends ServiceAbstractClass implements IUserService {
-    private static final Logger LOGGER = Logger.getLogger(UserService.class);
-
-    @Autowired
-    private IRepository<User> userRepository;
+public class UserService extends CRUDService<User> implements IUserService {
 
     private Pattern EMAIL_PATTERN = Pattern.compile("[0-9a-zA-Z]+@[0-9a-zA-Z]");
 
@@ -57,19 +46,7 @@ public class UserService extends ServiceAbstractClass implements IUserService {
         checkEmail(user);
         user.setLocked((byte)0);
         user.setPassHash(MD5Generator.generate(generateNewPassword()));
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        try {
-            user = userRepository.create(user, session);
-            session.getTransaction().commit();
-        } catch (RepositoryException exc) {
-            session.getTransaction().rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return user;
+        return super.create(user);
     }
 
     private String generateNewPassword() {
@@ -81,58 +58,23 @@ public class UserService extends ServiceAbstractClass implements IUserService {
         checkUsername(user);
         checkEmail(user);
         checkPassword(user);
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        try {
-            user = userRepository.update(user, session);
-            session.getTransaction().commit();
-        } catch (RepositoryException exc) {
-            session.getTransaction().rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return user;
+        return super.update(user);
     }
 
     @Override
     public void delete(int id) throws ServiceException {
-        if(id <= 0) {
-            throw new ServiceException("ID is not correct.");
-        }
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        validateId(id);
         User user = new User();
         user.setUserId(id);
-        try {
-            userRepository.delete(user, session);
-            session.getTransaction().commit();
-        } catch (RepositoryException exc) {
-            session.getTransaction().rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
+        super.delete(user);
     }
 
     @Override
     public List<User> read() throws ServiceException {
-        List<User> users;
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        try {
-            users = userRepository.query(null, session);
-            session.getTransaction().commit();
-        } catch (RepositoryException exc) {
-            users = new ArrayList<>();
-            session.getTransaction().rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return users;
+        return super.read();
+    }
+
+    private void validateId(int id) throws ServiceException {
+        if(id <= 0) throw new ServiceException("ID is not correct.");
     }
 }
