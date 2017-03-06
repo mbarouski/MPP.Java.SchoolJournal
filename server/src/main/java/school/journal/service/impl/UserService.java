@@ -8,8 +8,6 @@ import school.journal.service.IUserService;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.MD5Generator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static school.journal.utils.ValidateServiceUtils.*;
 
@@ -18,16 +16,6 @@ public class UserService extends CRUDService<User> implements IUserService {
 
     public UserService() {
         LOGGER = Logger.getLogger(UserService.class);
-    }
-
-    private static Pattern EMAIL_PATTERN = Pattern.compile("[0-9a-zA-Z]+@[0-9a-zA-Z]");
-
-    private void checkEmail(User user) throws ServiceException {
-        validateString(user.getEmail(), "Email");
-        Matcher m = EMAIL_PATTERN.matcher(user.getEmail());
-        if (!m.matches()) {
-            throw new ServiceException("Email isn't correct.");
-        }
     }
 
     private void checkPassword(User user) throws ServiceException {
@@ -42,7 +30,7 @@ public class UserService extends CRUDService<User> implements IUserService {
     @Override
     public User create(User user) throws ServiceException {
         validateString(user.getUsername(), "Username");
-        checkEmail(user);
+        validateEmail(user.getEmail());
         user.setLocked((byte) 0);
         user.setPassHash(MD5Generator.generate(generateNewPassword()));
         return super.create(user);
@@ -55,7 +43,7 @@ public class UserService extends CRUDService<User> implements IUserService {
     @Override
     public User update(User user) throws ServiceException {
         validateString(user.getUsername(), "Username");
-        checkEmail(user);
+        validateEmail(user.getEmail());
         checkPassword(user);
         return super.update(user);
     }

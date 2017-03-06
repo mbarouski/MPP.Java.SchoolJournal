@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public class ValidateServiceUtils {
 
     private static Pattern PHONE_PATTERN = Pattern.compile("\\+375[0-9]{9}");
+    private static Pattern EMAIL_PATTERN = Pattern.compile("[0-9a-zA-Z]+@[0-9a-zA-Z]");
 
     public static void validateNullableId(Integer id, String column) throws ServiceException {
         if (id != null) validateId(id, column);
@@ -30,5 +31,13 @@ public class ValidateServiceUtils {
     public static boolean validate(String phone) {
         Matcher m = PHONE_PATTERN.matcher(phone);
         return m.matches();
+    }
+
+    public static void validateEmail(String email) throws ServiceException {
+        validateString(email, "Email");
+        Matcher m = EMAIL_PATTERN.matcher(email);
+        if (!m.matches()) {
+            throw new ServiceException("Email isn't correct.");
+        }
     }
 }
