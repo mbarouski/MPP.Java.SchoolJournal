@@ -49,7 +49,7 @@ public class UserService extends CRUDService<User> implements IUserService {
     }
 
     private String generateNewPassword() {
-        return MD5Generator.generate(((Long) (System.currentTimeMillis() % 1000)).toString());
+        return MD5Generator.generate(((Long)(System.currentTimeMillis() % 1000)).toString());
     }
 
     @Override

@@ -82,11 +82,15 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     private void validateDate(Date date) throws ServiceException {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_YEAR, 1);
-        if (date.after(c.getTime())) throw new ServiceException("Invalid date");
+        if (date.after(c.getTime())) {
+            throw new ServiceException("Invalid date");
+        }
     }
 
     private void validateValue(int value) throws ServiceException {
-        if (value <= 0 || value >= 11) throw new ServiceException("Invalid value");
+        if (value <= 0 || value >= 11) {
+            throw new ServiceException("Invalid value");
+        }
     }
 
 }

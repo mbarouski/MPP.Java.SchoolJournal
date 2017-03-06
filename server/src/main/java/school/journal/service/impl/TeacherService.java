@@ -6,7 +6,6 @@ import school.journal.entity.Teacher;
 import school.journal.service.CRUDService;
 import school.journal.service.ITeacherService;
 import school.journal.service.exception.ServiceException;
-import school.journal.utils.MobilePhoneValidator;
 
 import java.util.List;
 import static school.journal.utils.ValidateServiceUtils.*;
@@ -26,7 +25,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
         validateNullableString(teacher.getPathronymic(), "Patronymic");
         validateNullableId(teacher.getClassId(), "Class");
         validateNullableString(teacher.getDescription(), "Description");
-        MobilePhoneValidator.validate(teacher.getPhoneNumber());
+        validate(teacher.getPhoneNumber());
         return super.create(teacher);
     }
 
@@ -38,7 +37,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
         validateNullableString(teacher.getPathronymic(), "Patronymic");
         validateNullableId(teacher.getClassId(), "Class");
         validateNullableString(teacher.getDescription(), "Description");
-        MobilePhoneValidator.validate(teacher.getPhoneNumber());
+        validate(teacher.getPhoneNumber());
         return super.update(teacher);
     }
 

@@ -11,7 +11,6 @@ import school.journal.repository.specification.pupil.PupilSpecificationByPupilId
 import school.journal.service.CRUDService;
 import school.journal.service.IPupilService;
 import school.journal.service.exception.ServiceException;
-import school.journal.utils.MobilePhoneValidator;
 
 import java.util.*;
 
@@ -44,8 +43,10 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     }
 
     @Override
-    public Pupil movePupilToAnotherClass(Pupil pupil, int classId) throws ServiceException {
+    public Pupil movePupilToAnotherClass(int pupilId, Integer classId) throws ServiceException {
         validateId(classId, "Class");
+        validateId(pupilId, "Pupil");
+        Pupil pupil = new Pupil();
         pupil.setClassId(classId);
         return update(pupil);
     }
@@ -81,7 +82,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         validateNullableString(pupil.getPathronymic(), "Patronymic");
         validateStartYear(pupil.getStartYear());
         validateEndYear(pupil.getEndYear());
-        MobilePhoneValidator.validate(pupil.getPhoneNumber());
+        validate(pupil.getPhoneNumber());
         return super.create(pupil);
     }
 
@@ -95,7 +96,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         validateStartYear(pupil.getStartYear());
         validateEndYear(pupil.getEndYear());
         validateEducationPeriod(pupil.getStartYear(), pupil.getEndYear());
-        MobilePhoneValidator.validate(pupil.getPhoneNumber());
+        validate(pupil.getPhoneNumber());
         return super.update(pupil);
     }
 
@@ -122,12 +123,14 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     private void validateStartYear(Date date) throws ServiceException {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.YEAR, -100);
-        if (date.before(c.getTime()))
+        if (date.before(c.getTime())) {
             throw new ServiceException("Invalid date to start education");
+        }
         c = new GregorianCalendar();
         c.add(Calendar.YEAR, 1);
-        if (date.after(c.getTime()))
+        if (date.after(c.getTime())) {
             throw new ServiceException("Invalid date to start education");
+        }
     }
 
     /**
@@ -140,17 +143,20 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     private void validateEndYear(Date date) throws ServiceException {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.YEAR, -88);
-        if (date.before(c.getTime()))
+        if (date.before(c.getTime())) {
             throw new ServiceException("Invalid date to end education");
+        }
         c = new GregorianCalendar();
         c.add(Calendar.YEAR, 13);
-        if (date.after(c.getTime()))
+        if (date.after(c.getTime())) {
             throw new ServiceException("Invalid date to end education");
+        }
     }
 
     private void validateEducationPeriod
             (Date startDate, Date endDate) throws ServiceException {
-        if (startDate.after(endDate))
+        if (startDate.after(endDate)) {
             throw new ServiceException("Invalid period of education");
+        }
     }
 }
