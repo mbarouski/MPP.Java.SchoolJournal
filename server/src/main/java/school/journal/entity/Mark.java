@@ -11,6 +11,7 @@ public class Mark {
     private int subjectId;
     private Integer teacherId;
 
+
     public int getMarkId() {
         return markId;
     }
@@ -96,4 +97,5 @@ public class Mark {
         result = 31 * result + (teacherId != null ? teacherId.hashCode() : 0);
         return result;
     }
+
 }
