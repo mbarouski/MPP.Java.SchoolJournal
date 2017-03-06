@@ -1,5 +1,6 @@
 package school.journal.service.impl;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
@@ -11,8 +12,16 @@ import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
 import java.util.List;
 
+import static school.journal.utils.ValidateServiceUtils.validateId;
+import static school.journal.utils.ValidateServiceUtils.validateString;
+
+
 @Component
 public class ClassService extends CRUDService<Clazz> implements ICLassService {
+
+    public ClassService() {
+        LOGGER = Logger.getLogger(ClassService.class);
+    }
 
     @Override
     public List<Clazz> read() throws ServiceException {
@@ -22,21 +31,21 @@ public class ClassService extends CRUDService<Clazz> implements ICLassService {
     @Override
     public Clazz create(Clazz clazz) throws ServiceException {
         validateClassNumber(clazz.getNumber());
-        validateLetterMark(clazz.getLetterMark());
+        validateString(clazz.getLetterMark(), "Letter Mark");
         return super.create(clazz);
     }
 
     @Override
     public Clazz update(Clazz clazz) throws ServiceException {
-        validateId(clazz.getClassId());
+        validateId(clazz.getClassId(), "Class");
         validateClassNumber(clazz.getNumber());
-        validateLetterMark(clazz.getLetterMark());
+        validateString(clazz.getLetterMark(), "Letter Mark");
         return super.update(clazz);
     }
 
     @Override
     public void delete(int id) throws ServiceException {
-        validateId(id);
+        validateId(id, "Class");
         Clazz clazz = new Clazz();
         clazz.setClassId(id);
         super.delete(clazz);
@@ -45,7 +54,7 @@ public class ClassService extends CRUDService<Clazz> implements ICLassService {
 
     @Override
     public Clazz getOne(int id) throws ServiceException {
-        validateId(id);
+        validateId(id, "Class");
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -62,19 +71,9 @@ public class ClassService extends CRUDService<Clazz> implements ICLassService {
         }
     }
 
-
-    private void validateId(int id) throws ServiceException {
-        if (id <= 0) throw new ServiceException("Invalid Id");
-    }
-
     private void validateClassNumber(int number) throws ServiceException {
         if (number <= 0 || number >= 12)
             throw new ServiceException("Invalid class number");
-    }
-
-    private void validateLetterMark(String letterMark) throws ServiceException {
-        if (letterMark.isEmpty())
-            throw new ServiceException("Invalid letter mark");
     }
 
 }
