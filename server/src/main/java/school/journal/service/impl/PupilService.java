@@ -1,19 +1,15 @@
 package school.journal.service.impl;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Clazz;
 import school.journal.entity.Pupil;
-import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
-import school.journal.repository.specification.pupil.PupilSpecification;
 import school.journal.repository.specification.pupil.PupilSpecificationByClassId;
 import school.journal.repository.specification.pupil.PupilSpecificationByPupilId;
+import school.journal.service.CRUDService;
 import school.journal.service.IPupilService;
-import school.journal.service.ServiceAbstractClass;
 import school.journal.service.exception.ServiceException;
 
 import java.util.*;
@@ -21,12 +17,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class PupilService extends ServiceAbstractClass implements IPupilService {
-    @Autowired
-    private IRepository<Pupil> pupilRepository;
-    private static final Logger LOGGER = Logger.getLogger(ClassService.class);
+public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
-    private static Pattern PHONE_PATTERN = Pattern.compile("\\+375[0-9]+@[0-9a-zA-Z]");
+    private static Pattern PHONE_PATTERN = Pattern.compile("\\+375\\d{9}");
 
     @Override
     public List<Pupil> getListOfPupils(int id) throws ServiceException {
@@ -35,7 +28,7 @@ public class PupilService extends ServiceAbstractClass implements IPupilService 
         Transaction transaction = session.beginTransaction();
         List<Pupil> pupilList;
         try {
-            pupilList = pupilRepository.query(
+            pupilList = repository.query(
                     new PupilSpecificationByClassId(id), session);
             transaction.commit();
         } catch (RepositoryException exc) {
@@ -58,12 +51,12 @@ public class PupilService extends ServiceAbstractClass implements IPupilService 
     @Override
     public Pupil getOne(int pupilId) throws ServiceException {
         validateId(pupilId);
-        PupilSpecification specification = new PupilSpecificationByPupilId(pupilId);
         Pupil pupil = null;
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            List<Pupil> pupilList = pupilRepository.query(specification, session);
+            List<Pupil> pupilList = repository.query(
+                    new PupilSpecificationByPupilId(pupilId), session);
             if (pupilList.size() > 0) {
                 pupil = pupilList.get(0);
             }
@@ -87,19 +80,7 @@ public class PupilService extends ServiceAbstractClass implements IPupilService 
         validateStartYear(pupil.getStartYear());
         validateEndYear(pupil.getEndYear());
         validateNullablePhone(pupil.getPhoneNumber());
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            pupil = pupilRepository.create(pupil, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return pupil;
+        return super.create(pupil);
     }
 
     @Override
@@ -112,19 +93,7 @@ public class PupilService extends ServiceAbstractClass implements IPupilService 
         validateStartYear(pupil.getStartYear());
         validateEndYear(pupil.getEndYear());
         validateNullablePhone(pupil.getPhoneNumber());
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            pupil = pupilRepository.update(pupil, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return pupil;
+        return super.update(pupil);
     }
 
     @Override
@@ -132,35 +101,12 @@ public class PupilService extends ServiceAbstractClass implements IPupilService 
         validateId(id);
         Pupil pupil = new Pupil();
         pupil.setPupilId(id);
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            pupilRepository.delete(pupil, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
+        super.delete(pupil);
     }
 
     @Override
     public List<Pupil> read() throws ServiceException {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            List<Pupil> pupilList = pupilRepository.query(null, session);
-            transaction.commit();
-            return pupilList;
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
+        return super.read();
     }
 
     private void validateId(int id) throws ServiceException {

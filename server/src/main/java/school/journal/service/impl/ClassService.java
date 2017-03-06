@@ -1,62 +1,29 @@
 package school.journal.service.impl;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Clazz;
-import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.clazz.ClazzSpecificationByClazzId;
 import school.journal.service.ICLassService;
-import school.journal.service.ServiceAbstractClass;
+import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
-
-import java.util.LinkedList;
 import java.util.List;
 
 @Component
-public class ClassService extends ServiceAbstractClass implements ICLassService {
-    @Autowired
-    private IRepository<Clazz> clazzRepository;
-    private static final Logger LOGGER = Logger.getLogger(ClassService.class);
+public class ClassService extends CRUDService<Clazz> implements ICLassService {
 
     @Override
     public List<Clazz> read() throws ServiceException {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        List<Clazz> clazzList;
-        try {
-            clazzList = clazzRepository.query(null, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return clazzList != null ? clazzList : new LinkedList<Clazz>();
+        return super.read();
     }
 
     @Override
     public Clazz create(Clazz clazz) throws ServiceException {
         validateClassNumber(clazz.getNumber());
         validateLetterMark(clazz.getLetterMark());
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            clazz = clazzRepository.create(clazz, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return clazz;
+        return super.create(clazz);
     }
 
     @Override
@@ -64,19 +31,7 @@ public class ClassService extends ServiceAbstractClass implements ICLassService 
         validateId(clazz.getClassId());
         validateClassNumber(clazz.getNumber());
         validateLetterMark(clazz.getLetterMark());
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            clazz = clazzRepository.update(clazz, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return clazz;
+        return super.update(clazz);
     }
 
     @Override
@@ -84,18 +39,7 @@ public class ClassService extends ServiceAbstractClass implements ICLassService 
         validateId(id);
         Clazz clazz = new Clazz();
         clazz.setClassId(id);
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            clazzRepository.delete(clazz, session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
+        super.delete(clazz);
     }
 
 
@@ -105,7 +49,7 @@ public class ClassService extends ServiceAbstractClass implements ICLassService 
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            List<Clazz> clazzList = clazzRepository.query(
+            List<Clazz> clazzList = repository.query(
                     new ClazzSpecificationByClazzId(id), session);
             transaction.commit();
             return clazzList.size() > 0 ? clazzList.get(0) : null;
