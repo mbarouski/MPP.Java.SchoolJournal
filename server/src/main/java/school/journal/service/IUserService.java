@@ -2,6 +2,6 @@ package school.journal.service;
 
 import school.journal.entity.User;
 
-public interface IUserService {
+public interface IUserService extends IService<User> {
 
 }

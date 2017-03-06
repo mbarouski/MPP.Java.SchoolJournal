@@ -4,10 +4,13 @@ import java.sql.Date;
 
 public class Mark {
     private int markId;
+    private int pupilId;
     private Integer value;
     private Enum type;
     private Date date;
-    private byte isDeleted;
+    private int subjectId;
+    private Integer teacherId;
+
 
     public int getMarkId() {
         return markId;
@@ -15,6 +18,14 @@ public class Mark {
 
     public void setMarkId(int markId) {
         this.markId = markId;
+    }
+
+    public int getPupilId() {
+        return pupilId;
+    }
+
+    public void setPupilId(int pupilId) {
+        this.pupilId = pupilId;
     }
 
     public Integer getValue() {
@@ -41,12 +52,20 @@ public class Mark {
         this.date = date;
     }
 
-    public byte getIsDeleted() {
-        return isDeleted;
+    public int getSubjectId() {
+        return subjectId;
     }
 
-    public void setIsDeleted(byte isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
     @Override
@@ -57,10 +76,12 @@ public class Mark {
         Mark mark = (Mark) o;
 
         if (markId != mark.markId) return false;
-        if (isDeleted != mark.isDeleted) return false;
+        if (pupilId != mark.pupilId) return false;
+        if (subjectId != mark.subjectId) return false;
         if (value != null ? !value.equals(mark.value) : mark.value != null) return false;
         if (type != null ? !type.equals(mark.type) : mark.type != null) return false;
         if (date != null ? !date.equals(mark.date) : mark.date != null) return false;
+        if (teacherId != null ? !teacherId.equals(mark.teacherId) : mark.teacherId != null) return false;
 
         return true;
     }
@@ -68,10 +89,13 @@ public class Mark {
     @Override
     public int hashCode() {
         int result = markId;
+        result = 31 * result + pupilId;
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (int) isDeleted;
+        result = 31 * result + subjectId;
+        result = 31 * result + (teacherId != null ? teacherId.hashCode() : 0);
         return result;
     }
+
 }

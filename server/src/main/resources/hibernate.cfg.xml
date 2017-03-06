@@ -6,20 +6,18 @@
     <session-factory>
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/school_journal_db</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">root</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/school_journal_db</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="show_sql">true</property>
-        <mapping resource="./ApiToken.hbm.xml"/>
-        <mapping resource="./Clazz.hbm.xml"/>
-        <mapping resource="./Mark.hbm.xml"/>
-        <mapping resource="./Pupil.hbm.xml"/>
-        <mapping resource="./Role.hbm.xml"/>
-        <mapping resource="./Subject.hbm.xml"/>
-        <mapping resource="./SubjectInSchedule.hbm.xml"/>
-        <mapping resource="./Teacher.hbm.xml"/>
-        <mapping resource="./TeacherM2MSubject.hbm.xml"/>
-        <mapping resource="./User.hbm.xml"/>
+        <mapping resource="Clazz.hbm.xml"/>
+        <mapping resource="Mark.hbm.xml"/>
+        <mapping resource="Pupil.hbm.xml"/>
+        <mapping resource="Role.hbm.xml"/>
+        <mapping resource="Subject.hbm.xml"/>
+        <mapping resource="SubjectInSchedule.hbm.xml"/>
+        <mapping resource="Teacher.hbm.xml"/>
+        <mapping resource="User.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
