@@ -1,6 +1,5 @@
 package school.journal.service;
 
-import school.journal.entity.Clazz;
 import school.journal.entity.Pupil;
 import school.journal.service.exception.ServiceException;
 
@@ -10,7 +9,7 @@ public interface IPupilService extends IService<Pupil>{
 
     List<Pupil> getListOfPupils(int clazzId) throws ServiceException;
 
-    Pupil movePupilToAnotherClass(Pupil pupil, Clazz clazz) throws ServiceException;
+    Pupil movePupilToAnotherClass(Pupil pupil, int classId) throws ServiceException;
 
     Pupil getOne(int pupilId) throws ServiceException;
 

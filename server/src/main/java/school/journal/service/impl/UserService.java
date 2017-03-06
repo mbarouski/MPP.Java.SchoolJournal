@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static school.journal.utils.ValidateServiceUtils.*;
+
 @Component
 public class UserService extends CRUDService<User> implements IUserService {
 
@@ -18,30 +20,20 @@ public class UserService extends CRUDService<User> implements IUserService {
         LOGGER = Logger.getLogger(UserService.class);
     }
 
-    private Pattern EMAIL_PATTERN = Pattern.compile("[0-9a-zA-Z]+@[0-9a-zA-Z]");
-
-    private void checkUsername(User user) throws ServiceException {
-        if((user.getUsername() == null) || (user.getUsername().isEmpty())){
-            throw new ServiceException("Username is empty.");
-        }
-    }
+    private static Pattern EMAIL_PATTERN = Pattern.compile("[0-9a-zA-Z]+@[0-9a-zA-Z]");
 
     private void checkEmail(User user) throws ServiceException {
-        if((user.getEmail() == null) || (user.getEmail().isEmpty())) {
-            throw new ServiceException("Email is empty.");
-        }
+        validateString(user.getEmail(), "Email");
         Matcher m = EMAIL_PATTERN.matcher(user.getEmail());
-        if(!m.matches()) {
+        if (!m.matches()) {
             throw new ServiceException("Email isn't correct.");
         }
     }
 
     private void checkPassword(User user) throws ServiceException {
         String password = user.getPassword();
-        if((password == null) || (password.isEmpty())){
-            throw new ServiceException("Password is empty.");
-        }
-        if(password.length() < 6) {
+        validateString(password, "Password");
+        if (password.length() < 6) {
             throw new ServiceException("Password is small.");
         }
         user.setPassHash(MD5Generator.generate(password));
@@ -49,20 +41,20 @@ public class UserService extends CRUDService<User> implements IUserService {
 
     @Override
     public User create(User user) throws ServiceException {
-        checkUsername(user);
+        validateString(user.getUsername(), "Username");
         checkEmail(user);
-        user.setLocked((byte)0);
+        user.setLocked((byte) 0);
         user.setPassHash(MD5Generator.generate(generateNewPassword()));
         return super.create(user);
     }
 
     private String generateNewPassword() {
-        return MD5Generator.generate(((Long)(System.currentTimeMillis() % 1000)).toString());
+        return MD5Generator.generate(((Long) (System.currentTimeMillis() % 1000)).toString());
     }
 
     @Override
     public User update(User user) throws ServiceException {
-        checkUsername(user);
+        validateString(user.getUsername(), "Username");
         checkEmail(user);
         checkPassword(user);
         return super.update(user);
@@ -70,7 +62,7 @@ public class UserService extends CRUDService<User> implements IUserService {
 
     @Override
     public void delete(int id) throws ServiceException {
-        validateId(id);
+        validateId(id, "User");
         User user = new User();
         user.setUserId(id);
         super.delete(user);
@@ -79,9 +71,5 @@ public class UserService extends CRUDService<User> implements IUserService {
     @Override
     public List<User> read() throws ServiceException {
         return super.read();
-    }
-
-    private void validateId(int id) throws ServiceException {
-        if(id <= 0) throw new ServiceException("ID is not correct.");
     }
 }

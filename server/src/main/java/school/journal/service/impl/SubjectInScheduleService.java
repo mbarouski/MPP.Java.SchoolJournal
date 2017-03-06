@@ -1,20 +1,18 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import school.journal.entity.SubjectInSchedule;
-import school.journal.repository.IRepository;
-import school.journal.repository.exception.RepositoryException;
 import school.journal.service.CRUDService;
 import school.journal.service.ISubjectInScheduleService;
-import school.journal.service.ServiceAbstractClass;
 import school.journal.service.exception.ServiceException;
-import static school.journal.utils.ValidateServiceUtils.*;
 
 import java.sql.Time;
 import java.util.List;
+
+import static school.journal.utils.ValidateServiceUtils.validateId;
+import static school.journal.utils.ValidateServiceUtils.validateNullableId;
+import static school.journal.utils.ValidateServiceUtils.validateString;
 
 @Component
 public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> implements ISubjectInScheduleService {
@@ -25,28 +23,28 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
     }
 
     private void checkTime(Time time) throws ServiceException{
-        if(time.before(new Time(7,0,0)) || time.after(new Time(20,0,0)) ){
+        if(time.before(new Time(7,0,0))
+                || time.after(new Time(20,0,0)) )
             throw new ServiceException("Invalid begin time of subject");
-        }
     }
 
     @Override
-    public SubjectInSchedule create(SubjectInSchedule subjectInSchedule) throws ServiceException {
-        validateId(subjectInSchedule.getClassId(),"Class");
-        validateId(subjectInSchedule.getTeacherId(),"Teacher");
-        validateString(subjectInSchedule.getPlace(),"Place");
-        checkTime(subjectInSchedule.getBeginTime());
-        return super.create(subjectInSchedule);
+    public SubjectInSchedule create(SubjectInSchedule subject) throws ServiceException {
+        validateId(subject.getClassId(),"Class");
+        validateNullableId(subject.getTeacherId(),"Teacher");
+        validateString(subject.getPlace(),"Place");
+        checkTime(subject.getBeginTime());
+        return super.create(subject);
     }
 
     @Override
-    public SubjectInSchedule update(SubjectInSchedule subjectInSchedule) throws ServiceException {
-        validateId(subjectInSchedule.getSubectInScheduleId(),"SubjectInSchedule");
-        validateId(subjectInSchedule.getClassId(),"Class");
-        validateId(subjectInSchedule.getTeacherId(),"Teacher");
-        validateString(subjectInSchedule.getPlace(),"Place");
-        checkTime(subjectInSchedule.getBeginTime());
-        return super.update(subjectInSchedule);
+    public SubjectInSchedule update(SubjectInSchedule subject) throws ServiceException {
+        validateId(subject.getSubectInScheduleId(),"SubjectInSchedule");
+        validateId(subject.getClassId(),"Class");
+        validateNullableId(subject.getTeacherId(),"Teacher");
+        validateString(subject.getPlace(),"Place");
+        checkTime(subject.getBeginTime());
+        return super.update(subject);
     }
 
     @Override
