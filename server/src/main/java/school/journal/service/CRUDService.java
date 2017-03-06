@@ -13,8 +13,11 @@ import java.util.List;
 public class CRUDService<T> extends ServiceAbstractClass{
     @Autowired
     protected IRepository<T> repository;
-    protected static final Logger LOGGER = Logger.getLogger(CRUDService.class);
+    protected static Logger LOGGER;
 
+    public CRUDService() {
+        LOGGER = Logger.getLogger(CRUDService.class);
+    }
 
     public T create(T obj) throws ServiceException {
         Session session = sessionFactory.openSession();

@@ -1,5 +1,6 @@
 package school.journal.service.impl;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,10 @@ import java.util.List;
 
 @Component
 public class MarkService extends CRUDService<Mark> implements IMarkService {
+
+    public MarkService() {
+        LOGGER = Logger.getLogger(MarkService.class);
+    }
 
     @Override
     public Mark create(Mark mark) throws ServiceException {

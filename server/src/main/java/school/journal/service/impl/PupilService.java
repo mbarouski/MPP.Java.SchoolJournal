@@ -1,5 +1,6 @@
 package school.journal.service.impl;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,10 @@ import java.util.regex.Pattern;
 public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     private static Pattern PHONE_PATTERN = Pattern.compile("\\+375\\d{9}");
+
+    public PupilService() {
+        LOGGER = Logger.getLogger(PupilService.class);
+    }
 
     @Override
     public List<Pupil> getListOfPupils(int id) throws ServiceException {

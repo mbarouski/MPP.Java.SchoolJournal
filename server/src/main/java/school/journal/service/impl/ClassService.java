@@ -1,5 +1,6 @@
 package school.journal.service.impl;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,10 @@ import java.util.List;
 
 @Component
 public class ClassService extends CRUDService<Clazz> implements ICLassService {
+
+    public ClassService() {
+        LOGGER = Logger.getLogger(ClassService.class);
+    }
 
     @Override
     public List<Clazz> read() throws ServiceException {
