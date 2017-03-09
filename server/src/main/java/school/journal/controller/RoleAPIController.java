@@ -31,7 +31,7 @@ public class RoleAPIController {
             throws ControllerException {
         try{
             LOGGER.info("get role list controller method");
-            return roleService.getRoles();
+            return roleService.read();
         } catch (ServiceException exc){
             return new ArrayList<>();
         }
@@ -42,7 +42,7 @@ public class RoleAPIController {
     public ResponseEntity create(@RequestBody Role role)
             throws ControllerException {
         try{
-            return new ResponseEntity(roleService.createRole(role), HttpStatus.OK);
+            return new ResponseEntity(roleService.create(role), HttpStatus.OK);
         } catch (ServiceException exc){
             return new ResponseEntity(new ErrorObject("Error in role creating"), HttpStatus.BAD_REQUEST);
         }
@@ -53,7 +53,7 @@ public class RoleAPIController {
     public ResponseEntity update(@RequestBody Role role)
             throws ControllerException {
         try{
-            return new ResponseEntity(roleService.updateRole(role), HttpStatus.OK);
+            return new ResponseEntity(roleService.update(role), HttpStatus.OK);
         } catch (ServiceException exc){
             return new ResponseEntity(new ErrorObject("Error in role updating"), HttpStatus.BAD_REQUEST);
         }
@@ -64,7 +64,8 @@ public class RoleAPIController {
     public ResponseEntity delete(@PathVariable("roleId") int roleId)
             throws ControllerException {
         try{
-            return new ResponseEntity(roleService.deleteRole(roleId), HttpStatus.OK);
+            roleService.delete(roleId);
+            return new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException exc){
             return new ResponseEntity(new ErrorObject("Error in role deleting"), HttpStatus.BAD_REQUEST);
         }
