@@ -26,6 +26,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter{
 //                req.setAttribute("user", user);
 //            }
 //        } catch (AuthException exc) {
+//            resp.sendError(401);
 //            return false;
 //        }
 //        return user != null;
