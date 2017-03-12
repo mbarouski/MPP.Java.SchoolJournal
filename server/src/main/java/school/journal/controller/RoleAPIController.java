@@ -32,71 +32,81 @@ public class RoleAPIController {
     @ResponseBody
     public ResponseEntity get(HttpServletRequest req)
             throws ControllerException {
+        ResponseEntity resultResponse;
         try{
             LOGGER.info("get role list controller method");
-            return new ResponseEntity(roleService.read(), HttpStatus.OK);
+            resultResponse = new ResponseEntity(roleService.read(), HttpStatus.OK);
         } catch (ServiceException exc){
-            return new ResponseEntity(new ArrayList<>(), HttpStatus.OK);
+            resultResponse = new ResponseEntity(new ArrayList<>(), HttpStatus.OK);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return resultResponse;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity create(@RequestBody Role role)
             throws ControllerException {
+        ResponseEntity resultResponse;
         try{
-            return new ResponseEntity(roleService.create(role), HttpStatus.OK);
+            resultResponse = new ResponseEntity(roleService.create(role), HttpStatus.OK);
         } catch (ServiceException exc){
-            return new ResponseEntity(new ErrorObject("Error in role creating"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in role creating"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return resultResponse;
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity update(@RequestBody Role role)
             throws ControllerException {
+        ResponseEntity resultResponse;
         try{
-            return new ResponseEntity(roleService.update(role), HttpStatus.OK);
+            resultResponse = new ResponseEntity(roleService.update(role), HttpStatus.OK);
         } catch (ServiceException exc){
-            return new ResponseEntity(new ErrorObject("Error in role updating"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in role updating"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return resultResponse;
     }
 
     @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity delete(@PathVariable("roleId") int roleId)
             throws ControllerException {
+        ResponseEntity resultResponse;
         try{
             roleService.delete(roleId);
-            return new ResponseEntity(HttpStatus.OK);
+            resultResponse = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException exc){
-            return new ResponseEntity(new ErrorObject("Error in role deleting"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in role deleting"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return resultResponse;
     }
 
     @RequestMapping(value = "/{roleId}")
     @ResponseBody
     public ResponseEntity getOne(@PathVariable("roleId") int roleId)
             throws ControllerException {
+        ResponseEntity resultResponse;
         try{
-            return new ResponseEntity(roleService.getOne(roleId), HttpStatus.OK);
+            resultResponse = new ResponseEntity(roleService.getOne(roleId), HttpStatus.OK);
         } catch (ServiceException exc){
-            return new ResponseEntity(new ErrorObject("Error in role getting"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in role getting"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return resultResponse;
     }
 }

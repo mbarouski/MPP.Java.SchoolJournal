@@ -24,27 +24,30 @@ public class AuthAPIController {
 
     @Autowired
     @Qualifier("AuthService")
-    IAuthService authService;
+    private IAuthService authService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity login(@RequestBody UserAuthInfo user) {
         String token = null;
+        ResponseEntity resultResponse = null;
         try {
             token = authService.login(user.getUsername(), user.getPassword());
             if(token != null) {
                 TokenInfo tokenInfo = new TokenInfo();
                 tokenInfo.setValue(token);
-                return new ResponseEntity(tokenInfo, HttpStatus.OK);
+                resultResponse = new ResponseEntity(tokenInfo, HttpStatus.OK);
             }
         } catch (AuthException exc) {
             LOGGER.error(exc);
+            resultResponse = new ResponseEntity(HttpStatus.UNAUTHORIZED);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
+            resultResponse = new ResponseEntity("Login error", HttpStatus.BAD_REQUEST);
         }  catch (Exception exc) {
             LOGGER.error(exc);
-            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        return resultResponse;
     }
 }
