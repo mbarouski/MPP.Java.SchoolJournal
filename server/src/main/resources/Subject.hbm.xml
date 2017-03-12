@@ -11,9 +11,6 @@
         <property name="name">
             <column name="name" sql-type="varchar(100)" length="100"/>
         </property>
-        <property name="isDeleted">
-            <column name="isDeleted" sql-type="tinyint(1)"/>
-        </property>
         <property name="description">
             <column name="description" sql-type="text"/>
         </property>

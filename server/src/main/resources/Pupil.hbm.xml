@@ -8,6 +8,9 @@
         <id name="pupilId">
             <column name="pupil_id" sql-type="int(10) unsigned"/>
         </id>
+        <property name="classId">
+            <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
+        </property>
         <property name="firstName">
             <column name="first_name" sql-type="varchar(100)" length="100"/>
         </property>
@@ -23,8 +26,11 @@
         <property name="characteristic">
             <column name="characteristic" sql-type="text" not-null="true"/>
         </property>
-        <many-to-one name="clazzByClassId" class="school.journal.entity.Clazz">
-            <column name="class_id"/>
-        </many-to-one>
+        <property name="startYear">
+            <column name="start_year" sql-type="year(4)"/>
+        </property>
+        <property name="endYear">
+            <column name="end_year" sql-type="year(4)" not-null="true"/>
+        </property>
     </class>
 </hibernate-mapping>

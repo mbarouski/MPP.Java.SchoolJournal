@@ -3,11 +3,11 @@ package school.journal.entity;
 public class Teacher {
     private int teacherId;
     private String phoneNumber;
+    private Integer classId;
     private String firstName;
     private String pathronymic;
     private String lastName;
     private String description;
-    private Clazz clazzByClassId;
 
     public int getTeacherId() {
         return teacherId;
@@ -23,6 +23,14 @@ public class Teacher {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
     }
 
     public String getFirstName() {
@@ -66,6 +74,7 @@ public class Teacher {
 
         if (teacherId != teacher.teacherId) return false;
         if (phoneNumber != null ? !phoneNumber.equals(teacher.phoneNumber) : teacher.phoneNumber != null) return false;
+        if (classId != null ? !classId.equals(teacher.classId) : teacher.classId != null) return false;
         if (firstName != null ? !firstName.equals(teacher.firstName) : teacher.firstName != null) return false;
         if (pathronymic != null ? !pathronymic.equals(teacher.pathronymic) : teacher.pathronymic != null) return false;
         if (lastName != null ? !lastName.equals(teacher.lastName) : teacher.lastName != null) return false;
@@ -78,18 +87,11 @@ public class Teacher {
     public int hashCode() {
         int result = teacherId;
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (classId != null ? classId.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (pathronymic != null ? pathronymic.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
-    }
-
-    public Clazz getClazzByClassId() {
-        return clazzByClassId;
-    }
-
-    public void setClazzByClassId(Clazz clazzByClassId) {
-        this.clazzByClassId = clazzByClassId;
     }
 }

@@ -18,6 +18,6 @@ public class UserSpecificationByUsername extends UserSpecification {
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("username", this.username);
+        return Restrictions.ilike("username", this.username);
     }
 }
