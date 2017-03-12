@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Token;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
 import school.journal.service.CRUDService;
@@ -20,7 +21,7 @@ import static school.journal.utils.ValidateServiceUtils.*;
 public class UserService extends CRUDService<User> implements IUserService {
 
     @Autowired
-    public UserService(IRepository<User> repository) {
+    public UserService(IRepository<User> repository, IRepository<Token> tokenRepository) {
         LOGGER = Logger.getLogger(UserService.class);
         this.repository = repository;
     }

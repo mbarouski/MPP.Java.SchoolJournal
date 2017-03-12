@@ -8,6 +8,7 @@ public class User {
     private String password;
     private byte locked;
     private String email;
+    private Role role;
 
     public int getUserId() {
         return userId;
@@ -63,6 +64,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override

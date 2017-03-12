@@ -2,13 +2,18 @@ package school.journal.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Role;
+import school.journal.entity.Token;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.role.RoleSpecificationByRoleId;
+import school.journal.repository.specification.token.TokenSpecificationByTokenId;
 import school.journal.repository.specification.user.UserSpecificationByUsername;
 import school.journal.service.IAuthService;
 import school.journal.service.ServiceAbstractClass;
@@ -25,7 +30,24 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
 
     @Autowired
     private IRepository<User> userRepository;
+    @Autowired
+    private IRepository<Token> tokenRepository;
+    @Autowired
+    private IRepository<Role> roleRepository;
 
+    private void updateToken(Token token) throws ServiceException{
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        try {
+            tokenRepository.update(token, session);
+        } catch (RepositoryException exc) {
+            session.getTransaction().rollback();
+            throw new ServiceException(exc);
+        } finally {
+            session.getTransaction().commit();
+            session.close();
+        }
+    }
 
     /**
      * Returns token string value.
@@ -33,27 +55,40 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
     @Override
     public String login(String username, String password) throws AuthException, ServiceException {
         List<User> users;
+        String tokenValue = null;
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         try {
             users = userRepository.query(new UserSpecificationByUsername(username), session);
             if(users.size() > 0){
                 User user = users.get(0);
+                if(user.getLocked() != 0) {
+                    throw new AuthException("User is blocked");
+                }
                 if(verifyPasswords(user.getPassHash(), password)) {
                     try {
-                        return JWT.create().withSubject(username).sign(Algorithm.HMAC256(SECRET));
+                        tokenValue = JWT.create().withSubject(username).sign(Algorithm.HMAC256(SECRET));
+                        Token token = new Token();
+                        token.setMasterId(user.getUserId());
+                        token.setValue(tokenValue);
+                        token.setActive((byte)1);
+                        updateToken(token);
                     } catch (UnsupportedEncodingException exc) {
 
                     }
+                } else {
+                    throw new AuthException("Password is incorrect");
                 }
+            } else {
+                throw new AuthException("User is not found");
             }
         } catch (RepositoryException exc) {
-
+            session.getTransaction().rollback();
         } finally {
             session.getTransaction().commit();
             session.close();
         }
-        return null;
+        return tokenValue;
     }
 
     private boolean verifyPasswords(String hash, String pass) {
@@ -61,8 +96,22 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
     }
 
     @Override
-    public void logout() throws AuthException, ServiceException {
-
+    public void logout(User user) throws AuthException, ServiceException {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        try {
+            Token token = new Token();
+            token.setMasterId(user.getUserId());
+            token.setActive((byte)0);
+            token.setValue("");
+            tokenRepository.update(token, session);
+        } catch (RepositoryException exc) {
+            session.getTransaction().rollback();
+            throw new ServiceException(exc);
+        } finally {
+            session.getTransaction().commit();
+            session.close();
+        }
     }
 
     /**
@@ -70,7 +119,15 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
      */
     @Override
     public User checkToken(String token) throws AuthException, ServiceException {
-        JWT jwt = JWT.decode(token);
+        if((token == null) || (token.isEmpty())) {
+            throw new AuthException("Token is incorrect");
+        }
+        JWT jwt = null;
+        try {
+            jwt = JWT.decode(token);
+        } catch (JWTDecodeException exc) {
+            throw new AuthException("Token is incorrect");
+        }
         try {
             String username = jwt.getSubject();
             if (username != null) {
@@ -82,7 +139,17 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
                     List<User> users = userRepository.query(new UserSpecificationByUsername(username), session);
                     if (users.size() > 0) {
                         user = users.get(0);
+                        Token tokenObj = tokenRepository.query(new TokenSpecificationByTokenId(user.getUserId()), session).get(0);
+                        if(tokenObj.getActive() == 0) {
+                            throw new AuthException("Token is not active");
+                        }
+//                        if(user.getLocked() != 0) {
+//                            throw new AuthException("User is blocked");
+//                        }
+                        user.setRole(roleRepository.query(new RoleSpecificationByRoleId(user.getRoleId()), session).get(0));
                         return user;
+                    } else {
+                        throw new AuthException("Logout error");
                     }
                 } catch (RepositoryException exc) {
 
