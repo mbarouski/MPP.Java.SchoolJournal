@@ -15,7 +15,7 @@ import school.journal.service.exception.ServiceException;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping(value = "/api/class")
+@RequestMapping(value = "/api/classes")
 public class ClassAPIController {
 
     private static Logger LOGGER = Logger.getLogger(ClassAPIController.class);
