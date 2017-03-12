@@ -2,6 +2,7 @@ package school.journal.controller;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ public class PupilAPIController {
     private static Logger LOGGER = Logger.getLogger(PupilAPIController.class);
 
     @Autowired
+    @Qualifier("PupilService")
     private IPupilService pupilService;
 
     @RequestMapping(method = RequestMethod.GET)
@@ -33,6 +35,9 @@ public class PupilAPIController {
         } catch (ServiceException exc) {
             LOGGER.error(exc);
             return new ResponseEntity(new ErrorObject("Error in getting pupil list"), HttpStatus.BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -49,6 +54,9 @@ public class PupilAPIController {
             LOGGER.error(exc);
             return new ResponseEntity(new ErrorObject("Error in pupil creation"),
                     HttpStatus.BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -64,6 +72,9 @@ public class PupilAPIController {
             LOGGER.error(exc);
             return new ResponseEntity(new ErrorObject("Error in pupil updating"),
                     HttpStatus.BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,6 +91,9 @@ public class PupilAPIController {
             LOGGER.error(exc);
             return new ResponseEntity(new ErrorObject("Error in mark deleting"),
                     HttpStatus.BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -96,6 +110,9 @@ public class PupilAPIController {
             LOGGER.error(exc);
             return new ResponseEntity(new ErrorObject("Error in pupil getting"),
                     HttpStatus.BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            return new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

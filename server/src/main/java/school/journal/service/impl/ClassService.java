@@ -3,13 +3,18 @@ package school.journal.service.impl;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Clazz;
+import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.clazz.ClazzSpecificationByClazzId;
-import school.journal.service.ICLassService;
+import school.journal.service.IClassService;
 import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
+import school.journal.utils.exception.ValidationException;
+
 import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.validateId;
@@ -17,10 +22,13 @@ import static school.journal.utils.ValidateServiceUtils.validateString;
 
 
 @Component
-public class ClassService extends CRUDService<Clazz> implements ICLassService {
+@Qualifier("ClassService")
+public class ClassService extends CRUDService<Clazz> implements IClassService {
 
-    public ClassService() {
+    @Autowired
+    public ClassService(IRepository<Clazz> repository) {
         LOGGER = Logger.getLogger(ClassService.class);
+        this.repository = repository;
     }
 
     @Override
@@ -31,21 +39,36 @@ public class ClassService extends CRUDService<Clazz> implements ICLassService {
     @Override
     public Clazz create(Clazz clazz) throws ServiceException {
         validateClassNumber(clazz.getNumber());
-        validateString(clazz.getLetterMark(), "Letter Mark");
+        try {
+            validateString(clazz.getLetterMark(), "Letter Mark");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         return super.create(clazz);
     }
 
     @Override
     public Clazz update(Clazz clazz) throws ServiceException {
-        validateId(clazz.getClassId(), "Class");
+        try {
+            validateId(clazz.getClassId(), "Class");
+            validateString(clazz.getLetterMark(), "Letter Mark");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         validateClassNumber(clazz.getNumber());
-        validateString(clazz.getLetterMark(), "Letter Mark");
         return super.update(clazz);
     }
 
     @Override
     public void delete(int id) throws ServiceException {
-        validateId(id, "Class");
+        try {
+            validateId(id, "Class");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         Clazz clazz = new Clazz();
         clazz.setClassId(id);
         super.delete(clazz);
@@ -54,7 +77,12 @@ public class ClassService extends CRUDService<Clazz> implements ICLassService {
 
     @Override
     public Clazz getOne(int id) throws ServiceException {
-        validateId(id, "Class");
+        try {
+            validateId(id, "Class");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {

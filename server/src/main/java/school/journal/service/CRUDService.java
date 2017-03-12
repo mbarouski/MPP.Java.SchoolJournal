@@ -11,7 +11,6 @@ import school.journal.service.exception.ServiceException;
 import java.util.List;
 
 public abstract class CRUDService<T> extends ServiceAbstractClass{
-    @Autowired
     protected IRepository<T> repository;
     protected static Logger LOGGER;
 

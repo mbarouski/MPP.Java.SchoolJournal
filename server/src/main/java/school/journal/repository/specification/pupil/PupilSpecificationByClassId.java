@@ -19,6 +19,6 @@ public class PupilSpecificationByClassId extends PupilSpecification {
 
     @Override
     public boolean specified(Pupil pupil) {
-        return pupil.getClazzByClassId().getClassId() == classId;
+        return pupil.getClassId() == classId;
     }
 }

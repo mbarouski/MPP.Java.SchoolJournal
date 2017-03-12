@@ -3,29 +3,40 @@ package school.journal.service.impl;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Pupil;
+import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.pupil.PupilSpecificationByClassId;
 import school.journal.repository.specification.pupil.PupilSpecificationByPupilId;
 import school.journal.service.CRUDService;
 import school.journal.service.IPupilService;
 import school.journal.service.exception.ServiceException;
+import school.journal.utils.exception.ValidationException;
 
 import java.util.*;
 
 import static school.journal.utils.ValidateServiceUtils.*;
 
-@Component
+@Component("PupilService")
 public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
-    public PupilService() {
+    @Autowired
+    public PupilService(IRepository<Pupil> repository) {
         LOGGER = Logger.getLogger(PupilService.class);
+        this.repository = repository;
     }
 
     @Override
     public List<Pupil> getListOfPupils(int id) throws ServiceException {
-        validateId(id, "Class");
+        try {
+            validateId(id, "Class");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -44,8 +55,13 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     @Override
     public Pupil movePupilToAnotherClass(int pupilId, Integer classId) throws ServiceException {
-        validateId(classId, "Class");
-        validateId(pupilId, "Pupil");
+        try {
+            validateId(classId, "Class");
+            validateId(pupilId, "Pupil");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         Pupil pupil = new Pupil();
         pupil.setClassId(classId);
         return update(pupil);
@@ -53,7 +69,12 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     @Override
     public Pupil getOne(int pupilId) throws ServiceException {
-        validateId(pupilId, "Pupil");
+        try{
+            validateId(pupilId, "Pupil");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         Pupil pupil = null;
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -76,33 +97,48 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     @Override
     public Pupil create(Pupil pupil) throws ServiceException {
-        validateNullableId(pupil.getClassId(), "Class");
-        validateString(pupil.getFirstName(), "First Name");
-        validateString(pupil.getLastName(), "Last Name");
-        validateNullableString(pupil.getPathronymic(), "Patronymic");
+        try {
+            validateNullableId(pupil.getClassId(), "Class");
+            validateString(pupil.getFirstName(), "First Name");
+            validateString(pupil.getLastName(), "Last Name");
+            validateNullableString(pupil.getPathronymic(), "Patronymic");
+            validatePhone(pupil.getPhoneNumber());
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         validateStartYear(pupil.getStartYear());
         validateEndYear(pupil.getEndYear());
-        validate(pupil.getPhoneNumber());
         return super.create(pupil);
     }
 
     @Override
     public Pupil update(Pupil pupil) throws ServiceException {
-        validateId(pupil.getPupilId(), "Pupil");
-        validateNullableId(pupil.getClassId(), "Class");
-        validateString(pupil.getFirstName(), "First Name");
-        validateString(pupil.getLastName(), "Last Name");
-        validateNullableString(pupil.getPathronymic(), "Patronymic");
+        try {
+            validateId(pupil.getPupilId(), "Pupil");
+            validateNullableId(pupil.getClassId(), "Class");
+            validateString(pupil.getFirstName(), "First Name");
+            validateString(pupil.getLastName(), "Last Name");
+            validateNullableString(pupil.getPathronymic(), "Patronymic");
+            validatePhone(pupil.getPhoneNumber());
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         validateStartYear(pupil.getStartYear());
         validateEndYear(pupil.getEndYear());
         validateEducationPeriod(pupil.getStartYear(), pupil.getEndYear());
-        validate(pupil.getPhoneNumber());
         return super.update(pupil);
     }
 
     @Override
     public void delete(int id) throws ServiceException {
-        validateId(id, "Pupil");
+        try{
+            validateId(id, "Pupil");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         Pupil pupil = new Pupil();
         pupil.setPupilId(id);
         super.delete(pupil);

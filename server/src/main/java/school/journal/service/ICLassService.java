@@ -6,7 +6,7 @@ import school.journal.service.exception.ServiceException;
 
 import java.util.List;
 
-public interface ICLassService extends IService<Clazz> {
+public interface IClassService extends IService<Clazz> {
 
     Clazz getOne(int classId) throws ServiceException;
 

@@ -19,7 +19,7 @@ import school.journal.utils.MD5Generator;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-@Component
+@Component("AuthService")
 public class AuthService extends ServiceAbstractClass implements IAuthService {
     private final String SECRET = "simple_secret_string";
 

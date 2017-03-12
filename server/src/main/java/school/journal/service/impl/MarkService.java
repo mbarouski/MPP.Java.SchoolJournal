@@ -3,13 +3,17 @@ package school.journal.service.impl;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Mark;
+import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.mark.MarkSpecificationByMarkId;
 import school.journal.service.IMarkService;
 import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
+import school.journal.utils.exception.ValidationException;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,18 +22,25 @@ import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.validateId;
 
-@Component
+@Component("MarkService")
 public class MarkService extends CRUDService<Mark> implements IMarkService {
 
-    public MarkService() {
+    @Autowired
+    public MarkService(IRepository<Mark> repository) {
         LOGGER = Logger.getLogger(MarkService.class);
+        this.repository = repository;
     }
 
     @Override
     public Mark create(Mark mark) throws ServiceException {
-        validateId(mark.getPupilId(),"Pupil");
-        validateId(mark.getSubjectId(),"Subject");
-        validateId(mark.getTeacherId(),"Teacher");
+        try {
+            validateId(mark.getPupilId(),"Pupil");
+            validateId(mark.getSubjectId(),"Subject");
+            validateId(mark.getTeacherId(),"Teacher");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         validateValue(mark.getValue());
         validateDate(mark.getDate());
         return super.create(mark);
@@ -37,10 +48,15 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Override
     public Mark update(Mark mark) throws ServiceException {
-        validateId(mark.getMarkId(),"Mark");
-        validateId(mark.getPupilId(),"Pupil");
-        validateId(mark.getSubjectId(),"Subject");
-        validateId(mark.getTeacherId(),"Teacher");
+        try {
+            validateId(mark.getMarkId(),"Mark");
+            validateId(mark.getPupilId(),"Pupil");
+            validateId(mark.getSubjectId(),"Subject");
+            validateId(mark.getTeacherId(),"Teacher");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         validateValue(mark.getValue());
         validateDate(mark.getDate());
         return super.update(mark);
@@ -48,7 +64,12 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Override
     public void delete(int id) throws ServiceException {
-        validateId(id,"Mark");
+        try {
+            validateId(id,"Mark");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         Mark mark = new Mark();
         mark.setMarkId(id);
         delete(mark);
@@ -62,7 +83,13 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Override
     public Mark getOne(int id) throws ServiceException {
-        validateId(id,"Mark");
+        try {
+
+            validateId(id,"Mark");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
