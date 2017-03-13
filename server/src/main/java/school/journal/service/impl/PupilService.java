@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Pupil;
 import school.journal.repository.IRepository;
@@ -68,7 +67,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     }
 
     @Override
-    public Pupil getOne(int pupilId) throws ServiceException {
+    public Pupil getPupilInfo(int pupilId) throws ServiceException {
         try{
             validateId(pupilId, "Pupil");
         } catch (ValidationException exc) {
@@ -121,13 +120,13 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
             validateString(pupil.getLastName(), "Last Name");
             validateNullableString(pupil.getPathronymic(), "Patronymic");
             validatePhone(pupil.getPhoneNumber());
+            validateDatePeriod(pupil.getStartYear(), pupil.getEndYear());
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
         validateStartYear(pupil.getStartYear());
         validateEndYear(pupil.getEndYear());
-        validateEducationPeriod(pupil.getStartYear(), pupil.getEndYear());
         return super.update(pupil);
     }
 
@@ -189,10 +188,4 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         }
     }
 
-    private void validateEducationPeriod
-            (Date startDate, Date endDate) throws ServiceException {
-        if (startDate.after(endDate)) {
-            throw new ServiceException("Invalid period of education");
-        }
-    }
 }

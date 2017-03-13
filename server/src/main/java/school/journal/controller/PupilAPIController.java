@@ -110,7 +110,7 @@ public class PupilAPIController {
         ResponseEntity resultResponse;
         try {
             LOGGER.info("Get Pupil entity Controller method");
-            resultResponse = new ResponseEntity(pupilService.getOne(pupilId),
+            resultResponse = new ResponseEntity(pupilService.getPupilInfo(pupilId),
                     HttpStatus.OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
