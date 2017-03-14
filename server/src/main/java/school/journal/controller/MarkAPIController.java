@@ -14,7 +14,9 @@ import school.journal.service.IMarkService;
 import school.journal.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
+@SuppressWarnings(value = "unchecked")
 @Controller
 @RequestMapping(value = "/api/marks")
 public class MarkAPIController {
@@ -116,6 +118,82 @@ public class MarkAPIController {
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity getMarksForSubjectInClass(
+            HttpServletRequest request,
+            @RequestParam(value = "subjectId") int subjectId,
+            @RequestParam(value = "classId") int classId)
+            throws ControllerException {
+        ResponseEntity resultResponse;
+        try {
+            LOGGER.info("Get mark entities by subject and class Controller method");
+            resultResponse = new ResponseEntity(markService.
+                    getMarksForSubjectInClass(subjectId, classId), HttpStatus.OK);
+        } catch (ServiceException exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in class getting"), HttpStatus.BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity getMarksForTermOrder(
+            HttpServletRequest request,
+            @RequestParam(value = "classId") int classId,
+            @RequestParam(value = "startTerm") Date startTerm,
+            @RequestParam(value = "endTerm") Date endTerm)
+            throws ControllerException {
+        ResponseEntity resultResponse;
+        try {
+            LOGGER.info("Get mark entities by class and time terms Controller method");
+            resultResponse = new ResponseEntity(markService.
+                    getMarksForTermOrder(classId, startTerm, endTerm),
+                    HttpStatus.OK);
+        } catch (ServiceException exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(
+                    new ErrorObject("Error in class getting"),
+                    HttpStatus.BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(
+                    new ErrorObject("Some critical error"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity getMarksForPupil(
+            HttpServletRequest request,
+            @RequestParam(value = "pupilId") int pupilId,
+            @RequestParam(value = "startTerm") Date startTerm,
+            @RequestParam(value = "endTerm") Date endTerm)
+            throws ControllerException {
+        ResponseEntity resultResponse;
+        try {
+            LOGGER.info("Get mark entities by pupil and time terms Controller method");
+            resultResponse = new ResponseEntity(markService.
+                    getMarksForPupil(pupilId, startTerm, endTerm), HttpStatus.OK);
+        } catch (ServiceException exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(
+                    new ErrorObject("Error in class getting"), HttpStatus.BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(
+                    new ErrorObject("Some critical error"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }

@@ -29,9 +29,9 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     }
 
     @Override
-    public List<Pupil> getListOfPupils(int id) throws ServiceException {
+    public List<Pupil> getListOfPupils(int clazzId) throws ServiceException {
         try {
-            validateId(id, "Class");
+            validateId(clazzId, "Class");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -40,7 +40,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Transaction transaction = session.beginTransaction();
         try {
             List<Pupil> pupilList = repository.query(
-                    new PupilSpecificationByClassId(id), session);
+                    new PupilSpecificationByClassId(clazzId), session);
             transaction.commit();
             return pupilList;
         } catch (RepositoryException exc) {

@@ -21,15 +21,17 @@ import static school.journal.utils.ValidateServiceUtils.validateString;
 @Component("SubjectInScheduleService")
 public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> implements ISubjectInScheduleService {
 
+    private static final long START_WORK_DAY_TIME_MILLIS = 25_200_000;//7h*60m*60s*1000ms
+    private static final long END_WORK_DAY_TIME_MILLIS = 72_000_000;//20h*60m*60s*1000ms
     @Autowired
     public SubjectInScheduleService(IRepository<SubjectInSchedule> repository) {
         LOGGER = Logger.getLogger(SubjectInSchedule.class);
         this.repository = repository;
     }
 
-    private void checkTime(Time time) throws ServiceException{
-        if(time.before(new Time(7,0,0))
-                || time.after(new Time(20,0,0)) )
+    private void checkTime(Time time) throws ServiceException {
+        if (time.before(new Time(START_WORK_DAY_TIME_MILLIS))
+                || time.after(new Time(END_WORK_DAY_TIME_MILLIS)))
             throw new ServiceException("Invalid begin time of subject");
     }
 
