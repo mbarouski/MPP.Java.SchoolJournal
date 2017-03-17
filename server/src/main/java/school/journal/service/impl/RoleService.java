@@ -23,7 +23,7 @@ import static school.journal.utils.ValidateServiceUtils.*;
 public class RoleService extends CRUDService<Role> implements IRoleService {
 
     @Autowired
-    public RoleService(IRepository<Role> repository) {
+    public RoleService(@Qualifier("RoleRepository")IRepository<Role> repository) {
         LOGGER = Logger.getLogger(RoleService.class);
         this.repository = repository;
     }

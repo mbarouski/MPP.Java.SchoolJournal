@@ -14,4 +14,6 @@ public class ErrorObject {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public static final ErrorObject CRITICAL_ERROR = new ErrorObject("Some critical error");
 }

@@ -10,7 +10,8 @@ import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
-@Component
+
+@Component("UserRepository")
 public class UserRepository extends RepositoryAbstractClass<User> {
 
     @Override

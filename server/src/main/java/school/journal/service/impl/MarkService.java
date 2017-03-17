@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import school.journal.entity.Mark;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.mark.MarkSpecificationByPupilId;
 import school.journal.repository.specification.mark.MarkSpecificationByMarkId;
 import school.journal.service.IMarkService;
 import school.journal.service.CRUDService;
@@ -26,7 +27,7 @@ import static school.journal.utils.ValidateServiceUtils.validateId;
 public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Autowired
-    public MarkService(IRepository<Mark> repository) {
+    public MarkService(@Qualifier("MarkRepository")IRepository<Mark> repository) {
         LOGGER = Logger.getLogger(MarkService.class);
         this.repository = repository;
     }
@@ -34,38 +35,38 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     @Override
     public Mark create(Mark mark) throws ServiceException {
         try {
-            validateId(mark.getPupilId(),"Pupil");
-            validateId(mark.getSubjectId(),"Subject");
-            validateId(mark.getTeacherId(),"Teacher");
+            validateId(mark.getPupilId(), "Pupil");
+            validateId(mark.getSubjectId(), "Subject");
+            validateId(mark.getTeacherId(), "Teacher");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
         validateValue(mark.getValue());
-        validateDate(mark.getDate());
+        validateCreatingMarkDate(mark.getDate());
         return super.create(mark);
     }
 
     @Override
     public Mark update(Mark mark) throws ServiceException {
         try {
-            validateId(mark.getMarkId(),"Mark");
-            validateId(mark.getPupilId(),"Pupil");
-            validateId(mark.getSubjectId(),"Subject");
-            validateId(mark.getTeacherId(),"Teacher");
+            validateId(mark.getMarkId(), "Mark");
+            validateId(mark.getPupilId(), "Pupil");
+            validateId(mark.getSubjectId(), "Subject");
+            validateId(mark.getTeacherId(), "Teacher");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
         validateValue(mark.getValue());
-        validateDate(mark.getDate());
+        validateCreatingMarkDate(mark.getDate());
         return super.update(mark);
     }
 
     @Override
     public void delete(int id) throws ServiceException {
         try {
-            validateId(id,"Mark");
+            validateId(id, "Mark");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -85,7 +86,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     public Mark getOne(int id) throws ServiceException {
         try {
 
-            validateId(id,"Mark");
+            validateId(id, "Mark");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -106,7 +107,106 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
     }
 
-    private void validateDate(Date date) throws ServiceException {
+    @Override
+    public List<Mark> getMarksForSubjectInClass(int subjectId, int classId) throws ServiceException {
+        try {
+            validateId(subjectId, "Subject");
+            validateId(classId, "Class");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        //TODO Learn how to create complex criteries
+        //TODO DON'T DELETE THE CODE BELOW
+        /*Criteria criteria = session.createCriteria(Mark.class);
+        criteria.createAlias("school_journal_db.pupil", "pupil", INNER_JOIN).
+                add(Restrictions.and(
+                        new MarkSpecificationBySubjectId(subjectId).toCriteria(),
+                        Restrictions.eq("pupil.class_id", classId)
+                ));*/
+        List<Mark> markList = null;
+        markList = session.createSQLQuery(
+                "SELECT  * " +
+                        "FROM  mark as m " +
+                        "JOIN pupil as p " +
+                        "ON m.pupil_id = p.pupil_id " +
+                        "WHERE p.class_id =" + classId + " " +
+                        "AND m.subject_id = " + subjectId + ";").list();
+        /*try {
+            markList = (List<Mark>) criteria.list();
+            transaction.commit();
+        } finally {
+            session.close();
+        }*/
+        transaction.commit();
+        session.close();
+        return markList;
+    }
+
+    @Override
+    public List<Mark> getMarksForTermOrder(int classId) throws ServiceException {
+        try {
+            validateId(classId, "Class");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        //TODO Learn how to create complex criteries
+        //TODO DON'T DELETE THE CODE BELOW
+        /*Criteria criteria = session.createCriteria(Mark.class);
+        criteria.createAlias("school_journal_db.pupil", "pupil", INNER_JOIN).
+                add(Restrictions.and(
+                        Restrictions.between("mark.date", startTerm, endTerm),
+                        Restrictions.eq("pupil.class_id", classId)
+                ));*/
+        List<Mark> markList;
+        markList = session.createSQLQuery(
+                "SELECT  * " +
+                        "FROM  mark as m " +
+                        "JOIN pupil as p " +
+                        "ON m.pupil_id = p.pupil_id " +
+                        "WHERE p.class_id =" + classId + " ;").list();
+        /*try {
+            markList = (List<Mark>) criteria.list();
+            transaction.commit();
+        } finally {
+            session.close();
+        }
+        */
+        transaction.commit();
+        session.close();
+        return markList;
+    }
+
+    @Override
+    public List<Mark> getMarksForPupil(int pupilId) throws ServiceException {
+        try {
+            validateId(pupilId, "Pupil");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<Mark> markList;
+        try {
+            markList = repository.query(new MarkSpecificationByPupilId(pupilId), session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return markList;
+    }
+
+    private void validateCreatingMarkDate(Date date) throws ServiceException {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_YEAR, 1);
         if (date.after(c.getTime())) {
