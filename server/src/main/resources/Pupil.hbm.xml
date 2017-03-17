@@ -26,11 +26,5 @@
         <property name="characteristic">
             <column name="characteristic" sql-type="text" not-null="true"/>
         </property>
-        <property name="startYear">
-            <column name="start_year" sql-type="year(4)"/>
-        </property>
-        <property name="endYear">
-            <column name="end_year" sql-type="year(4)" not-null="true"/>
-        </property>
     </class>
 </hibernate-mapping>

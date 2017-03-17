@@ -13,12 +13,12 @@
         <property name="show_sql">true</property>
         <mapping resource="Clazz.hbm.xml"/>
         <mapping resource="Mark.hbm.xml"/>
-        <mapping resource="Pupil.hbm.xml"/>
         <mapping resource="Role.hbm.xml"/>
         <mapping resource="Subject.hbm.xml"/>
         <mapping resource="SubjectInSchedule.hbm.xml"/>
         <mapping resource="Teacher.hbm.xml"/>
         <mapping resource="User.hbm.xml"/>
         <mapping resource="Token.hbm.xml"/>
+        <mapping resource="Pupil.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
