@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Pupil;
 import school.journal.repository.IRepository;
@@ -107,8 +106,6 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        validateStartYear(pupil.getStartYear());
-        validateEndYear(pupil.getEndYear());
         return super.create(pupil);
     }
 
@@ -126,8 +123,6 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        validateStartYear(pupil.getStartYear());
-        validateEndYear(pupil.getEndYear());
         return super.update(pupil);
     }
 
@@ -148,45 +143,4 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     public List<Pupil> read() throws ServiceException {
         return super.read();
     }
-
-    /**
-     * Validates the year of starting education. If the year was
-     * more than 100 years ago, it became invalid.
-     * we'll can't have information about it
-     *
-     * @param date is year to validate
-     */
-    private void validateStartYear(Date date) throws ServiceException {
-        Calendar c = new GregorianCalendar();
-        c.add(Calendar.YEAR, -100);
-        if (date.before(c.getTime())) {
-            throw new ServiceException("Invalid date to start education");
-        }
-        c = new GregorianCalendar();
-        c.add(Calendar.YEAR, 1);
-        if (date.after(c.getTime())) {
-            throw new ServiceException("Invalid date to start education");
-        }
-    }
-
-    /**
-     * Validates the year of finishing education. If the year was
-     * more than 88 years ago
-     * (-100+12), it became invalid.
-     *
-     * @param date is year to validate
-     */
-    private void validateEndYear(Date date) throws ServiceException {
-        Calendar c = new GregorianCalendar();
-        c.add(Calendar.YEAR, -88);
-        if (date.before(c.getTime())) {
-            throw new ServiceException("Invalid date to end education");
-        }
-        c = new GregorianCalendar();
-        c.add(Calendar.YEAR, 13);
-        if (date.after(c.getTime())) {
-            throw new ServiceException("Invalid date to end education");
-        }
-    }
-
 }
