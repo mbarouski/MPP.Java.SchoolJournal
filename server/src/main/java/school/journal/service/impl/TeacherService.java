@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Teacher;
 import school.journal.repository.IRepository;
+import school.journal.repository.impl.TeacherRepository;
 import school.journal.service.CRUDService;
 import school.journal.service.ITeacherService;
 import school.journal.service.exception.ServiceException;
@@ -18,7 +19,7 @@ import static school.journal.utils.ValidateServiceUtils.*;
 public class TeacherService extends CRUDService<Teacher> implements ITeacherService {
 
     @Autowired
-    public TeacherService(IRepository<Teacher> repository) {
+    public TeacherService(@Qualifier("TeacherRepository") IRepository<Teacher> repository) {
         LOGGER = Logger.getLogger(TeacherService.class);
         this.repository = repository;
     }

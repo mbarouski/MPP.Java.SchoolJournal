@@ -1,7 +1,9 @@
 package school.journal.utils;
 
+
 import school.journal.utils.exception.ValidationException;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +43,12 @@ public class ValidateServiceUtils {
         Matcher m = EMAIL_PATTERN.matcher(email);
         if (!m.matches()) {
             throw new ValidationException("Email isn't correct.");
+        }
+    }
+
+    public static void validateDatePeriod(Date startDate, Date endDate) throws ValidationException{
+        if (startDate.after(endDate)) {
+            throw new ValidationException("Invalid time period");
         }
     }
 }

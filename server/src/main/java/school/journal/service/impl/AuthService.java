@@ -6,12 +6,14 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Role;
 import school.journal.entity.Token;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.impl.UserRepository;
 import school.journal.repository.specification.role.RoleSpecificationByRoleId;
 import school.journal.repository.specification.token.TokenSpecificationByTokenId;
 import school.journal.repository.specification.user.UserSpecificationByUsername;
@@ -29,10 +31,13 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
     private final String SECRET = "simple_secret_string";
 
     @Autowired
+    @Qualifier("UserRepository")
     private IRepository<User> userRepository;
     @Autowired
+    @Qualifier("TokenRepository")
     private IRepository<Token> tokenRepository;
     @Autowired
+    @Qualifier("RoleRepository")
     private IRepository<Role> roleRepository;
 
     private void updateToken(Token token) throws ServiceException{

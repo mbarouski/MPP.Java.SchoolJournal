@@ -3,6 +3,7 @@ package school.journal.repository.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Mark;
 import school.journal.repository.RepositoryAbstractClass;
@@ -10,7 +11,7 @@ import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
-@Component
+@Component("MarkRepository")
 public class MarkRepository extends RepositoryAbstractClass<Mark> {
     @Override
     public Mark create(Mark mark, Session session) throws RepositoryException {

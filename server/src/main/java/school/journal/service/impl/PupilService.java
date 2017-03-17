@@ -23,15 +23,15 @@ import static school.journal.utils.ValidateServiceUtils.*;
 public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     @Autowired
-    public PupilService(IRepository<Pupil> repository) {
+    public PupilService(@Qualifier("PupilRepository")IRepository<Pupil> repository) {
         LOGGER = Logger.getLogger(PupilService.class);
         this.repository = repository;
     }
 
     @Override
-    public List<Pupil> getListOfPupils(int id) throws ServiceException {
+    public List<Pupil> getListOfPupils(int clazzId) throws ServiceException {
         try {
-            validateId(id, "Class");
+            validateId(clazzId, "Class");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -40,7 +40,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Transaction transaction = session.beginTransaction();
         try {
             List<Pupil> pupilList = repository.query(
-                    new PupilSpecificationByClassId(id), session);
+                    new PupilSpecificationByClassId(clazzId), session);
             transaction.commit();
             return pupilList;
         } catch (RepositoryException exc) {
@@ -67,7 +67,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     }
 
     @Override
-    public Pupil getOne(int pupilId) throws ServiceException {
+    public Pupil getPupilInfo(int pupilId) throws ServiceException {
         try{
             validateId(pupilId, "Pupil");
         } catch (ValidationException exc) {
@@ -118,6 +118,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
             validateString(pupil.getLastName(), "Last Name");
             validateNullableString(pupil.getPathronymic(), "Patronymic");
             validatePhone(pupil.getPhoneNumber());
+            validateDatePeriod(pupil.getStartYear(), pupil.getEndYear());
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
