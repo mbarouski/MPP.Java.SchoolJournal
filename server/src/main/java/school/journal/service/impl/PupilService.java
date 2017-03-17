@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Pupil;
 import school.journal.repository.IRepository;
@@ -118,7 +119,6 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
             validateString(pupil.getLastName(), "Last Name");
             validateNullableString(pupil.getPathronymic(), "Patronymic");
             validatePhone(pupil.getPhoneNumber());
-            validateDatePeriod(pupil.getStartYear(), pupil.getEndYear());
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
