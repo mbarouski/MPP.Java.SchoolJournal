@@ -126,7 +126,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
                         new MarkSpecificationBySubjectId(subjectId).toCriteria(),
                         Restrictions.eq("pupil.class_id", classId)
                 ));*/
-        List<Mark> markList;
+        List<Mark> markList = null;
         markList = session.createSQLQuery(
                 "SELECT  * " +
                         "FROM  mark as m " +
@@ -139,8 +139,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             transaction.commit();
         } finally {
             session.close();
-        }
-        */
+        }*/
         transaction.commit();
         session.close();
         return markList;

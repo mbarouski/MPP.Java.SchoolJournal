@@ -16,6 +16,7 @@ import school.journal.service.impl.ClassService;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.http.HttpStatus.*;
+import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 @Controller
 @RequestMapping(value = "/api/classes")
@@ -40,7 +41,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Can't get Class list"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -58,7 +59,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Can't create class"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -76,7 +77,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Can't update class"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -95,7 +96,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Can't delete class"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -113,7 +114,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in class getting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }

@@ -20,6 +20,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 @Controller
 @RequestMapping(value = "/api/marks")
@@ -44,7 +45,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in getting mark list"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -62,7 +63,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in mark creation"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -80,7 +81,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in mark updating"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -99,7 +100,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in mark deleting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -117,7 +118,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in mark getting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -136,7 +137,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in class getting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -151,14 +152,10 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.getMarksForTermOrder(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(
-                    new ErrorObject("Error in mark getting"),
-                    BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in mark getting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(
-                    new ErrorObject("Some critical error"),
-                    INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -170,17 +167,14 @@ public class MarkAPIController {
         ResponseEntity resultResponse;
         try {
             LOGGER.info("Get mark entities by pupil and time terms Controller method");
-            resultResponse = new ResponseEntity(markService.
-                    getMarksForPupil(pupilId), OK);
+            resultResponse = new ResponseEntity(markService.getMarksForPupil(pupilId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(
                     new ErrorObject("Error in mark getting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(
-                    new ErrorObject("Some critical error"),
-                    INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }

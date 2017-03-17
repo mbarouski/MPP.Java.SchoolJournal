@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 @SuppressWarnings("unchecked")
 @Controller
@@ -41,7 +42,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in getting pupil list"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -59,7 +60,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in pupil creation"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -78,7 +79,7 @@ public class PupilAPIController {
                     BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -97,7 +98,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(new ErrorObject("Error in mark deleting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -113,11 +114,10 @@ public class PupilAPIController {
                     OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil getting"),
-                    BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil getting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -129,16 +129,13 @@ public class PupilAPIController {
         ResponseEntity resultResponse;
         try {
             LOGGER.info("Get Pupil entities Controller method");
-            resultResponse = new ResponseEntity(
-                    pupilService.getListOfPupils(classId), OK);
+            resultResponse = new ResponseEntity(pupilService.getListOfPupils(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(
-                    new ErrorObject("Error in pupil getting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil getting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(
-                    new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -150,16 +147,13 @@ public class PupilAPIController {
         ResponseEntity resultResponse;
         try {
             LOGGER.info("Update Pupil controller method");
-            resultResponse = new ResponseEntity(
-                    pupilService.movePupilToAnotherClass(pupilId, classId), OK);
+            resultResponse = new ResponseEntity(pupilService.movePupilToAnotherClass(pupilId, classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(
-                    new ErrorObject("Error in pupil updating"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil updating"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(
-                    new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
