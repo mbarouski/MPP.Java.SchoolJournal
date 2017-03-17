@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Pupil;
 import school.journal.repository.IRepository;
@@ -23,7 +24,7 @@ import static school.journal.utils.ValidateServiceUtils.*;
 public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     @Autowired
-    public PupilService(IRepository<Pupil> repository) {
+    public PupilService(@Qualifier("PupilRepository")IRepository<Pupil> repository) {
         LOGGER = Logger.getLogger(PupilService.class);
         this.repository = repository;
     }

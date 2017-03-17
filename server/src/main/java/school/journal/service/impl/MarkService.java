@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Mark;
 import school.journal.repository.IRepository;
@@ -26,7 +27,7 @@ import static school.journal.utils.ValidateServiceUtils.validateId;
 public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Autowired
-    public MarkService(IRepository<Mark> repository) {
+    public MarkService(@Qualifier("MarkRepository")IRepository<Mark> repository) {
         LOGGER = Logger.getLogger(MarkService.class);
         this.repository = repository;
     }

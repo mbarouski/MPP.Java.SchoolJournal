@@ -11,7 +11,7 @@ import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
-@Component
+@Component("TokenRepository")
 public class TokenRepository extends RepositoryAbstractClass<Token> {
     @Override
     public Token create(Token token, Session session) throws RepositoryException {

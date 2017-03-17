@@ -24,7 +24,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
     private static final long START_WORK_DAY_TIME_MILLIS = 25_200_000;//7h*60m*60s*1000ms
     private static final long END_WORK_DAY_TIME_MILLIS = 72_000_000;//20h*60m*60s*1000ms
     @Autowired
-    public SubjectInScheduleService(IRepository<SubjectInSchedule> repository) {
+    public SubjectInScheduleService(@Qualifier("SubjectInScheduleRepository")IRepository<SubjectInSchedule> repository) {
         LOGGER = Logger.getLogger(SubjectInSchedule.class);
         this.repository = repository;
     }

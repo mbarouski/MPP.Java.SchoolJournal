@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import school.journal.entity.Token;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
+import school.journal.repository.impl.TokenRepository;
+import school.journal.repository.impl.UserRepository;
 import school.journal.service.CRUDService;
 import school.journal.service.IUserService;
 import school.journal.service.exception.ServiceException;
@@ -21,7 +23,7 @@ import static school.journal.utils.ValidateServiceUtils.*;
 public class UserService extends CRUDService<User> implements IUserService {
 
     @Autowired
-    public UserService(IRepository<User> repository, IRepository<Token> tokenRepository) {
+    public UserService(@Qualifier("UserRepository") IRepository<User> repository, @Qualifier("TokenRepository") IRepository<Token> tokenRepository) {
         LOGGER = Logger.getLogger(UserService.class);
         this.repository = repository;
     }

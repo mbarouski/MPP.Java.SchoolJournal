@@ -10,7 +10,8 @@ import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
-@Component
+
+@Component("TeacherRepository")
 public class TeacherRepository extends RepositoryAbstractClass<Teacher> {
     @Override
     public Teacher create(Teacher teacher, Session session) throws RepositoryException {

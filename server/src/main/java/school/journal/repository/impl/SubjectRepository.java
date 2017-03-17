@@ -11,7 +11,7 @@ import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
-@Component
+@Component("SubjectRepository")
 public class SubjectRepository extends RepositoryAbstractClass<Subject> {
     @Override
     public Subject create(Subject subject, Session session) throws RepositoryException {

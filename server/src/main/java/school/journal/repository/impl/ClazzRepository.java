@@ -3,6 +3,7 @@ package school.journal.repository.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Clazz;
 import school.journal.repository.RepositoryAbstractClass;
@@ -10,7 +11,8 @@ import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
-@Component
+
+@Component("ClazzRepository")
 public class ClazzRepository extends RepositoryAbstractClass<Clazz> {
 
     @Override

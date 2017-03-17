@@ -122,9 +122,9 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(value = "/{pupilId}", method = GET)
+    @RequestMapping(value = "/{pupilId}", method = GET,params = "classId")
     @ResponseBody
-    public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @PathVariable("pupilId") int classId)
+    public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
         ResponseEntity resultResponse;
         try {
@@ -143,7 +143,7 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = PUT)
+    @RequestMapping(method = PUT,params = "pupilId,classId")
     @ResponseBody
     public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId, @RequestParam(value = "classId") Integer classId)
             throws ControllerException {

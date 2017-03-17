@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @RequestMapping(value = "/api/marks")
@@ -29,7 +31,7 @@ public class MarkAPIController {
     @Qualifier("MarkService")
     private IMarkService markService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = GET)
     @ResponseBody
     public ResponseEntity get(HttpServletRequest request)
             throws ControllerException {
@@ -47,7 +49,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = POST)
     @ResponseBody
     public ResponseEntity create(HttpServletRequest request, @RequestBody Mark mark)
             throws ControllerException {
@@ -65,7 +67,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = PUT)
     @ResponseBody
     public ResponseEntity update(HttpServletRequest request, @RequestBody Mark mark)
             throws ControllerException {
@@ -83,7 +85,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(value = "/{markId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{markId}", method = DELETE)
     @ResponseBody
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("markId") int markId)
             throws ControllerException {
@@ -102,7 +104,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(value = "/{markId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{markId}", method = GET)
     @ResponseBody
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("markId") int markId)
             throws ControllerException {
@@ -120,7 +122,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = GET,params = "subjectId,classId")
     @ResponseBody
     public ResponseEntity getMarksForSubjectInClass(HttpServletRequest request, @RequestParam(value = "subjectId") int subjectId, @RequestParam(value = "classId") int classId)
             throws ControllerException {
@@ -139,7 +141,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = GET,params = "classId")
     @ResponseBody
     public ResponseEntity getMarksForTermOrder(HttpServletRequest request, @RequestParam(value = "classId") int classId)
             throws ControllerException {
@@ -161,7 +163,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = GET,params = "pupilId")
     @ResponseBody
     public ResponseEntity getMarksForPupil(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId)
             throws ControllerException {
