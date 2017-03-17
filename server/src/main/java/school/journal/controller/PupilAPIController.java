@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @SuppressWarnings("unchecked")
 @Controller
@@ -49,8 +48,7 @@ public class PupilAPIController {
 
     @RequestMapping(method = POST)
     @ResponseBody
-    public ResponseEntity create(HttpServletRequest request,
-                                 @RequestBody Pupil pupil)
+    public ResponseEntity create(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
         ResponseEntity resultResponse;
         try {
@@ -68,8 +66,7 @@ public class PupilAPIController {
 
     @RequestMapping(method = PUT)
     @ResponseBody
-    public ResponseEntity update(HttpServletRequest request,
-                                 @RequestBody Pupil pupil)
+    public ResponseEntity update(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
         ResponseEntity resultResponse;
         try {
@@ -86,10 +83,9 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(value = "/{classId}", method = DELETE)
+    @RequestMapping(value = "/{pupilId}", method = DELETE)
     @ResponseBody
-    public ResponseEntity delete(HttpServletRequest request,
-                                 @PathVariable("classId") int pupilId)
+    public ResponseEntity delete(HttpServletRequest request, @PathVariable("pupilId") int pupilId)
             throws ControllerException {
         ResponseEntity resultResponse;
         try {
@@ -106,10 +102,9 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(value = "/{classId}", method = GET)
+    @RequestMapping(value = "/{pupilId}", method = GET)
     @ResponseBody
-    public ResponseEntity getPupilInfo(HttpServletRequest request,
-                                       @PathVariable("classId") int pupilId)
+    public ResponseEntity getPupilInfo(HttpServletRequest request, @PathVariable("pupilId") int pupilId)
             throws ControllerException {
         ResponseEntity resultResponse;
         try {
@@ -127,10 +122,9 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(value = "/{classId}", method = GET)
+    @RequestMapping(value = "/{pupilId}", method = GET)
     @ResponseBody
-    public ResponseEntity getListOfPupils(HttpServletRequest request,
-                                          @PathVariable("classId") int classId)
+    public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @PathVariable("pupilId") int classId)
             throws ControllerException {
         ResponseEntity resultResponse;
         try {
@@ -151,10 +145,7 @@ public class PupilAPIController {
 
     @RequestMapping(method = PUT)
     @ResponseBody
-    public ResponseEntity movePupilToAnotherClass(
-            HttpServletRequest request,
-            @RequestParam(value = "pupilId") int pupilId,
-            @RequestParam(value = "classId") Integer classId)
+    public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId, @RequestParam(value = "classId") Integer classId)
             throws ControllerException {
         ResponseEntity resultResponse;
         try {

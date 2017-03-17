@@ -15,6 +15,8 @@ import school.journal.service.impl.ClassService;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Controller
 @RequestMapping(value = "/api/classes")
 public class ClassAPIController {
@@ -32,13 +34,13 @@ public class ClassAPIController {
         ResponseEntity resultResponse = null;
         try {
             LOGGER.info("Get Class list controller method");
-            resultResponse = new ResponseEntity(classService.read(), HttpStatus.OK);
+            resultResponse = new ResponseEntity(classService.read(), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't get Class list"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't get Class list"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -50,13 +52,13 @@ public class ClassAPIController {
         ResponseEntity resultResponse = null;
         try {
             LOGGER.info("Create Class controller method");
-            resultResponse = new ResponseEntity(classService.create(clazz), HttpStatus.CREATED);
+            resultResponse = new ResponseEntity(classService.create(clazz), CREATED);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't create class"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't create class"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -68,13 +70,13 @@ public class ClassAPIController {
         ResponseEntity resultResponse = null;
         try {
             LOGGER.info("Update Class controller method");
-            resultResponse = new ResponseEntity(classService.update(clazz), HttpStatus.OK);
+            resultResponse = new ResponseEntity(classService.update(clazz), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't update class"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't update class"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -87,13 +89,13 @@ public class ClassAPIController {
         try {
             LOGGER.info("Delete Class controller method");
             classService.delete(classId);
-            resultResponse = new ResponseEntity(HttpStatus.OK);
+            resultResponse = new ResponseEntity(OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't delete class"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't delete class"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }
@@ -105,13 +107,13 @@ public class ClassAPIController {
         ResponseEntity resultResponse = null;
         try {
             LOGGER.info("Get Class entity Controller method");
-            resultResponse = new ResponseEntity(classService.getOne(classId), HttpStatus.OK);
+            resultResponse = new ResponseEntity(classService.getOne(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in class getting"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in class getting"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), INTERNAL_SERVER_ERROR);
         }
         return resultResponse;
     }

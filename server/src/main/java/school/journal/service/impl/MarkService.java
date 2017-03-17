@@ -1,18 +1,15 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Mark;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
-import school.journal.repository.specification.mark.MarkSpecificationByPupilIdAndDates;
+import school.journal.repository.specification.mark.MarkSpecificationByPupilId;
 import school.journal.repository.specification.mark.MarkSpecificationByMarkId;
-import school.journal.repository.specification.mark.MarkSpecificationBySubjectId;
 import school.journal.service.IMarkService;
 import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
@@ -23,8 +20,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static javax.sql.rowset.JoinRowSet.INNER_JOIN;
-import static school.journal.utils.ValidateServiceUtils.validateDatePeriod;
 import static school.journal.utils.ValidateServiceUtils.validateId;
 
 @Component("MarkService")
@@ -151,10 +146,9 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     }
 
     @Override
-    public List<Mark> getMarksForTermOrder(int classId, Date startTerm, Date endTerm) throws ServiceException {
+    public List<Mark> getMarksForTermOrder(int classId) throws ServiceException {
         try {
             validateId(classId, "Class");
-            validateDatePeriod(startTerm, endTerm);
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -175,8 +169,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
                         "FROM  mark as m " +
                         "JOIN pupil as p " +
                         "ON m.pupil_id = p.pupil_id " +
-                        "WHERE p.class_id =" + classId + " " +
-                        "AND m.date BETWEEN " + startTerm + " AND " + endTerm + ";").list();
+                        "WHERE p.class_id =" + classId + " ;").list();
         /*try {
             markList = (List<Mark>) criteria.list();
             transaction.commit();
@@ -190,10 +183,9 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     }
 
     @Override
-    public List<Mark> getMarksForPupil(int pupilId, Date startTerm, Date endTerm) throws ServiceException {
+    public List<Mark> getMarksForPupil(int pupilId) throws ServiceException {
         try {
             validateId(pupilId, "Pupil");
-            validateDatePeriod(startTerm, endTerm);
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -202,9 +194,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Transaction transaction = session.beginTransaction();
         List<Mark> markList;
         try {
-            markList = repository.query(
-                    new MarkSpecificationByPupilIdAndDates(
-                            pupilId, startTerm, endTerm), session);
+            markList = repository.query(new MarkSpecificationByPupilId(pupilId), session);
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();

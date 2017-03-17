@@ -1,6 +1,6 @@
 package school.journal.utils;
 
-import school.journal.service.exception.ServiceException;
+
 import school.journal.utils.exception.ValidationException;
 
 import java.util.Date;
@@ -46,8 +46,7 @@ public class ValidateServiceUtils {
         }
     }
 
-    public static void validateDatePeriod
-            (Date startDate, Date endDate) throws ValidationException{
+    public static void validateDatePeriod(Date startDate, Date endDate) throws ValidationException{
         if (startDate.after(endDate)) {
             throw new ValidationException("Invalid time period");
         }
