@@ -1,17 +1,23 @@
 package school.journal.entity;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.sql.Date;
 
+@Entity
 public class Mark {
     private int markId;
     private int pupilId;
     private Integer value;
-    private Enum type;
+    private short type;
     private Date date;
     private int subjectId;
     private Integer teacherId;
 
-
+    @Id
+    @Column(name = "mark_id")
     public int getMarkId() {
         return markId;
     }
@@ -20,6 +26,8 @@ public class Mark {
         this.markId = markId;
     }
 
+    @Basic
+    @Column(name = "pupil_id")
     public int getPupilId() {
         return pupilId;
     }
@@ -28,6 +36,8 @@ public class Mark {
         this.pupilId = pupilId;
     }
 
+    @Basic
+    @Column(name = "value")
     public Integer getValue() {
         return value;
     }
@@ -36,14 +46,18 @@ public class Mark {
         this.value = value;
     }
 
-    public Enum getType() {
+    @Basic
+    @Column(name = "type")
+    public short getType() {
         return type;
     }
 
-    public void setType(Enum type) {
+    public void setType(short type) {
         this.type = type;
     }
 
+    @Basic
+    @Column(name = "date")
     public Date getDate() {
         return date;
     }
@@ -52,6 +66,8 @@ public class Mark {
         this.date = date;
     }
 
+    @Basic
+    @Column(name = "subject_id")
     public int getSubjectId() {
         return subjectId;
     }
@@ -60,6 +76,8 @@ public class Mark {
         this.subjectId = subjectId;
     }
 
+    @Basic
+    @Column(name = "teacher_id")
     public Integer getTeacherId() {
         return teacherId;
     }
@@ -77,9 +95,9 @@ public class Mark {
 
         if (markId != mark.markId) return false;
         if (pupilId != mark.pupilId) return false;
+        if (type != mark.type) return false;
         if (subjectId != mark.subjectId) return false;
         if (value != null ? !value.equals(mark.value) : mark.value != null) return false;
-        if (type != null ? !type.equals(mark.type) : mark.type != null) return false;
         if (date != null ? !date.equals(mark.date) : mark.date != null) return false;
         if (teacherId != null ? !teacherId.equals(mark.teacherId) : mark.teacherId != null) return false;
 
@@ -91,11 +109,10 @@ public class Mark {
         int result = markId;
         result = 31 * result + pupilId;
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (int) type;
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + subjectId;
         result = 31 * result + (teacherId != null ? teacherId.hashCode() : 0);
         return result;
     }
-
 }

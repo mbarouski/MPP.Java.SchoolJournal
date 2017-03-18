@@ -1,15 +1,21 @@
 package school.journal.entity;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class User {
     private int userId;
     private int roleId;
     private String username;
     private String passHash;
-    private String password;
     private byte locked;
     private String email;
-    private Role role;
 
+    @Id
+    @Column(name = "user_id")
     public int getUserId() {
         return userId;
     }
@@ -18,6 +24,8 @@ public class User {
         this.userId = userId;
     }
 
+    @Basic
+    @Column(name = "role_id")
     public int getRoleId() {
         return roleId;
     }
@@ -26,6 +34,8 @@ public class User {
         this.roleId = roleId;
     }
 
+    @Basic
+    @Column(name = "username")
     public String getUsername() {
         return username;
     }
@@ -34,6 +44,8 @@ public class User {
         this.username = username;
     }
 
+    @Basic
+    @Column(name = "pass_hash")
     public String getPassHash() {
         return passHash;
     }
@@ -42,14 +54,8 @@ public class User {
         this.passHash = passHash;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
+    @Basic
+    @Column(name = "locked")
     public byte getLocked() {
         return locked;
     }
@@ -58,20 +64,14 @@ public class User {
         this.locked = locked;
     }
 
+    @Basic
+    @Column(name = "email")
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     @Override

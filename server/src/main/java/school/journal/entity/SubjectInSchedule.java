@@ -1,16 +1,21 @@
 package school.journal.entity;
 
+import javax.persistence.*;
 import java.sql.Time;
 
+@Entity
+@Table(name = "subject_in_schedule", schema = "school_journal_db", catalog = "")
 public class SubjectInSchedule {
     private int subectInScheduleId;
     private int subjectId;
     private Integer teacherId;
-    private Enum dayOfWeek;
+    private byte dayOfWeek;
     private Time beginTime;
     private String place;
     private int classId;
 
+    @Id
+    @Column(name = "subect_in_schedule_id")
     public int getSubectInScheduleId() {
         return subectInScheduleId;
     }
@@ -19,6 +24,8 @@ public class SubjectInSchedule {
         this.subectInScheduleId = subectInScheduleId;
     }
 
+    @Basic
+    @Column(name = "subject_id")
     public int getSubjectId() {
         return subjectId;
     }
@@ -27,6 +34,8 @@ public class SubjectInSchedule {
         this.subjectId = subjectId;
     }
 
+    @Basic
+    @Column(name = "teacher_id")
     public Integer getTeacherId() {
         return teacherId;
     }
@@ -35,14 +44,18 @@ public class SubjectInSchedule {
         this.teacherId = teacherId;
     }
 
-    public Enum getDayOfWeek() {
+    @Basic
+    @Column(name = "day_of_week")
+    public byte getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(Enum dayOfWeek) {
+    public void setDayOfWeek(byte dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 
+    @Basic
+    @Column(name = "begin_time")
     public Time getBeginTime() {
         return beginTime;
     }
@@ -51,6 +64,8 @@ public class SubjectInSchedule {
         this.beginTime = beginTime;
     }
 
+    @Basic
+    @Column(name = "place")
     public String getPlace() {
         return place;
     }
@@ -59,6 +74,8 @@ public class SubjectInSchedule {
         this.place = place;
     }
 
+    @Basic
+    @Column(name = "class_id")
     public int getClassId() {
         return classId;
     }
@@ -76,9 +93,9 @@ public class SubjectInSchedule {
 
         if (subectInScheduleId != that.subectInScheduleId) return false;
         if (subjectId != that.subjectId) return false;
+        if (dayOfWeek != that.dayOfWeek) return false;
         if (classId != that.classId) return false;
         if (teacherId != null ? !teacherId.equals(that.teacherId) : that.teacherId != null) return false;
-        if (dayOfWeek != null ? !dayOfWeek.equals(that.dayOfWeek) : that.dayOfWeek != null) return false;
         if (beginTime != null ? !beginTime.equals(that.beginTime) : that.beginTime != null) return false;
         if (place != null ? !place.equals(that.place) : that.place != null) return false;
 
@@ -90,7 +107,7 @@ public class SubjectInSchedule {
         int result = subectInScheduleId;
         result = 31 * result + subjectId;
         result = 31 * result + (teacherId != null ? teacherId.hashCode() : 0);
-        result = 31 * result + (dayOfWeek != null ? dayOfWeek.hashCode() : 0);
+        result = 31 * result + (int) dayOfWeek;
         result = 31 * result + (beginTime != null ? beginTime.hashCode() : 0);
         result = 31 * result + (place != null ? place.hashCode() : 0);
         result = 31 * result + classId;

@@ -12,6 +12,7 @@ import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.validateId;
@@ -81,5 +82,19 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
     public List<SubjectInSchedule> read() throws ServiceException {
         return super.read();
     }
-    
+
+    public List<SubjectInSchedule> getPupilSchedule(int id) throws ServiceException{
+        try {
+            validateId(id,"Pupil");
+        }catch (ValidationException exc){
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+        ArrayList<SubjectInSchedule> schedule = new ArrayList<>();
+
+        return null;
+    }
+
+    //SET('simple', 'apsent', 'control', 'self', 'term', 'year')
+
 }

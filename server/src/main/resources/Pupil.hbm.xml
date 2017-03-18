@@ -5,26 +5,12 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Pupil" table="pupil" schema="school_journal_db">
-        <id name="pupilId">
-            <column name="pupil_id" sql-type="int(10) unsigned"/>
-        </id>
-        <property name="classId">
-            <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
-        </property>
-        <property name="firstName">
-            <column name="first_name" sql-type="varchar(100)" length="100"/>
-        </property>
-        <property name="pathronymic">
-            <column name="pathronymic" sql-type="varchar(100)" length="100"/>
-        </property>
-        <property name="lastName">
-            <column name="last_name" sql-type="varchar(100)" length="100"/>
-        </property>
-        <property name="phoneNumber">
-            <column name="phone_number" sql-type="varchar(45)" length="45" not-null="true"/>
-        </property>
-        <property name="characteristic">
-            <column name="characteristic" sql-type="text" not-null="true"/>
-        </property>
+        <id name="pupilId" column="pupil_id"/>
+        <property name="classId" column="class_id"/>
+        <property name="firstName" column="first_name"/>
+        <property name="pathronymic" column="pathronymic"/>
+        <property name="lastName" column="last_name"/>
+        <property name="phoneNumber" column="phone_number"/>
+        <property name="characteristic" column="characteristic"/>
     </class>
 </hibernate-mapping>

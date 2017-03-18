@@ -5,14 +5,8 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Token" table="token" schema="school_journal_db">
-        <id name="masterId">
-            <column name="master_id" sql-type="int(10) unsigned"/>
-        </id>
-        <property name="value">
-            <column name="value" sql-type="text" not-null="true"/>
-        </property>
-        <property name="active">
-            <column name="active" sql-type="tinyint(1)"/>
-        </property>
+        <id name="masterId" column="master_id"/>
+        <property name="value" column="value"/>
+        <property name="active" column="active"/>
     </class>
 </hibernate-mapping>
