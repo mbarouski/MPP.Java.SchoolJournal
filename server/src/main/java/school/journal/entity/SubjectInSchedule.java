@@ -9,14 +9,10 @@ public class SubjectInSchedule {
     private int subectInScheduleId;
     private int subjectId;
     private Integer teacherId;
-    private Enum dayOfWeek;
+    private byte dayOfWeek;
     private Time beginTime;
     private String place;
     private int classId;
-
-    public void setDayOfWeek(byte dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-    }
 
     @Id
     @Column(name = "subect_in_schedule_id")
@@ -50,11 +46,11 @@ public class SubjectInSchedule {
 
     @Basic
     @Column(name = "day_of_week")
-    public Enum getDayOfWeek() {
+    public byte getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(Enum dayOfWeek) {
+    public void setDayOfWeek(byte dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 
@@ -97,9 +93,9 @@ public class SubjectInSchedule {
 
         if (subectInScheduleId != that.subectInScheduleId) return false;
         if (subjectId != that.subjectId) return false;
+        if (dayOfWeek != that.dayOfWeek) return false;
         if (classId != that.classId) return false;
         if (teacherId != null ? !teacherId.equals(that.teacherId) : that.teacherId != null) return false;
-        if (dayOfWeek != null ? !dayOfWeek.equals(that.dayOfWeek) : that.dayOfWeek != null) return false;
         if (beginTime != null ? !beginTime.equals(that.beginTime) : that.beginTime != null) return false;
         if (place != null ? !place.equals(that.place) : that.place != null) return false;
 
@@ -111,7 +107,7 @@ public class SubjectInSchedule {
         int result = subectInScheduleId;
         result = 31 * result + subjectId;
         result = 31 * result + (teacherId != null ? teacherId.hashCode() : 0);
-        result = 31 * result + (dayOfWeek != null ? dayOfWeek.hashCode() : 0);
+        result = 31 * result + (int) dayOfWeek;
         result = 31 * result + (beginTime != null ? beginTime.hashCode() : 0);
         result = 31 * result + (place != null ? place.hashCode() : 0);
         result = 31 * result + classId;

@@ -5,26 +5,12 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Mark" table="mark" schema="school_journal_db">
-        <id name="markId">
-            <column name="mark_id" sql-type="int(10) unsigned"/>
-        </id>
-        <property name="pupilId">
-            <column name="pupil_id" sql-type="int(10) unsigned"/>
-        </property>
-        <property name="value">
-            <column name="value" sql-type="int(11)" not-null="true"/>
-        </property>
-        <property name="type">
-            <column name="type" sql-type="set('simple', 'apsent', 'control', 'self', 'term', 'year')"/>
-        </property>
-        <property name="date">
-            <column name="date" sql-type="date"/>
-        </property>
-        <property name="subjectId">
-            <column name="subject_id" sql-type="int(10) unsigned"/>
-        </property>
-        <property name="teacherId">
-            <column name="teacher_id" sql-type="int(10) unsigned" not-null="true"/>
-        </property>
+        <id name="markId" column="mark_id"/>
+        <property name="pupilId" column="pupil_id"/>
+        <property name="value" column="value"/>
+        <property name="type" column="type"/>
+        <property name="date" column="date"/>
+        <property name="subjectId" column="subject_id"/>
+        <property name="teacherId" column="teacher_id"/>
     </class>
 </hibernate-mapping>

@@ -5,14 +5,8 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Role" table="role" schema="school_journal_db">
-        <id name="roleId">
-            <column name="role_id" sql-type="int(10) unsigned"/>
-        </id>
-        <property name="name">
-            <column name="name" sql-type="varchar(45)" length="45"/>
-        </property>
-        <property name="level">
-            <column name="level" sql-type="int(11)"/>
-        </property>
+        <id name="roleId" column="role_id"/>
+        <property name="name" column="name"/>
+        <property name="level" column="level"/>
     </class>
 </hibernate-mapping>

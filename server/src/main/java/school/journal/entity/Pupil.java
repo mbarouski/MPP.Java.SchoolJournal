@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 @Entity
 public class Pupil {
-    private Integer pupilId;
+    private int pupilId;
     private Integer classId;
     private String firstName;
     private String pathronymic;
@@ -15,17 +15,13 @@ public class Pupil {
     private String phoneNumber;
     private String characteristic;
 
-    public void setPupilId(int pupilId) {
-        this.pupilId = pupilId;
-    }
-
     @Id
     @Column(name = "pupil_id")
-    public Integer getPupilId() {
+    public int getPupilId() {
         return pupilId;
     }
 
-    public void setPupilId(Integer pupilId) {
+    public void setPupilId(int pupilId) {
         this.pupilId = pupilId;
     }
 
@@ -96,7 +92,7 @@ public class Pupil {
 
         Pupil pupil = (Pupil) o;
 
-        if (pupilId != null ? !pupilId.equals(pupil.pupilId) : pupil.pupilId != null) return false;
+        if (pupilId != pupil.pupilId) return false;
         if (classId != null ? !classId.equals(pupil.classId) : pupil.classId != null) return false;
         if (firstName != null ? !firstName.equals(pupil.firstName) : pupil.firstName != null) return false;
         if (pathronymic != null ? !pathronymic.equals(pupil.pathronymic) : pupil.pathronymic != null) return false;
@@ -110,7 +106,7 @@ public class Pupil {
 
     @Override
     public int hashCode() {
-        int result = pupilId != null ? pupilId.hashCode() : 0;
+        int result = pupilId;
         result = 31 * result + (classId != null ? classId.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (pathronymic != null ? pathronymic.hashCode() : 0);

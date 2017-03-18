@@ -11,14 +11,10 @@ public class Mark {
     private int markId;
     private int pupilId;
     private Integer value;
-    private Enum type;
+    private short type;
     private Date date;
     private int subjectId;
     private Integer teacherId;
-
-    public void setType(short type) {
-        this.type = type;
-    }
 
     @Id
     @Column(name = "mark_id")
@@ -52,11 +48,11 @@ public class Mark {
 
     @Basic
     @Column(name = "type")
-    public Enum getType() {
+    public short getType() {
         return type;
     }
 
-    public void setType(Enum type) {
+    public void setType(short type) {
         this.type = type;
     }
 
@@ -99,9 +95,9 @@ public class Mark {
 
         if (markId != mark.markId) return false;
         if (pupilId != mark.pupilId) return false;
+        if (type != mark.type) return false;
         if (subjectId != mark.subjectId) return false;
         if (value != null ? !value.equals(mark.value) : mark.value != null) return false;
-        if (type != null ? !type.equals(mark.type) : mark.type != null) return false;
         if (date != null ? !date.equals(mark.date) : mark.date != null) return false;
         if (teacherId != null ? !teacherId.equals(mark.teacherId) : mark.teacherId != null) return false;
 
@@ -113,11 +109,10 @@ public class Mark {
         int result = markId;
         result = 31 * result + pupilId;
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (int) type;
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + subjectId;
         result = 31 * result + (teacherId != null ? teacherId.hashCode() : 0);
         return result;
     }
-
 }

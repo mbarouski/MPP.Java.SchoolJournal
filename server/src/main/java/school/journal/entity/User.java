@@ -11,10 +11,8 @@ public class User {
     private int roleId;
     private String username;
     private String passHash;
-    private String password;
     private byte locked;
     private String email;
-    private Role role;
 
     @Id
     @Column(name = "user_id")
@@ -56,14 +54,6 @@ public class User {
         this.passHash = passHash;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Basic
     @Column(name = "locked")
     public byte getLocked() {
@@ -82,14 +72,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     @Override
