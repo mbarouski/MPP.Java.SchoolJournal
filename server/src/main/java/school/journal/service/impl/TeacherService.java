@@ -75,4 +75,34 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
     public List<Teacher> read() throws ServiceException {
         return super.read();
     }
+
+    @Override
+    public List<Teacher> getListOfTeachersForClass(int classId) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public List<Teacher> getListOfAllTeachers() throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public Teacher attachTeacherToClass(int teacherId, int classId) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public Teacher detachTeacherFromClass(int teacherId) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public Teacher makeDirectorOfStudies(int teacherId) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public Teacher unmakeDirectorOfStudies(int teacherId) throws ServiceException {
+        return null;
+    }
 }
