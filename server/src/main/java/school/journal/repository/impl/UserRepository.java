@@ -41,4 +41,11 @@ public class UserRepository extends RepositoryAbstractClass<User> {
         }
         return criteria.list();
     }
+
+    @Override
+    public User get(int id, Session session) throws RepositoryException {
+        User user = (User)session.get(User.class, id);
+        if (user == null) throw new RepositoryException("User not found");
+        return user;
+    }
 }

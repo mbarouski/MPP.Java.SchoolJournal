@@ -2,7 +2,6 @@ package school.journal.repository.specification.role;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import school.journal.entity.Role;
 
 public class RoleSpecificationByRoleId extends RoleSpecification {
     private int roleId;

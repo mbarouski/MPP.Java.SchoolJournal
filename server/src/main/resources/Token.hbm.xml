@@ -5,8 +5,18 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Token" table="token" schema="school_journal_db">
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
         <id name="masterId" column="master_id"/>
         <property name="value" column="value"/>
         <property name="active" column="active"/>
+=======
+        <property name="value">
+            <column name="value" sql-type="text" not-null="true"/>
+        </property>
+        <property name="active">
+            <column name="active" sql-type="tinyint(1)"/>
+        </property>
+        <one-to-one name="user" class="school.journal.entity.User"/>
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
     </class>
 </hibernate-mapping>

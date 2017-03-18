@@ -7,8 +7,8 @@ import javax.persistence.Id;
 
 @Entity
 public class Token {
-    private int masterId;
     private String value;
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
     private byte active;
 
     @Id
@@ -20,6 +20,10 @@ public class Token {
     public void setMasterId(int masterId) {
         this.masterId = masterId;
     }
+=======
+    private Byte active;
+    private User user;
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
 
     @Basic
     @Column(name = "value")
@@ -31,13 +35,17 @@ public class Token {
         this.value = value;
     }
 
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
     @Basic
     @Column(name = "active")
     public byte getActive() {
+=======
+    public Byte getActive() {
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
         return active;
     }
 
-    public void setActive(byte active) {
+    public void setActive(Byte active) {
         this.active = active;
     }
 
@@ -48,18 +56,24 @@ public class Token {
 
         Token token = (Token) o;
 
-        if (masterId != token.masterId) return false;
-        if (active != token.active) return false;
         if (value != null ? !value.equals(token.value) : token.value != null) return false;
+        if (active != null ? !active.equals(token.active) : token.active != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = masterId;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (int) active;
+        int result = value != null ? value.hashCode() : 0;
+        result = 31 * result + (active != null ? active.hashCode() : 0);
         return result;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

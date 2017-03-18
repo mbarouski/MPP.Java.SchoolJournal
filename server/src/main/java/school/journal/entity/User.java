@@ -7,23 +7,33 @@ import javax.persistence.Id;
 
 @Entity
 public class User {
-    private int userId;
-    private int roleId;
+    private Integer userId;
     private String username;
     private String passHash;
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
     private byte locked;
     private String email;
 
     @Id
     @Column(name = "user_id")
     public int getUserId() {
+=======
+    private Byte locked;
+    private String email;
+    private Role role;
+    private String password;
+    private Integer roleId;
+
+    public Integer getUserId() {
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
     @Basic
     @Column(name = "role_id")
     public int getRoleId() {
@@ -36,6 +46,8 @@ public class User {
 
     @Basic
     @Column(name = "username")
+=======
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
     public String getUsername() {
         return username;
     }
@@ -54,13 +66,17 @@ public class User {
         this.passHash = passHash;
     }
 
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
     @Basic
     @Column(name = "locked")
     public byte getLocked() {
+=======
+    public Byte getLocked() {
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
         return locked;
     }
 
-    public void setLocked(byte locked) {
+    public void setLocked(Byte locked) {
         this.locked = locked;
     }
 
@@ -74,6 +90,25 @@ public class User {
         this.email = email;
     }
 
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
+=======
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,11 +116,10 @@ public class User {
 
         User user = (User) o;
 
-        if (userId != user.userId) return false;
-        if (roleId != user.roleId) return false;
-        if (locked != user.locked) return false;
+        if (userId != null ? !userId.equals(user.userId) : user.userId != null) return false;
         if (username != null ? !username.equals(user.username) : user.username != null) return false;
         if (passHash != null ? !passHash.equals(user.passHash) : user.passHash != null) return false;
+        if (locked != null ? !locked.equals(user.locked) : user.locked != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
 
         return true;
@@ -93,12 +127,19 @@ public class User {
 
     @Override
     public int hashCode() {
-        int result = userId;
-        result = 31 * result + roleId;
+        int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (passHash != null ? passHash.hashCode() : 0);
-        result = 31 * result + (int) locked;
+        result = 31 * result + (locked != null ? locked.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

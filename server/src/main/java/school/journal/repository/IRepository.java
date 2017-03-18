@@ -12,4 +12,5 @@ public interface IRepository<T> {
     T delete(T t, Session session) throws RepositoryException;
 
     List<T> query(HibernateSpecification specification, Session session) throws RepositoryException;
+    T get(int id, Session session) throws RepositoryException;
 }

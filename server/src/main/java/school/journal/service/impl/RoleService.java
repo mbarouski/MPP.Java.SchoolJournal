@@ -29,33 +29,6 @@ public class RoleService extends CRUDService<Role> implements IRoleService {
     }
 
     @Override
-    public Role getOne(int roleId) throws ServiceException {
-        try {
-            validateId(roleId, "Role");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        }
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Role role = null;
-        try {
-            List list = repository.query(
-                    new RoleSpecificationByRoleId(roleId), session);
-            session.getTransaction().commit();
-            if (list.size() > 0) {
-                role = (Role) list.get(0);
-            }
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-        } finally {
-            session.close();
-        }
-        return role;
-    }
-
-    @Override
     public Role create(Role obj) throws ServiceException {
         try {
             validateString(obj.getName(),"Name");

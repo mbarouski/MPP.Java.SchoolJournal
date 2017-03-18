@@ -5,6 +5,7 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Teacher" table="teacher" schema="school_journal_db">
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
         <id name="teacherId" column="teacher_id"/>
         <property name="phoneNumber" column="phone_number"/>
         <property name="classId" column="class_id"/>
@@ -12,5 +13,26 @@
         <property name="pathronymic" column="pathronymic"/>
         <property name="lastName" column="last_name"/>
         <property name="description" column="description"/>
+=======
+        <property name="phoneNumber">
+            <column name="phone_number" sql-type="varchar(45)" length="45" not-null="true"/>
+        </property>
+        <property name="classId">
+            <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
+        </property>
+        <property name="firstName">
+            <column name="first_name" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="pathronymic">
+            <column name="pathronymic" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="lastName">
+            <column name="last_name" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="description">
+            <column name="description" sql-type="text" not-null="true"/>
+        </property>
+        <one-to-one name="user" class="school.journal.entity.User"/>
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
     </class>
 </hibernate-mapping>

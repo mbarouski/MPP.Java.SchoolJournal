@@ -7,13 +7,13 @@ import javax.persistence.Id;
 
 @Entity
 public class Teacher {
-    private int teacherId;
     private String phoneNumber;
     private Integer classId;
     private String firstName;
     private String pathronymic;
     private String lastName;
     private String description;
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
 
     @Id
     @Column(name = "teacher_id")
@@ -24,6 +24,10 @@ public class Teacher {
     public void setTeacherId(int teacherId) {
         this.teacherId = teacherId;
     }
+=======
+    private User user;
+    private Integer userId;
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
 
     @Basic
     @Column(name = "phone_number")
@@ -85,6 +89,14 @@ public class Teacher {
         this.description = description;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,7 +104,6 @@ public class Teacher {
 
         Teacher teacher = (Teacher) o;
 
-        if (teacherId != teacher.teacherId) return false;
         if (phoneNumber != null ? !phoneNumber.equals(teacher.phoneNumber) : teacher.phoneNumber != null) return false;
         if (classId != null ? !classId.equals(teacher.classId) : teacher.classId != null) return false;
         if (firstName != null ? !firstName.equals(teacher.firstName) : teacher.firstName != null) return false;
@@ -105,13 +116,20 @@ public class Teacher {
 
     @Override
     public int hashCode() {
-        int result = teacherId;
-        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        int result = phoneNumber != null ? phoneNumber.hashCode() : 0;
         result = 31 * result + (classId != null ? classId.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (pathronymic != null ? pathronymic.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -2,7 +2,6 @@ package school.journal.repository.specification.token;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import school.journal.entity.Token;
 
 public class TokenSpecificationByTokenId extends TokenSpecification {
     private int tokenId;

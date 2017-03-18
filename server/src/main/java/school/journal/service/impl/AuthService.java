@@ -13,7 +13,6 @@ import school.journal.entity.Token;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
-import school.journal.repository.impl.UserRepository;
 import school.journal.repository.specification.role.RoleSpecificationByRoleId;
 import school.journal.repository.specification.token.TokenSpecificationByTokenId;
 import school.journal.repository.specification.user.UserSpecificationByUsername;
@@ -74,7 +73,7 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
                     try {
                         tokenValue = JWT.create().withSubject(username).sign(Algorithm.HMAC256(SECRET));
                         Token token = new Token();
-                        token.setMasterId(user.getUserId());
+                        token.setUser((User)session.load(User.class, user.getUserId()));
                         token.setValue(tokenValue);
                         token.setActive((byte)1);
                         updateToken(token);
@@ -106,7 +105,7 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
         session.beginTransaction();
         try {
             Token token = new Token();
-            token.setMasterId(user.getUserId());
+            token.setUser((User)session.load(User.class, user.getUserId()));
             token.setActive((byte)0);
             token.setValue("");
             tokenRepository.update(token, session);
@@ -151,7 +150,6 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
 //                        if(user.getLocked() != 0) {
 //                            throw new AuthException("User is blocked");
 //                        }
-                        user.setRole(roleRepository.query(new RoleSpecificationByRoleId(user.getRoleId()), session).get(0));
                         return user;
                     } else {
                         throw new AuthException("Logout error");

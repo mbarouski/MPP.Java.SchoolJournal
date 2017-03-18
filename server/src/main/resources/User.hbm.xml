@@ -5,11 +5,32 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.User" table="user" schema="school_journal_db">
+<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
         <id name="userId" column="user_id"/>
         <property name="roleId" column="role_id"/>
         <property name="username" column="username"/>
         <property name="passHash" column="pass_hash"/>
         <property name="locked" column="locked"/>
         <property name="email" column="email"/>
+=======
+        <id name="userId">
+            <column name="user_id" sql-type="int(10) unsigned"/>
+        </id>
+        <property name="username">
+            <column name="username" sql-type="varchar(30)" length="30"/>
+        </property>
+        <property name="passHash">
+            <column name="pass_hash" sql-type="varchar(40)" length="40"/>
+        </property>
+        <property name="locked">
+            <column name="locked" sql-type="tinyint(1)"/>
+        </property>
+        <property name="email">
+            <column name="email" sql-type="varchar(200)" length="200"/>
+        </property>
+        <many-to-one name="role" class="school.journal.entity.Role">
+            <column name="role_id"/>
+        </many-to-one>
+>>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
     </class>
 </hibernate-mapping>

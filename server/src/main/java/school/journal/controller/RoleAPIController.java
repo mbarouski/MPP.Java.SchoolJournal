@@ -11,13 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
-import school.journal.entity.Role;
 import school.journal.service.IRoleService;
 import school.journal.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/api/roles")
