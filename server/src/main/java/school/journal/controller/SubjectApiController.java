@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 @Controller
 @RequestMapping(value = "/api/subjects")
-public class SubjectApiController {
-    private Logger LOGGER = Logger.getLogger(SubjectApiController.class);
+public class SubjectAPIController {
+    private Logger LOGGER = Logger.getLogger(SubjectAPIController.class);
 
     @Autowired
     @Qualifier("SubjectService")
