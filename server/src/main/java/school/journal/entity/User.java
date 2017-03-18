@@ -1,29 +1,21 @@
 package school.journal.entity;
 
 public class User {
-    private int userId;
-    private int roleId;
+    private Integer userId;
     private String username;
     private String passHash;
-    private String password;
-    private byte locked;
+    private Byte locked;
     private String email;
     private Role role;
+    private String password;
+    private Integer roleId;
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public int getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
     }
 
     public String getUsername() {
@@ -42,19 +34,11 @@ public class User {
         this.passHash = passHash;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public byte getLocked() {
+    public Byte getLocked() {
         return locked;
     }
 
-    public void setLocked(byte locked) {
+    public void setLocked(Byte locked) {
         this.locked = locked;
     }
 
@@ -66,12 +50,20 @@ public class User {
         this.email = email;
     }
 
-    public Role getRole() {
-        return role;
+    public String getPassword() {
+        return password;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     @Override
@@ -81,11 +73,10 @@ public class User {
 
         User user = (User) o;
 
-        if (userId != user.userId) return false;
-        if (roleId != user.roleId) return false;
-        if (locked != user.locked) return false;
+        if (userId != null ? !userId.equals(user.userId) : user.userId != null) return false;
         if (username != null ? !username.equals(user.username) : user.username != null) return false;
         if (passHash != null ? !passHash.equals(user.passHash) : user.passHash != null) return false;
+        if (locked != null ? !locked.equals(user.locked) : user.locked != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
 
         return true;
@@ -93,12 +84,19 @@ public class User {
 
     @Override
     public int hashCode() {
-        int result = userId;
-        result = 31 * result + roleId;
+        int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (passHash != null ? passHash.hashCode() : 0);
-        result = 31 * result + (int) locked;
+        result = 31 * result + (locked != null ? locked.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

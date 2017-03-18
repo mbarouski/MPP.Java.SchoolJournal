@@ -3,11 +3,7 @@ package school.journal.interceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import school.journal.entity.User;
 import school.journal.service.IAuthService;
-import school.journal.service.IRoleService;
-import school.journal.service.IUserService;
-import school.journal.service.exception.AuthException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

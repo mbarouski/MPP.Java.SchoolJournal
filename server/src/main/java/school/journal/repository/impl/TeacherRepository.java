@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Teacher;
+import school.journal.entity.User;
 import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
@@ -39,5 +40,12 @@ public class TeacherRepository extends RepositoryAbstractClass<Teacher> {
             criteria.add(criterion);
         }
         return criteria.list();
+    }
+
+    @Override
+    public Teacher get(int id, Session session) throws RepositoryException {
+        Teacher teacher = (Teacher)session.get(Teacher.class, id);
+        if (teacher == null) throw new RepositoryException("Teacher not found");
+        return teacher;
     }
 }

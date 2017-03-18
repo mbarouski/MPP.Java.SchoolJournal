@@ -1,15 +1,15 @@
 package school.journal.entity;
 
 public class Role {
-    private int roleId;
+    private Integer roleId;
     private String name;
-    private int level;
+    private Integer level;
 
-    public int getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 
@@ -21,11 +21,11 @@ public class Role {
         this.name = name;
     }
 
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
@@ -36,18 +36,18 @@ public class Role {
 
         Role role = (Role) o;
 
-        if (roleId != role.roleId) return false;
-        if (level != role.level) return false;
+        if (roleId != null ? !roleId.equals(role.roleId) : role.roleId != null) return false;
         if (name != null ? !name.equals(role.name) : role.name != null) return false;
+        if (level != null ? !level.equals(role.level) : role.level != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = roleId;
+        int result = roleId != null ? roleId.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + level;
+        result = 31 * result + (level != null ? level.hashCode() : 0);
         return result;
     }
 }

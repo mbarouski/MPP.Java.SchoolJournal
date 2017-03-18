@@ -1,17 +1,9 @@
 package school.journal.entity;
 
 public class Token {
-    private int masterId;
     private String value;
-    private byte active;
-
-    public int getMasterId() {
-        return masterId;
-    }
-
-    public void setMasterId(int masterId) {
-        this.masterId = masterId;
-    }
+    private Byte active;
+    private User user;
 
     public String getValue() {
         return value;
@@ -21,11 +13,11 @@ public class Token {
         this.value = value;
     }
 
-    public byte getActive() {
+    public Byte getActive() {
         return active;
     }
 
-    public void setActive(byte active) {
+    public void setActive(Byte active) {
         this.active = active;
     }
 
@@ -36,18 +28,24 @@ public class Token {
 
         Token token = (Token) o;
 
-        if (masterId != token.masterId) return false;
-        if (active != token.active) return false;
         if (value != null ? !value.equals(token.value) : token.value != null) return false;
+        if (active != null ? !active.equals(token.active) : token.active != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = masterId;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (int) active;
+        int result = value != null ? value.hashCode() : 0;
+        result = 31 * result + (active != null ? active.hashCode() : 0);
         return result;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

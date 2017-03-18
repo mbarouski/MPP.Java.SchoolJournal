@@ -2,7 +2,6 @@ package school.journal.repository.specification.pupil;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import school.journal.entity.Pupil;
 
 public class PupilSpecificationByLastName extends PupilSpecification {
 

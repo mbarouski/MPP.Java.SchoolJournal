@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import school.journal.controller.util.ErrorObject;
-import school.journal.entity.User;
 import school.journal.entity.util.TokenInfo;
 import school.journal.entity.util.UserAuthInfo;
 import school.journal.service.IAuthService;

@@ -1,21 +1,14 @@
 package school.journal.entity;
 
 public class Teacher {
-    private int teacherId;
     private String phoneNumber;
     private Integer classId;
     private String firstName;
     private String pathronymic;
     private String lastName;
     private String description;
-
-    public int getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-    }
+    private User user;
+    private Integer userId;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -65,6 +58,14 @@ public class Teacher {
         this.description = description;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,7 +73,6 @@ public class Teacher {
 
         Teacher teacher = (Teacher) o;
 
-        if (teacherId != teacher.teacherId) return false;
         if (phoneNumber != null ? !phoneNumber.equals(teacher.phoneNumber) : teacher.phoneNumber != null) return false;
         if (classId != null ? !classId.equals(teacher.classId) : teacher.classId != null) return false;
         if (firstName != null ? !firstName.equals(teacher.firstName) : teacher.firstName != null) return false;
@@ -85,13 +85,20 @@ public class Teacher {
 
     @Override
     public int hashCode() {
-        int result = teacherId;
-        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        int result = phoneNumber != null ? phoneNumber.hashCode() : 0;
         result = 31 * result + (classId != null ? classId.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (pathronymic != null ? pathronymic.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
