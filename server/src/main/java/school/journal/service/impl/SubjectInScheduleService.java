@@ -92,6 +92,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         }
         ArrayList<SubjectInSchedule> schedule = new ArrayList<>();
 
+        return null;
     }
 
     //SET('simple', 'apsent', 'control', 'self', 'term', 'year')

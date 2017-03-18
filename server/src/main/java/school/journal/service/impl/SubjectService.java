@@ -1,12 +1,16 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Subject;
 import school.journal.repository.IRepository;
+import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.impl.SubjectRepository;
+import school.journal.repository.specification.subject.SubjectSpecificationBySubjectId;
 import school.journal.service.CRUDService;
 import school.journal.service.ISubjectService;
 import school.journal.service.exception.ServiceException;
@@ -66,5 +70,32 @@ public class SubjectService extends CRUDService<Subject> implements ISubjectServ
     @Override
     public List<Subject> read() throws ServiceException {
         return super.read();
+    }
+
+    @Override
+    public Subject getOne(int subjectId) throws ServiceException {
+        try {
+            validateId(subjectId, "Subject");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Subject subject = null;
+        try {
+            List list = repository.query(
+                    new SubjectSpecificationBySubjectId(subjectId), session);
+            session.getTransaction().commit();
+            if (list.size() > 0) {
+                subject = (Subject) list.get(0);
+            }
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+        } finally {
+            session.close();
+        }
+        return subject;
     }
 }
