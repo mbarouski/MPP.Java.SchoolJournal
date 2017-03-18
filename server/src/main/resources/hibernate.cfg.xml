@@ -20,5 +20,14 @@
         <mapping resource="User.hbm.xml"/>
         <mapping resource="Token.hbm.xml"/>
         <mapping resource="Pupil.hbm.xml"/>
+        <mapping class="school.journal.entity.Clazz"/>
+        <mapping class="school.journal.entity.Mark"/>
+        <mapping class="school.journal.entity.Pupil"/>
+        <mapping class="school.journal.entity.Role"/>
+        <mapping class="school.journal.entity.Subject"/>
+        <mapping class="school.journal.entity.SubjectInSchedule"/>
+        <mapping class="school.journal.entity.Teacher"/>
+        <mapping class="school.journal.entity.Token"/>
+        <mapping class="school.journal.entity.User"/>
     </session-factory>
 </hibernate-configuration>

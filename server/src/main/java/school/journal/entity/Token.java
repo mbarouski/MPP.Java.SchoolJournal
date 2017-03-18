@@ -1,10 +1,18 @@
 package school.journal.entity;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Token {
     private int masterId;
     private String value;
     private byte active;
 
+    @Id
+    @Column(name = "master_id")
     public int getMasterId() {
         return masterId;
     }
@@ -13,6 +21,8 @@ public class Token {
         this.masterId = masterId;
     }
 
+    @Basic
+    @Column(name = "value")
     public String getValue() {
         return value;
     }
@@ -21,6 +31,8 @@ public class Token {
         this.value = value;
     }
 
+    @Basic
+    @Column(name = "active")
     public byte getActive() {
         return active;
     }

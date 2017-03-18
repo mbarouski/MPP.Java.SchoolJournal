@@ -1,10 +1,16 @@
 package school.journal.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "class", schema = "school_journal_db", catalog = "")
 public class Clazz {
     private int classId;
     private int number;
     private String letterMark;
 
+    @Id
+    @Column(name = "class_id")
     public int getClassId() {
         return classId;
     }
@@ -13,6 +19,8 @@ public class Clazz {
         this.classId = classId;
     }
 
+    @Basic
+    @Column(name = "number")
     public int getNumber() {
         return number;
     }
@@ -21,6 +29,8 @@ public class Clazz {
         this.number = number;
     }
 
+    @Basic
+    @Column(name = "letter_mark")
     public String getLetterMark() {
         return letterMark;
     }

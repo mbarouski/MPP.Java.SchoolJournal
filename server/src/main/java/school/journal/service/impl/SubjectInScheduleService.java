@@ -94,4 +94,6 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
 
     }
 
+    //SET('simple', 'apsent', 'control', 'self', 'term', 'year')
+
 }

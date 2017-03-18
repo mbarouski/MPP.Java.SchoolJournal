@@ -1,7 +1,10 @@
 package school.journal.entity;
 
+import javax.persistence.*;
 import java.sql.Time;
 
+@Entity
+@Table(name = "subject_in_schedule", schema = "school_journal_db", catalog = "")
 public class SubjectInSchedule {
     private int subectInScheduleId;
     private int subjectId;
@@ -11,6 +14,12 @@ public class SubjectInSchedule {
     private String place;
     private int classId;
 
+    public void setDayOfWeek(byte dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    @Id
+    @Column(name = "subect_in_schedule_id")
     public int getSubectInScheduleId() {
         return subectInScheduleId;
     }
@@ -19,6 +28,8 @@ public class SubjectInSchedule {
         this.subectInScheduleId = subectInScheduleId;
     }
 
+    @Basic
+    @Column(name = "subject_id")
     public int getSubjectId() {
         return subjectId;
     }
@@ -27,6 +38,8 @@ public class SubjectInSchedule {
         this.subjectId = subjectId;
     }
 
+    @Basic
+    @Column(name = "teacher_id")
     public Integer getTeacherId() {
         return teacherId;
     }
@@ -35,6 +48,8 @@ public class SubjectInSchedule {
         this.teacherId = teacherId;
     }
 
+    @Basic
+    @Column(name = "day_of_week")
     public Enum getDayOfWeek() {
         return dayOfWeek;
     }
@@ -43,6 +58,8 @@ public class SubjectInSchedule {
         this.dayOfWeek = dayOfWeek;
     }
 
+    @Basic
+    @Column(name = "begin_time")
     public Time getBeginTime() {
         return beginTime;
     }
@@ -51,6 +68,8 @@ public class SubjectInSchedule {
         this.beginTime = beginTime;
     }
 
+    @Basic
+    @Column(name = "place")
     public String getPlace() {
         return place;
     }
@@ -59,6 +78,8 @@ public class SubjectInSchedule {
         this.place = place;
     }
 
+    @Basic
+    @Column(name = "class_id")
     public int getClassId() {
         return classId;
     }

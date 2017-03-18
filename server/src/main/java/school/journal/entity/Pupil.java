@@ -1,5 +1,11 @@
 package school.journal.entity;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Pupil {
     private Integer pupilId;
     private Integer classId;
@@ -9,6 +15,12 @@ public class Pupil {
     private String phoneNumber;
     private String characteristic;
 
+    public void setPupilId(int pupilId) {
+        this.pupilId = pupilId;
+    }
+
+    @Id
+    @Column(name = "pupil_id")
     public Integer getPupilId() {
         return pupilId;
     }
@@ -17,6 +29,8 @@ public class Pupil {
         this.pupilId = pupilId;
     }
 
+    @Basic
+    @Column(name = "class_id")
     public Integer getClassId() {
         return classId;
     }
@@ -25,6 +39,8 @@ public class Pupil {
         this.classId = classId;
     }
 
+    @Basic
+    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -33,6 +49,8 @@ public class Pupil {
         this.firstName = firstName;
     }
 
+    @Basic
+    @Column(name = "pathronymic")
     public String getPathronymic() {
         return pathronymic;
     }
@@ -41,6 +59,8 @@ public class Pupil {
         this.pathronymic = pathronymic;
     }
 
+    @Basic
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -49,6 +69,8 @@ public class Pupil {
         this.lastName = lastName;
     }
 
+    @Basic
+    @Column(name = "phone_number")
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -57,6 +79,8 @@ public class Pupil {
         this.phoneNumber = phoneNumber;
     }
 
+    @Basic
+    @Column(name = "characteristic")
     public String getCharacteristic() {
         return characteristic;
     }

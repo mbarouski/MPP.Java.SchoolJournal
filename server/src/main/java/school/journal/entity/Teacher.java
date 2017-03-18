@@ -1,5 +1,11 @@
 package school.journal.entity;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Teacher {
     private int teacherId;
     private String phoneNumber;
@@ -9,6 +15,8 @@ public class Teacher {
     private String lastName;
     private String description;
 
+    @Id
+    @Column(name = "teacher_id")
     public int getTeacherId() {
         return teacherId;
     }
@@ -17,6 +25,8 @@ public class Teacher {
         this.teacherId = teacherId;
     }
 
+    @Basic
+    @Column(name = "phone_number")
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -25,6 +35,8 @@ public class Teacher {
         this.phoneNumber = phoneNumber;
     }
 
+    @Basic
+    @Column(name = "class_id")
     public Integer getClassId() {
         return classId;
     }
@@ -33,6 +45,8 @@ public class Teacher {
         this.classId = classId;
     }
 
+    @Basic
+    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -41,6 +55,8 @@ public class Teacher {
         this.firstName = firstName;
     }
 
+    @Basic
+    @Column(name = "pathronymic")
     public String getPathronymic() {
         return pathronymic;
     }
@@ -49,6 +65,8 @@ public class Teacher {
         this.pathronymic = pathronymic;
     }
 
+    @Basic
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -57,6 +75,8 @@ public class Teacher {
         this.lastName = lastName;
     }
 
+    @Basic
+    @Column(name = "description")
     public String getDescription() {
         return description;
     }

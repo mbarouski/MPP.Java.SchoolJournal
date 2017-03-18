@@ -1,7 +1,12 @@
 package school.journal.entity;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.sql.Date;
 
+@Entity
 public class Mark {
     private int markId;
     private int pupilId;
@@ -11,7 +16,12 @@ public class Mark {
     private int subjectId;
     private Integer teacherId;
 
+    public void setType(short type) {
+        this.type = type;
+    }
 
+    @Id
+    @Column(name = "mark_id")
     public int getMarkId() {
         return markId;
     }
@@ -20,6 +30,8 @@ public class Mark {
         this.markId = markId;
     }
 
+    @Basic
+    @Column(name = "pupil_id")
     public int getPupilId() {
         return pupilId;
     }
@@ -28,6 +40,8 @@ public class Mark {
         this.pupilId = pupilId;
     }
 
+    @Basic
+    @Column(name = "value")
     public Integer getValue() {
         return value;
     }
@@ -36,6 +50,8 @@ public class Mark {
         this.value = value;
     }
 
+    @Basic
+    @Column(name = "type")
     public Enum getType() {
         return type;
     }
@@ -44,6 +60,8 @@ public class Mark {
         this.type = type;
     }
 
+    @Basic
+    @Column(name = "date")
     public Date getDate() {
         return date;
     }
@@ -52,6 +70,8 @@ public class Mark {
         this.date = date;
     }
 
+    @Basic
+    @Column(name = "subject_id")
     public int getSubjectId() {
         return subjectId;
     }
@@ -60,6 +80,8 @@ public class Mark {
         this.subjectId = subjectId;
     }
 
+    @Basic
+    @Column(name = "teacher_id")
     public Integer getTeacherId() {
         return teacherId;
     }

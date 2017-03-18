@@ -1,10 +1,18 @@
 package school.journal.entity;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Role {
     private int roleId;
     private String name;
     private int level;
 
+    @Id
+    @Column(name = "role_id")
     public int getRoleId() {
         return roleId;
     }
@@ -13,6 +21,8 @@ public class Role {
         this.roleId = roleId;
     }
 
+    @Basic
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -21,6 +31,8 @@ public class Role {
         this.name = name;
     }
 
+    @Basic
+    @Column(name = "level")
     public int getLevel() {
         return level;
     }
