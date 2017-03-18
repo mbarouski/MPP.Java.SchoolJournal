@@ -1,14 +1,18 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Token;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
+import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.impl.TokenRepository;
 import school.journal.repository.impl.UserRepository;
+import school.journal.repository.specification.user.UserSpecificationByUserId;
 import school.journal.service.CRUDService;
 import school.journal.service.IUserService;
 import school.journal.service.exception.ServiceException;
@@ -61,16 +65,29 @@ public class UserService extends CRUDService<User> implements IUserService {
     }
 
     @Override
-    public User update(User user) throws ServiceException {
+    public User update(User newUser) throws ServiceException {
+        User user;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            validateString(user.getUsername(), "Username");
-            validateEmail(user.getEmail());
-        } catch (ValidationException exc) {
+            List<User> users = repository.query(new UserSpecificationByUserId(newUser.getUserId()), session);
+            if(users.size() == 0) {
+                throw new ServiceException("No such user");
+            }
+            user = users.get(0);
+
+
+            repository.update(user, session);
+        } catch (RepositoryException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        checkPassword(user);
-        return super.update(user);
+//        catch (ValidationException exc) {
+//            LOGGER.error(exc);
+//            throw new ServiceException(exc);
+//        }
+        checkPassword(newUser);
+        return user;
     }
 
     @Override
