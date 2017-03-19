@@ -1,23 +1,9 @@
 package school.journal.entity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class User {
     private Integer userId;
     private String username;
     private String passHash;
-<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
-    private byte locked;
-    private String email;
-
-    @Id
-    @Column(name = "user_id")
-    public int getUserId() {
-=======
     private Byte locked;
     private String email;
     private Role role;
@@ -25,7 +11,6 @@ public class User {
     private Integer roleId;
 
     public Integer getUserId() {
->>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
         return userId;
     }
 
@@ -33,21 +18,6 @@ public class User {
         this.userId = userId;
     }
 
-<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
-    @Basic
-    @Column(name = "role_id")
-    public int getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
-    }
-
-    @Basic
-    @Column(name = "username")
-=======
->>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
     public String getUsername() {
         return username;
     }
@@ -56,8 +26,6 @@ public class User {
         this.username = username;
     }
 
-    @Basic
-    @Column(name = "pass_hash")
     public String getPassHash() {
         return passHash;
     }
@@ -66,13 +34,7 @@ public class User {
         this.passHash = passHash;
     }
 
-<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
-    @Basic
-    @Column(name = "locked")
-    public byte getLocked() {
-=======
     public Byte getLocked() {
->>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
         return locked;
     }
 
@@ -80,8 +42,6 @@ public class User {
         this.locked = locked;
     }
 
-    @Basic
-    @Column(name = "email")
     public String getEmail() {
         return email;
     }
@@ -90,8 +50,6 @@ public class User {
         this.email = email;
     }
 
-<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
-=======
     public String getPassword() {
         return password;
     }
@@ -108,7 +66,6 @@ public class User {
         this.roleId = roleId;
     }
 
->>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

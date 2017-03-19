@@ -1,11 +1,5 @@
 package school.journal.entity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class Teacher {
     private String phoneNumber;
     private Integer classId;
@@ -13,24 +7,9 @@ public class Teacher {
     private String pathronymic;
     private String lastName;
     private String description;
-<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
-
-    @Id
-    @Column(name = "teacher_id")
-    public int getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-    }
-=======
     private User user;
     private Integer userId;
->>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
 
-    @Basic
-    @Column(name = "phone_number")
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -39,8 +18,6 @@ public class Teacher {
         this.phoneNumber = phoneNumber;
     }
 
-    @Basic
-    @Column(name = "class_id")
     public Integer getClassId() {
         return classId;
     }
@@ -49,8 +26,6 @@ public class Teacher {
         this.classId = classId;
     }
 
-    @Basic
-    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -59,8 +34,6 @@ public class Teacher {
         this.firstName = firstName;
     }
 
-    @Basic
-    @Column(name = "pathronymic")
     public String getPathronymic() {
         return pathronymic;
     }
@@ -69,8 +42,6 @@ public class Teacher {
         this.pathronymic = pathronymic;
     }
 
-    @Basic
-    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -79,8 +50,6 @@ public class Teacher {
         this.lastName = lastName;
     }
 
-    @Basic
-    @Column(name = "description")
     public String getDescription() {
         return description;
     }
