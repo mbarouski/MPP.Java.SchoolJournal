@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="school.journal.entity.SubjectInSchedule" table="subject_in_schedule" schema="school_journal_db">
+        <id name="subectInScheduleId">
+            <column name="subect_in_schedule_id" sql-type="int(10) unsigned"/>
+        </id>
+        <property name="dayOfWeek">
+            <column name="day_of_week" sql-type="set('mon', 'tue', 'wed', 'thu', 'fri', 'sut')"/>
+        </property>
+        <property name="beginTime">
+            <column name="begin_time" sql-type="time"/>
+        </property>
+        <property name="place">
+            <column name="place" sql-type="varchar(45)" length="45"/>
+        </property>
+        <many-to-one name="subject" class="school.journal.entity.Subject">
+            <column name="subject_id"/>
+        </many-to-one>
+        <many-to-one name="teacher" class="school.journal.entity.Teacher">
+            <column name="teacher_id" not-null="true"/>
+        </many-to-one>
+        <many-to-one name="clazz" class="school.journal.entity.Clazz">
+            <column name="class_id"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

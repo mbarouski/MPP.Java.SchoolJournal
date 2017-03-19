@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="school.journal.entity.Pupil" table="pupil" schema="school_journal_db">
+        <property name="classId">
+            <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
+        </property>
+        <property name="firstName">
+            <column name="first_name" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="pathronymic">
+            <column name="pathronymic" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="lastName">
+            <column name="last_name" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="phoneNumber">
+            <column name="phone_number" sql-type="varchar(45)" length="45" not-null="true"/>
+        </property>
+        <property name="characteristic">
+            <column name="characteristic" sql-type="text" not-null="true"/>
+        </property>
+        <one-to-one name="user" class="school.journal.entity.User"/>
+    </class>
+</hibernate-mapping>

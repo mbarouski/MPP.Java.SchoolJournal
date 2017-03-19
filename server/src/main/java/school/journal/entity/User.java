@@ -9,6 +9,7 @@ public class User {
     private Role role;
     private String password;
     private Integer roleId;
+    private Role roleByRoleId;
 
     public Integer getUserId() {
         return userId;
@@ -66,6 +67,8 @@ public class User {
         this.roleId = roleId;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,5 +101,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Role getRoleByRoleId() {
+        return roleByRoleId;
+    }
+
+    public void setRoleByRoleId(Role roleByRoleId) {
+        this.roleByRoleId = roleByRoleId;
     }
 }
