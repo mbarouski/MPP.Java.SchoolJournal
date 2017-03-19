@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.SubjectInSchedule;
 import school.journal.repository.IRepository;
 import school.journal.service.CRUDService;
 import school.journal.service.ISubjectInScheduleService;
