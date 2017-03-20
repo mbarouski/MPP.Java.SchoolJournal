@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="school.journal.entity.Mark" table="mark" schema="school_journal_db">
+        <id name="markId">
+            <column name="mark_id" sql-type="int(10) unsigned"/>
+        </id>
+        <property name="value">
+            <column name="value" sql-type="int(11)" not-null="true"/>
+        </property>
+        <property name="type">
+            <column name="type" sql-type="set('simple', 'apsent', 'control', 'self', 'term', 'year')"/>
+        </property>
+        <property name="date">
+            <column name="date" sql-type="date"/>
+        </property>
+        <many-to-one name="pupil" class="school.journal.entity.Pupil">
+            <column name="pupil_id"/>
+        </many-to-one>
+        <many-to-one name="subject" class="school.journal.entity.Subject">
+            <column name="subject_id"/>
+        </many-to-one>
+        <many-to-one name="teacher" class="school.journal.entity.Teacher">
+            <column name="teacher_id" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

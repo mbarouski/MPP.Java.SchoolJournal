@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Clazz;
 import school.journal.entity.Teacher;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
@@ -23,6 +24,7 @@ import static school.journal.utils.ValidateServiceUtils.*;
 public class TeacherService extends CRUDService<Teacher> implements ITeacherService {
 
     private IRepository<User> userRepository;
+    private IRepository<Clazz> classRepository;
 
     @Autowired
     public TeacherService(@Qualifier("TeacherRepository") IRepository<Teacher> repository,
@@ -31,6 +33,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
         LOGGER = Logger.getLogger(TeacherService.class);
         this.repository = repository;
         this.userRepository = userRepository;
+        this.classRepository = classRepository;
     }
 
     private User checkUser(Integer id, Session session) throws ServiceException{
