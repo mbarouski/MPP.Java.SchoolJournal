@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Mark;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.mark.MarkSpecificationByPupilId;
@@ -34,9 +35,9 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     @Override
     public Mark create(Mark mark) throws ServiceException {
         try {
-            validateId(mark.getPupilId(), "Pupil");
-            validateId(mark.getSubjectId(), "Subject");
-            validateId(mark.getTeacherId(), "Teacher");
+            validateId(mark.getPupil().getUserId(), "Pupil");
+            validateId(mark.getSubject().getSubjectId(), "Subject");
+            validateId(mark.getTeacher().getUserId(), "Teacher");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -50,9 +51,9 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     public Mark update(Mark mark) throws ServiceException {
         try {
             validateId(mark.getMarkId(), "Mark");
-            validateId(mark.getPupilId(), "Pupil");
-            validateId(mark.getSubjectId(), "Subject");
-            validateId(mark.getTeacherId(), "Teacher");
+            validateId(mark.getPupil().getUserId(), "Pupil");
+            validateId(mark.getSubject().getSubjectId(), "Subject");
+            validateId(mark.getTeacher().getUserId(), "Teacher");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);

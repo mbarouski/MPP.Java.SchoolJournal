@@ -4,6 +4,15 @@ public class Token {
     private String value;
     private Byte active;
     private User user;
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public String getValue() {
         return value;

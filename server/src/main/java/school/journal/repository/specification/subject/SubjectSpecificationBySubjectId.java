@@ -2,6 +2,7 @@ package school.journal.repository.specification.subject;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import school.journal.entity.Subject;
 
 public class SubjectSpecificationBySubjectId extends SubjectSpecification {
 

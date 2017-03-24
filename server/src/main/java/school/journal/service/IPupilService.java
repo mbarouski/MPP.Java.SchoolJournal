@@ -1,5 +1,6 @@
 package school.journal.service;
 
+import school.journal.entity.Pupil;
 import school.journal.service.exception.ServiceException;
 
 import java.util.List;

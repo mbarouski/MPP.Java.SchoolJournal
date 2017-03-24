@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Subject;
 import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
@@ -38,6 +39,11 @@ public class SubjectRepository extends RepositoryAbstractClass<Subject> {
             criteria.add(criterion);
         }
         return criteria.list();
+    }
+
+    @Override
+    public Subject get(int id, Session session) throws RepositoryException {
+        return null;
     }
 }
 

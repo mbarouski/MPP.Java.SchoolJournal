@@ -2,6 +2,7 @@ package school.journal.repository.specification.mark;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import school.journal.entity.Mark;
 
 public class MarkSpecificationByMarkId extends MarkSpecification {
 
