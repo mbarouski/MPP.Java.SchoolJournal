@@ -6,9 +6,9 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Clazz;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
-import school.journal.repository.specification.clazz.ClazzSpecificationByClazzId;
 import school.journal.service.IClassService;
 import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
@@ -44,20 +44,38 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        return super.create(clazz);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            checkClassBeforeCreate(clazz);
+            clazz = repository.create(clazz, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return clazz;
     }
 
     @Override
     public Clazz update(Clazz clazz) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            validateId(clazz.getClassId(), "Class");
-            validateString(clazz.getLetterMark(), "Letter Mark");
-        } catch (ValidationException exc) {
+            prepareClassBeforeUpdate(clazz, session);
+            clazz = repository.update(clazz, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
+        } finally {
+            session.close();
         }
-        validateClassNumber(clazz.getNumber());
-        return super.update(clazz);
+        return clazz;
     }
 
     @Override
@@ -82,19 +100,53 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
+        return super.getOne(id);
+    }
+
+    private void checkClassBeforeCreate(Clazz clazz) throws ServiceException {
         try {
-            List<Clazz> clazzList = repository.query(
-                    new ClazzSpecificationByClazzId(id), session);
-            transaction.commit();
-            return clazzList.size() > 0 ? clazzList.get(0) : null;
-        } catch (RepositoryException exc) {
-            transaction.rollback();
+            validateLetterMark(clazz.getLetterMark());
+            validateClassNumber(clazz.getNumber());
+        } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
-        } finally {
-            session.close();
+        }
+    }
+
+    private void prepareClassBeforeUpdate(Clazz newClazz, Session session) throws ServiceException {
+        Clazz clazz;
+        try {
+            clazz = repository.get(newClazz.getClassId(), session);
+            validateClass(clazz);
+            checkClassNumber(clazz, newClazz.getNumber());
+            checkLetterMark(clazz, newClazz.getLetterMark());
+        } catch (RepositoryException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+    }
+
+    private void checkLetterMark(Clazz clazz, String letterMark) {
+        if (letterMark == null) return;
+        try {
+            validateLetterMark(letterMark);
+            clazz.setLetterMark(letterMark);
+        } catch (ValidationException exc) {
+            LOGGER.warn(exc);
+        }
+    }
+
+    private void validateLetterMark(String string) throws ValidationException {
+        validateString(string, "Letter Mark");
+    }
+
+    private void checkClassNumber(Clazz clazz, Integer number) {
+        if (number == null) return;
+        try {
+            validateClassNumber(number);
+            clazz.setNumber(number);
+        } catch (ServiceException exc) {
+            LOGGER.warn(exc);
         }
     }
 
@@ -103,4 +155,9 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
             throw new ServiceException("Invalid class number");
     }
 
+    private void validateClass(Clazz clazz) throws ServiceException {
+        if (clazz == null) {
+            throw new ServiceException("Class is not exists");
+        }
+    }
 }

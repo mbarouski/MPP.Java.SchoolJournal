@@ -6,10 +6,14 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Mark;
+import school.journal.entity.Pupil;
+import school.journal.entity.Subject;
+import school.journal.entity.Teacher;
+import school.journal.entity.util.MarkType;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.mark.MarkSpecificationByPupilId;
-import school.journal.repository.specification.mark.MarkSpecificationByMarkId;
 import school.journal.service.IMarkService;
 import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
@@ -21,45 +25,47 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.validateId;
+import static school.journal.utils.ValidateServiceUtils.validateNullableId;
 
 @Component("MarkService")
 public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Autowired
-    public MarkService(@Qualifier("MarkRepository")IRepository<Mark> repository) {
+    public MarkService(@Qualifier("MarkRepository") IRepository<Mark> repository) {
         LOGGER = Logger.getLogger(MarkService.class);
         this.repository = repository;
     }
 
     @Override
     public Mark create(Mark mark) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        checkMarkBeforeCreate(mark,session);
         try {
-            validateId(mark.getPupilId(), "Pupil");
-            validateId(mark.getSubjectId(), "Subject");
-            validateId(mark.getTeacherId(), "Teacher");
-        } catch (ValidationException exc) {
+            repository.create(mark,session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        validateValue(mark.getValue());
-        validateCreatingMarkDate(mark.getDate());
         return super.create(mark);
     }
 
     @Override
     public Mark update(Mark mark) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        checkMarkBeforeUpdate(mark, session);
         try {
-            validateId(mark.getMarkId(), "Mark");
-            validateId(mark.getPupilId(), "Pupil");
-            validateId(mark.getSubjectId(), "Subject");
-            validateId(mark.getTeacherId(), "Teacher");
-        } catch (ValidationException exc) {
+            mark = repository.update(mark, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        validateValue(mark.getValue());
-        validateCreatingMarkDate(mark.getDate());
-        return super.update(mark);
+        return mark;
     }
 
     @Override
@@ -72,7 +78,38 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
         Mark mark = new Mark();
         mark.setMarkId(id);
-        delete(mark);
+        super.delete(mark);
+    }
+
+    private void checkMarkBeforeCreate(Mark newMark,Session session) throws ServiceException {
+        try {
+            validateNullableId(newMark.getMarkId(), "Mark");
+            validateSubject(newMark.getSubject().getSubjectId(), session);
+            validateTeacher(newMark.getTeacher().getUser().getUserId(), session);
+            validateDate(newMark.getDate());
+            validateValue(newMark.getValue());
+            validateType(newMark.getType());
+            validatePupil(newMark.getPupil().getUser().getUserId(), session);
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+    }
+
+    private Mark checkMarkBeforeUpdate(Mark newMark, Session session) throws ServiceException {
+        try {
+            Mark mark = repository.get(newMark.getMarkId(), session);
+            checkValue(mark, newMark.getValue());
+            checkDate(mark, newMark.getDate());
+            checkPupil(mark, newMark.getPupil().getUser().getUserId(), session);
+            checkSubject(mark, newMark.getSubject().getSubjectId(), session);
+            checkTeacher(mark, newMark.getTeacher().getUser().getUserId(), session);
+            checkType(mark, newMark.getType());
+            return mark;
+        } catch (RepositoryException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
     }
 
 
@@ -90,20 +127,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            List<Mark> markList = repository.query(
-                    new MarkSpecificationByMarkId(id), session);
-            transaction.commit();
-            return markList.size() > 0 ? markList.get(0) : null;
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
+        return super.getOne(id);
     }
 
     @Override
@@ -205,11 +229,102 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         return markList;
     }
 
-    private void validateCreatingMarkDate(Date date) throws ServiceException {
+    private void checkType(Mark mark,Short type) {
+        if (type == null) return;
+        try {
+            validateType(type);
+            mark.setType(type);
+        } catch (ServiceException exc) {
+            LOGGER.warn(exc);
+        }
+    }
+
+    private void validateType(Short type) throws ServiceException {
+        if (MarkType.values().length < type) {
+            throw new ServiceException("Wrong mark type");
+        }
+    }
+
+    private void checkTeacher(Mark mark, int id, Session session) {
+        try {
+            Teacher teacher = validateTeacher(id, session);
+            mark.setTeacher(teacher);
+        } catch (ServiceException exc) {
+            LOGGER.warn(exc);
+        }
+        Teacher teacher = (Teacher) session.load(Teacher.class, id);
+        if (teacher != null) {
+            mark.setTeacher(teacher);
+        }
+    }
+
+    private Teacher validateTeacher(int id,Session session) throws ServiceException {
+        Teacher teacher = (Teacher) session.load(Teacher.class, id);
+        if (teacher == null) {
+            throw new ServiceException("Error in Mark validation. Teacher is not exist");
+        }
+        return teacher;
+    }
+
+    private void checkSubject(Mark mark, int id, Session session) throws ServiceException {
+        try {
+            Subject subject = validateSubject(id, session);
+            mark.setSubject(subject);
+        } catch (ServiceException exc) {
+            LOGGER.warn(exc);
+        }
+    }
+
+    private Subject validateSubject(int id,Session session) throws ServiceException {
+        Subject subject = (Subject) session.load(Subject.class, id);
+        if (subject == null) {
+            throw new ServiceException("Error in Mark validation. Subject is not exist");
+        }
+        return subject;
+    }
+
+    private void checkPupil(Mark mark, int id, Session session){
+        try {
+            Pupil pupil = validatePupil(id,session);
+            mark.setPupil(pupil);
+        } catch (ServiceException exc) {
+            LOGGER.warn(exc);
+        }
+    }
+
+    private Pupil validatePupil(int id,Session session) throws ServiceException {
+        Pupil pupil = (Pupil) session.load(Pupil.class, id);
+        if (pupil == null) {
+            throw new ServiceException("Error in Mark validation. Pupil is not exist");
+        }
+        return pupil;
+    }
+
+    private void checkDate(Mark mark, java.sql.Date date) throws ServiceException {
+        if (date == null) return;
+        try {
+            validateDate(date);
+            mark.setDate(date);
+        } catch (ServiceException exc){
+            LOGGER.warn(exc);
+        }
+    }
+
+    private void validateDate(Date date) throws ServiceException {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_YEAR, 1);
         if (date.after(c.getTime())) {
             throw new ServiceException("Invalid date");
+        }
+    }
+
+    private void checkValue(Mark mark, Integer value){
+        if (value == null) return;
+        try {
+            validateValue(value);
+            mark.setValue(value);
+        }catch (ServiceException exc){
+            LOGGER.warn(exc);
         }
     }
 
@@ -218,5 +333,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             throw new ServiceException("Invalid value");
         }
     }
+
+
 
 }
