@@ -8,6 +8,15 @@ public class Pupil {
     private String phoneNumber;
     private String characteristic;
     private User user;
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getClassId() {
         return classId;

@@ -40,8 +40,8 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     public Mark create(Mark mark) throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        checkMarkBeforeCreate(mark,session);
         try {
+            checkMarkBeforeCreate(mark,session);
             repository.create(mark,session);
             transaction.commit();
         } catch (RepositoryException exc) {

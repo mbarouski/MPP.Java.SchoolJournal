@@ -12,7 +12,7 @@ import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
-@Component("ClazzRepository")
+@Component("ClassRepository")
 public class ClazzRepository extends RepositoryAbstractClass<Clazz> {
 
     @Override

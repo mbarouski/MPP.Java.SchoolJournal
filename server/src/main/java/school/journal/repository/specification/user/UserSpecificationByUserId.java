@@ -2,6 +2,7 @@ package school.journal.repository.specification.user;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import school.journal.entity.User;
 
 public class UserSpecificationByUserId extends UserSpecification {
     private int userId;

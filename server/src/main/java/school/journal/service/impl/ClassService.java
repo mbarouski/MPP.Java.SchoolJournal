@@ -25,7 +25,7 @@ import static school.journal.utils.ValidateServiceUtils.validateString;
 public class ClassService extends CRUDService<Clazz> implements IClassService {
 
     @Autowired
-    public ClassService(@Qualifier("ClazzRepository") IRepository<Clazz> repository) {
+    public ClassService(@Qualifier("ClassRepository") IRepository<Clazz> repository) {
         LOGGER = Logger.getLogger(ClassService.class);
         this.repository = repository;
     }

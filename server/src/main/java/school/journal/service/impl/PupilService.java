@@ -156,11 +156,10 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-
     }
 
     private Pupil prepareEntityForUpdate(Pupil newEntity, Session session) throws ServiceException {
-        Pupil pupil = null;
+        Pupil pupil;
         try {
             pupil = repository.get(newEntity.getUser().getUserId(), session);
             checkClassId(pupil, newEntity.getClassId(),session);

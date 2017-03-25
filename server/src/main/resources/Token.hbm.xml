@@ -5,6 +5,9 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Token" table="token" schema="school_journal_db">
+        <id name="userId">
+            <column name="master_id"  sql-type="int(10) unsigned"/>
+        </id>
         <property name="value">
             <column name="value" sql-type="text" not-null="true"/>
         </property>

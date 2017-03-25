@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
+import school.journal.entity.Role;
 import school.journal.service.IRoleService;
 import school.journal.service.exception.ServiceException;
 
@@ -85,22 +86,6 @@ public class RoleAPIController {
             resultResponse = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException exc){
             resultResponse = new ResponseEntity(new ErrorObject("Error in role deleting"), HttpStatus.BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
-    }
-
-    @RequestMapping(value = "/{roleId}")
-    @ResponseBody
-    public ResponseEntity getOne(@PathVariable("roleId") int roleId)
-            throws ControllerException {
-        ResponseEntity resultResponse;
-        try{
-            resultResponse = new ResponseEntity(roleService.getOne(roleId), HttpStatus.OK);
-        } catch (ServiceException exc){
-            resultResponse = new ResponseEntity(new ErrorObject("Error in role getting"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -5,7 +5,9 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Pupil" table="pupil" schema="school_journal_db">
-        <id name="getPupilId"/>
+        <id name="userId">
+            <column name="pupil_id"  sql-type="int(10) unsigned"/>
+        </id>
         <property name="classId">
             <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
         </property>
@@ -23,9 +25,6 @@
         </property>
         <property name="characteristic">
             <column name="characteristic" sql-type="text" not-null="true"/>
-        </property>
-        <property name="pupil_id">
-            <column name="pupil_id" sql-type="int(10) unsigned" not-null="true"/>
         </property>
         <one-to-one name="user" class="school.journal.entity.User"/>
     </class>

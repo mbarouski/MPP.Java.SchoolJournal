@@ -9,7 +9,6 @@ public class User {
     private Role role;
     private String password;
     private Integer roleId;
-    private Role roleByRoleId;
 
     public Integer getUserId() {
         return userId;
@@ -103,11 +102,5 @@ public class User {
         this.role = role;
     }
 
-    public Role getRoleByRoleId() {
-        return roleByRoleId;
-    }
 
-    public void setRoleByRoleId(Role roleByRoleId) {
-        this.roleByRoleId = roleByRoleId;
-    }
 }
