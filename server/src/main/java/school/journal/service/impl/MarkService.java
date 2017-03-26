@@ -2,9 +2,9 @@ package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +14,9 @@ import school.journal.entity.util.MarkType;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.mark.MarkSpecificationByPupil;
-import school.journal.repository.specification.mark.MarkSpecificationBySubject;
+import school.journal.repository.specification.pupil.PupilSpecificationByClassId;
+import school.journal.repository.specification.pupil.PupilSpecificationByPupilId;
+import school.journal.repository.specification.subject.SubjectSpecificationBySubjectId;
 import school.journal.service.IMarkService;
 import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
@@ -124,7 +126,6 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     @Override
     public Mark getOne(int id) throws ServiceException {
         try {
-
             validateId(id, "Mark");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
@@ -135,6 +136,28 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Override
     public List<Mark> getMarksForSubjectInClass(int subjectId, int classId) throws ServiceException {
+        validateSubjectAndClassBeforeSelecting(subjectId, classId);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Criteria criteria = session.createCriteria(Mark.class);
+        criteria.createCriteria("subject", INNER_JOIN).add(
+                new SubjectSpecificationBySubjectId(subjectId).toCriteria());
+        criteria.createCriteria("pupil", INNER_JOIN).add(
+                new PupilSpecificationByClassId(classId).toCriteria());
+        List<Mark> markList;
+        try {
+            markList = (List<Mark>) criteria.list();
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()){
+                transaction.rollback();
+            }
+            session.close();
+        }
+        return markList;
+    }
+
+    public void validateSubjectAndClassBeforeSelecting(int subjectId,int classId) throws ServiceException {
         try {
             validateId(subjectId, "Subject");
             validateId(classId, "Class");
@@ -142,111 +165,65 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        //TODO Learn how to create complex criteries
-        //TODO DON'T DELETE THE CODE BELOW
-        Subject subject = (Subject) session.load(Subject.class,subjectId);
-        Clazz clazz = (Clazz) session.load(Clazz.class,classId);
-        Criteria criteria = session.createCriteria(Mark.class);
-        criteria.createAlias("subject","sub",INNER_JOIN).add(
-                        Restrictions.eq("sub.subjectId",subjectId));
-        criteria.createCriteria("pupil", INNER_JOIN).add(
-                        Restrictions.eq("classId", classId));
-        List<Mark> markList = null;
-//        markList = session.createSQLQuery(
-//                "SELECT  * " +
-//                        "FROM  mark as m " +
-//                        "JOIN pupil as p " +
-//                        "ON m.pupil_id = p.pupil_id " +
-//                        "WHERE p.class_id =" + classId + " " +
-//                        "AND m.subject_id = " + subjectId + ";").list();
-        try {
-            markList = (List<Mark>) criteria.list();
-            transaction.commit();
-        } finally {
-            session.close();
-        }
-//        transaction.commit();
-//        session.close();
-        return markList;
     }
 
     @Override
     public List<Mark> getMarksForTermOrder(int classId) throws ServiceException {
+        List<Mark> markList;
+        validateClassIdBeforeSelect(classId);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Criteria criteria = session.createCriteria(Mark.class);
+            criteria.createCriteria("pupil", INNER_JOIN).add(
+                    new PupilSpecificationByClassId(classId).toCriteria());
+            markList = (List<Mark>) criteria.list();
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            session.close();
+        }
+        return markList;
+    }
+
+    private void validateClassIdBeforeSelect(int classId) throws ServiceException {
         try {
             validateId(classId, "Class");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        //TODO Learn how to create complex criteries
-        //TODO DON'T DELETE THE CODE BELOW
-        /*Criteria criteria = session.createCriteria(Mark.class);
-        criteria.createAlias("school_journal_db.pupil", "pupil", INNER_JOIN).
-                add(Restrictions.and(
-                        Restrictions.between("mark.date", startTerm, endTerm),
-                        Restrictions.eq("pupil.class_id", classId)
-                ));*/
-        List<Mark> markList;
-        markList = session.createSQLQuery(
-                "SELECT  * " +
-                        "FROM  mark as m " +
-                        "JOIN pupil as p " +
-                        "ON m.pupil_id = p.pupil_id " +
-                        "WHERE p.class_id =" + classId + " ;").list();
-        /*try {
-            markList = (List<Mark>) criteria.list();
-            transaction.commit();
-        } finally {
-            session.close();
-        }
-        */
-        transaction.commit();
-        session.close();
-        return markList;
     }
 
     @Override
     public List<Mark> getMarksForPupil(int pupilId) throws ServiceException {
+        validatePupilIdBeforeSelect(pupilId);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<Mark> markList;
+        try {
+            Criteria criteria = session.createCriteria(Mark.class);
+            criteria.createCriteria("pupil", INNER_JOIN).add(
+                    new PupilSpecificationByPupilId(pupilId).toCriteria());
+            markList = criteria.list();
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            session.close();
+        }
+        return markList;
+    }
+
+    private void validatePupilIdBeforeSelect(int pupilId)throws ServiceException {
         try {
             validateId(pupilId, "Pupil");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
-        }
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        List<Mark> markList;
-        try {
-            Pupil pupil=(Pupil)session.load(Pupil.class,pupilId);
-            markList = repository.query(new MarkSpecificationByPupil(pupil), session);
-            transaction.commit();
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        } finally {
-            session.close();
-        }
-        return markList;
-    }
-
-    private void checkType(Mark mark,Short type) {
-        if (type == null) return;
-        try {
-            validateType(type);
-            //mark.setType(type);
-        } catch (ServiceException exc) {
-            LOGGER.warn(exc);
-        }
-    }
-
-    private void validateType(Short type) throws ServiceException {
-        if (MarkType.values().length < type) {
-            throw new ServiceException("Wrong mark type");
         }
     }
 

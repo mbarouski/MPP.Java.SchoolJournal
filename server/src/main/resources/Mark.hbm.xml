@@ -20,7 +20,7 @@
         <many-to-one name="pupil" class="school.journal.entity.Pupil" fetch="join" lazy="false">
             <column name="pupil_id"/>
         </many-to-one>
-        <many-to-one name="subject" class="school.journal.entity.Subject" fetch="join" lazy="false">
+        <many-to-one name="subject" class="school.journal.entity.Subject" fetch="join">
             <column name="subject_id"/>
         </many-to-one>
         <many-to-one name="teacher" class="school.journal.entity.Teacher" lazy="false">

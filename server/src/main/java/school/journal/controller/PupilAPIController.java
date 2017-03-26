@@ -1,5 +1,6 @@
 package school.journal.controller;
 
+import com.sun.org.glassfish.gmbal.ParameterNames;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -122,9 +123,9 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(value = "/{pupilId}", method = GET,params = "classId")
+    @RequestMapping(method = GET,params = "classId")
     @ResponseBody
-    public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @PathVariable("classId") int classId)
+    public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @RequestParam(value = "classId") int classId)
             throws ControllerException {
         ResponseEntity resultResponse;
         try {
@@ -140,7 +141,7 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = PUT,params = "pupilId,classId")
+    @RequestMapping(method = PUT,params = {"pupilId","classId"})
     @ResponseBody
     public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId, @RequestParam(value = "classId") Integer classId)
             throws ControllerException {
