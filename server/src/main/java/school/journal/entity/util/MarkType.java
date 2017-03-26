@@ -18,6 +18,14 @@ public enum MarkType {
         return meaning;
     }
 
+    public static MarkType fromMeaning(String meaning) {
+        for (MarkType type : MarkType.values()) {
+            if (type.getMeaning().equalsIgnoreCase(meaning)) {
+                return type;
+            }
+        }
+        throw new UnsupportedOperationException("The meaning " + meaning + "is unsupported");
+    }
 
     @Override
     public String toString() {

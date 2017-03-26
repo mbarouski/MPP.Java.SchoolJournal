@@ -8,7 +8,7 @@
         <id name="userId">
             <column name="pupil_id"  sql-type="int(10) unsigned"/>
         </id>
-        <property name="classId">
+        <property name="classId" lazy="false">
             <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
         </property>
         <property name="firstName">

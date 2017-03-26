@@ -3,21 +3,22 @@ package school.journal.repository.specification.mark;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import school.journal.entity.Mark;
+import school.journal.entity.Pupil;
 
-public class MarkSpecificationByPupilId extends MarkSpecification {
-    private int pupilId;
+public class MarkSpecificationByPupil extends MarkSpecification {
+    private Pupil pupil;
 
-    public MarkSpecificationByPupilId(int pupilId) {
-        this.pupilId = pupilId;
+    public MarkSpecificationByPupil(Pupil pupil) {
+        this.pupil = pupil;
     }
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("pupil_id", pupilId);
+        return Restrictions.eq("pupil", pupil);
     }
 
     @Override
     public boolean specified(Mark mark) {
-        return mark.getPupil().getUserId() == pupilId;
+        return mark.getPupil() == pupil;
     }
 }

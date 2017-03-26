@@ -123,7 +123,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = GET,params = "subjectId,classId")
+    @RequestMapping(method = GET,params = {"subjectId", "classId"})
     @ResponseBody
     public ResponseEntity getMarksForSubjectInClass(HttpServletRequest request, @RequestParam(value = "subjectId") int subjectId, @RequestParam(value = "classId") int classId)
             throws ControllerException {

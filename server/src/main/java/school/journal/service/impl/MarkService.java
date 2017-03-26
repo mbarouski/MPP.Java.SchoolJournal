@@ -1,19 +1,20 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import school.journal.entity.Mark;
-import school.journal.entity.Pupil;
-import school.journal.entity.Subject;
-import school.journal.entity.Teacher;
+import school.journal.entity.*;
 import school.journal.entity.util.MarkType;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
-import school.journal.repository.specification.mark.MarkSpecificationByPupilId;
+import school.journal.repository.specification.mark.MarkSpecificationByPupil;
+import school.journal.repository.specification.mark.MarkSpecificationBySubject;
 import school.journal.service.IMarkService;
 import school.journal.service.CRUDService;
 import school.journal.service.exception.ServiceException;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import static org.hibernate.criterion.CriteriaSpecification.INNER_JOIN;
 import static school.journal.utils.ValidateServiceUtils.validateId;
 import static school.journal.utils.ValidateServiceUtils.validateNullableId;
 
@@ -88,7 +90,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             validateTeacher(newMark.getTeacher().getUser().getUserId(), session);
             validateDate(newMark.getDate());
             validateValue(newMark.getValue());
-            validateType(newMark.getType());
+            //validateType(newMark.getType());
             validatePupil(newMark.getPupil().getUser().getUserId(), session);
         } catch (ValidationException exc) {
             LOGGER.error(exc);
@@ -104,7 +106,8 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             checkPupil(mark, newMark.getPupil().getUser().getUserId(), session);
             checkSubject(mark, newMark.getSubject().getSubjectId(), session);
             checkTeacher(mark, newMark.getTeacher().getUser().getUserId(), session);
-            checkType(mark, newMark.getType());
+            mark.setType(newMark.getType());
+            //checkType(mark, newMark.getType());
             return mark;
         } catch (RepositoryException exc) {
             LOGGER.error(exc);
@@ -143,28 +146,29 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Transaction transaction = session.beginTransaction();
         //TODO Learn how to create complex criteries
         //TODO DON'T DELETE THE CODE BELOW
-        /*Criteria criteria = session.createCriteria(Mark.class);
-        criteria.createAlias("school_journal_db.pupil", "pupil", INNER_JOIN).
-                add(Restrictions.and(
-                        new MarkSpecificationBySubjectId(subjectId).toCriteria(),
-                        Restrictions.eq("pupil.class_id", classId)
-                ));*/
+        Subject subject = (Subject) session.load(Subject.class,subjectId);
+        Clazz clazz = (Clazz) session.load(Clazz.class,classId);
+        Criteria criteria = session.createCriteria(Mark.class);
+        criteria.createAlias("subject","sub",INNER_JOIN).add(
+                        Restrictions.eq("sub.subjectId",subjectId));
+        criteria.createCriteria("pupil", INNER_JOIN).add(
+                        Restrictions.eq("classId", classId));
         List<Mark> markList = null;
-        markList = session.createSQLQuery(
-                "SELECT  * " +
-                        "FROM  mark as m " +
-                        "JOIN pupil as p " +
-                        "ON m.pupil_id = p.pupil_id " +
-                        "WHERE p.class_id =" + classId + " " +
-                        "AND m.subject_id = " + subjectId + ";").list();
-        /*try {
+//        markList = session.createSQLQuery(
+//                "SELECT  * " +
+//                        "FROM  mark as m " +
+//                        "JOIN pupil as p " +
+//                        "ON m.pupil_id = p.pupil_id " +
+//                        "WHERE p.class_id =" + classId + " " +
+//                        "AND m.subject_id = " + subjectId + ";").list();
+        try {
             markList = (List<Mark>) criteria.list();
             transaction.commit();
         } finally {
             session.close();
-        }*/
-        transaction.commit();
-        session.close();
+        }
+//        transaction.commit();
+//        session.close();
         return markList;
     }
 
@@ -217,7 +221,8 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Transaction transaction = session.beginTransaction();
         List<Mark> markList;
         try {
-            markList = repository.query(new MarkSpecificationByPupilId(pupilId), session);
+            Pupil pupil=(Pupil)session.load(Pupil.class,pupilId);
+            markList = repository.query(new MarkSpecificationByPupil(pupil), session);
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();
@@ -233,7 +238,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         if (type == null) return;
         try {
             validateType(type);
-            mark.setType(type);
+            //mark.setType(type);
         } catch (ServiceException exc) {
             LOGGER.warn(exc);
         }
