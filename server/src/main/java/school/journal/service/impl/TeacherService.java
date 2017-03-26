@@ -8,20 +8,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Clazz;
+import school.journal.entity.Role;
 import school.journal.entity.Teacher;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.teacher.TeacherSpecificationByClassId;
+import school.journal.repository.specification.teacher.TeacherSpecificationByTeacherId;
 import school.journal.service.CRUDService;
 import school.journal.service.ITeacherService;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
+import java.text.MessageFormat;
 import java.util.List;
+
+import static school.journal.entity.enums.RoleEnum.DIRECTOR_OF_STUDIES;
+import static school.journal.entity.enums.RoleEnum.TEACHER;
 import static school.journal.utils.ValidateServiceUtils.*;
 
 @Component("TeacherService")
 public class TeacherService extends CRUDService<Teacher> implements ITeacherService {
+    private static final String SQL_QUERY_FOR_GET_TEACHERS_FOR_CLASS = "SELECT `teacher`.`teacher_id`, `teacher`.`phone_number`, " +
+            "`teacher`.`class_id`, `teacher`.`first_name`, `teacher`.`last_name`, `teacher`.`pathronymic`, `teacher`.`description` " +
+            "FROM `teacher` " +
+            "JOIN `subject_in_schedule` " +
+            "ON `teacher`.`teacher_id` = `subject_in_schedule`.`teacher_id` " +
+            "WHERE `subject_in_schedule`.`class_id` = {0};";
+
 
     private IRepository<User> userRepository;
     private IRepository<Clazz> classRepository;
@@ -172,31 +186,57 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
 
     @Override
     public List<Teacher> getListOfTeachersForClass(int classId) throws ServiceException {
-        return null;
+        Session session = sessionFactory.openSession();
+        List<Teacher> teachers;
+        teachers = session.createSQLQuery(MessageFormat.format(SQL_QUERY_FOR_GET_TEACHERS_FOR_CLASS, classId)).addEntity(Teacher.class).list();
+        return teachers;
     }
 
     @Override
-    public List<Teacher> getListOfAllTeachers() throws ServiceException {
-        return null;
+    public Teacher changeClassOfTeacher(int teacherId, int classId) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Teacher teacher;
+        try {
+            teacher = (Teacher)session.get(Teacher.class, teacherId);
+            if(teacher == null) throw new ServiceException("Teacher not found");
+            if(classId == 0) {
+                teacher.setClassId(null);
+            } else {
+                if(session.get(Clazz.class, classId) == null) throw new ServiceException("Class not found");
+            }
+            repository.update(teacher, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return teacher;
     }
 
     @Override
-    public Teacher attachTeacherToClass(int teacherId, int classId) throws ServiceException {
-        return null;
-    }
-
-    @Override
-    public Teacher detachTeacherFromClass(int teacherId) throws ServiceException {
-        return null;
-    }
-
-    @Override
-    public Teacher makeDirectorOfStudies(int teacherId) throws ServiceException {
-        return null;
-    }
-
-    @Override
-    public Teacher unmakeDirectorOfStudies(int teacherId) throws ServiceException {
-        return null;
+    public Teacher changeDirectorOfStudies(int teacherId, boolean isDirector) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Teacher teacher;
+        try {
+            teacher = (Teacher)session.get(Teacher.class, teacherId);
+            if(teacher == null) throw new ServiceException("Teacher not found");
+            Role role = (Role) session.get(Role.class, (isDirector ? DIRECTOR_OF_STUDIES : TEACHER).getValue());
+            if(role == null) throw new ServiceException("Role not found");
+            teacher.getUser().setRole(role);
+            repository.update(teacher, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return teacher;
     }
 }
