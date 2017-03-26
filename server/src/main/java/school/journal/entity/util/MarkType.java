@@ -1,7 +1,12 @@
 package school.journal.entity.util;
 
 public enum MarkType {
-    simple("simple"), test("test"), annual("annual");
+    simple("simple"),
+    apsent("apsent"),
+    control("control"),
+    self("self"),
+    term("term"),
+    year("year");
 
     final String meaning;
 
