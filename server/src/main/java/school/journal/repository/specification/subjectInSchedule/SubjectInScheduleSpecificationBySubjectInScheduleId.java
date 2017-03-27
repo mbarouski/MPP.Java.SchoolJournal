@@ -2,6 +2,7 @@ package school.journal.repository.specification.subjectInSchedule;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import school.journal.entity.SubjectInSchedule;
 
 public class SubjectInScheduleSpecificationBySubjectInScheduleId extends SubjectInScheduleSpecification {
     private int subjectInScheduleId;

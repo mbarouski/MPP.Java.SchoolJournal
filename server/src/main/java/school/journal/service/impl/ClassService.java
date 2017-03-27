@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Clazz;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.clazz.ClazzSpecificationByClazzId;
@@ -25,7 +26,7 @@ import static school.journal.utils.ValidateServiceUtils.validateString;
 public class ClassService extends CRUDService<Clazz> implements IClassService {
 
     @Autowired
-    public ClassService(@Qualifier("ClazzRepository") IRepository<Clazz> repository) {
+    public ClassService(@Qualifier("ClassRepository") IRepository<Clazz> repository) {
         LOGGER = Logger.getLogger(ClassService.class);
         this.repository = repository;
     }

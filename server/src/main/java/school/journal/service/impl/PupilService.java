@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Pupil;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.pupil.PupilSpecificationByClassId;
@@ -112,7 +113,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     @Override
     public Pupil update(Pupil pupil) throws ServiceException {
         try {
-            validateId(pupil.getPupilId(), "Pupil");
+            validateId(pupil.getUserId(), "Pupil");
             validateNullableId(pupil.getClassId(), "Class");
             validateString(pupil.getFirstName(), "First Name");
             validateString(pupil.getLastName(), "Last Name");
@@ -127,15 +128,15 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     @Override
     public void delete(int id) throws ServiceException {
-        try{
-            validateId(id, "Pupil");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        }
-        Pupil pupil = new Pupil();
-        pupil.setPupilId(id);
-        super.delete(pupil);
+//        try{
+//            validateId(id, "Pupil");
+//        } catch (ValidationException exc) {
+//            LOGGER.error(exc);
+//            throw new ServiceException(exc);
+//        }
+//        Pupil pupil = new Pupil();
+//        pupil.setUser(id);
+//        super.delete(pupil);
     }
 
     @Override

@@ -2,6 +2,7 @@ package school.journal.repository.specification.teacher;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import school.journal.entity.Teacher;
 
 public class TeacherSpecificationByLastName extends TeacherSpecification {
     private String lastName;

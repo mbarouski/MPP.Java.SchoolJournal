@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Mark;
 import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
@@ -37,5 +38,10 @@ public class MarkRepository extends RepositoryAbstractClass<Mark> {
             criteria.add(criterion);
         }
         return criteria.list();
+    }
+
+    @Override
+    public Mark get(int id, Session session) throws RepositoryException {
+        return null;
     }
 }

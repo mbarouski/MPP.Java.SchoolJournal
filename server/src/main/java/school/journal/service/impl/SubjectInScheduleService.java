@@ -42,6 +42,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             throw new ServiceException("Invalid begin time of subject");
     }
 
+    @Override
     public SubjectInSchedule create(SubjectInSchedule subject,int clazzId,int subjectId,int teacherId) throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();

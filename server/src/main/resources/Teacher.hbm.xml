@@ -5,6 +5,9 @@
 <hibernate-mapping>
 
     <class name="school.journal.entity.Teacher" table="teacher" schema="school_journal_db">
+        <id name="userId">
+            <column name="teacher_id"  sql-type="int(10) unsigned"/>
+        </id>
         <property name="phoneNumber">
             <column name="phone_number" sql-type="varchar(45)" length="45" not-null="true"/>
         </property>

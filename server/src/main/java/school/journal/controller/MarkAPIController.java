@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
+import school.journal.entity.Mark;
 import school.journal.service.IMarkService;
 import school.journal.service.exception.ServiceException;
 

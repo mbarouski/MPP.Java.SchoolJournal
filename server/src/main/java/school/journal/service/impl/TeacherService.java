@@ -155,9 +155,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
         return teacher;
     }

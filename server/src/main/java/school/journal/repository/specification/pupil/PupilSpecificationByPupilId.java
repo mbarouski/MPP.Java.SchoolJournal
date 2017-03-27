@@ -2,6 +2,7 @@ package school.journal.repository.specification.pupil;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import school.journal.entity.Pupil;
 
 public class PupilSpecificationByPupilId extends PupilSpecification {
 
@@ -18,6 +19,6 @@ public class PupilSpecificationByPupilId extends PupilSpecification {
 
     @Override
     public boolean specified(Pupil pupil) {
-        return pupil.getPupilId() == pupilId;
+        return pupil.getUserId() == pupilId;
     }
 }

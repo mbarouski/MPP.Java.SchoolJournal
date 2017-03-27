@@ -2,6 +2,7 @@ package school.journal.repository.specification.clazz;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import school.journal.entity.Clazz;
 
 public class ClazzSpecificationByClazzId extends ClazzSpecification {
 
