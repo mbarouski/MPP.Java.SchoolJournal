@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import school.journal.entity.Clazz;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
@@ -20,8 +21,7 @@ import static school.journal.utils.ValidateServiceUtils.validateId;
 import static school.journal.utils.ValidateServiceUtils.validateString;
 
 
-@Component
-@Qualifier("ClassService")
+@Service("ClassService")
 public class ClassService extends CRUDService<Clazz> implements IClassService {
 
     @Autowired
@@ -113,7 +113,7 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
         }
     }
 
-    private void prepareClassBeforeUpdate(Clazz newClazz, Session session) throws ServiceException {
+    private Clazz prepareClassBeforeUpdate(Clazz newClazz, Session session) throws ServiceException {
         Clazz clazz;
         try {
             clazz = repository.get(newClazz.getClassId(), session);
@@ -124,6 +124,7 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
+        return clazz;
     }
 
     private void checkLetterMark(Clazz clazz, String letterMark) {
