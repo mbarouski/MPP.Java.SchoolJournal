@@ -92,6 +92,7 @@ public class Pupil {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (characteristic != null ? characteristic.hashCode() : 0);
+        result = 31 * result + (pupilId != null ? pupilId.hashCode() : 0);
         return result;
     }
 
@@ -101,5 +102,15 @@ public class Pupil {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    private Integer pupilId;
+
+    public Integer getPupilId() {
+        return pupilId;
+    }
+
+    public void setPupilId(Integer id) {
+        this.pupilId = id;
     }
 }

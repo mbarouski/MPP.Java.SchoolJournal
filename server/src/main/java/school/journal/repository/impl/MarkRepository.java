@@ -42,6 +42,8 @@ public class MarkRepository extends RepositoryAbstractClass<Mark> {
 
     @Override
     public Mark get(int id, Session session) throws RepositoryException {
-        return null;
+        Mark mark = (Mark) session.get(Mark.class, id);
+        if (mark == null) throw new RepositoryException("Mark not found");
+        return mark;
     }
 }
