@@ -20,7 +20,7 @@
         <property name="email">
             <column name="email" sql-type="varchar(200)" length="200"/>
         </property>
-        <many-to-one name="role" class="school.journal.entity.Role" fetch="join" lazy="false">
+        <many-to-one name="role" class="school.journal.entity.Role" fetch="join">
             <column name="role_id"/>
         </many-to-one>
     </class>
