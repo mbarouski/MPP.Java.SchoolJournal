@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthAPIController {
     private final static Logger LOGGER = Logger.getLogger(AuthAPIController.class);
 
-    @Autowired
+//    @Autowired
     @Qualifier("AuthService")
     private IAuthService authService;
 

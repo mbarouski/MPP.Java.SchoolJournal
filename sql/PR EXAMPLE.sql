@@ -4,7 +4,10 @@ Value ('test',1);
 
 INSERT INTO `user` (`role_id`,`username`,`pass_hash`,`locked`,`email`)
 VALUES 	(1,'v','v',false,'v'),
-		(1,'a','a',false,'a');
+		(1,'a','a',false,'a'),
+        (1,'anton','vanton',false,'vanton@mail.com'),
+		(1,'avlera','avlera',false,'avlera@mail.com');
+        
 INSERT INTO `class` (`number`,`letter_mark`)
 VALUES 	(1,'v'),
 		(2,'a');

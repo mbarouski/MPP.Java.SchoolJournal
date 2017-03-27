@@ -39,8 +39,8 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            checkMarkBeforeCreate(mark,session);
-            mark = repository.create(mark,session);
+            checkMarkBeforeCreate(mark, session);
+            mark = repository.create(mark, session);
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();
@@ -79,7 +79,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         super.delete(mark);
     }
 
-    private void checkMarkBeforeCreate(Mark newMark,Session session) throws ServiceException {
+    private void checkMarkBeforeCreate(Mark newMark, Session session) throws ServiceException {
         try {
             validateNullableId(newMark.getMarkId(), "Mark");
             validateSubject(newMark.getSubject().getSubjectId(), session);
@@ -110,7 +110,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             if (newMark.getTeacher() != null) {
                 checkTeacher(mark, newMark.getTeacher().getUser().getUserId(), session);
             }
-            if (newMark.getType()!=null){
+            if (newMark.getType() != null) {
                 mark.setType(newMark.getType());
             }
             return mark;
@@ -152,7 +152,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             markList = (List<Mark>) criteria.list();
             transaction.commit();
         } finally {
-            if (transaction.isActive()){
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             session.close();
@@ -160,7 +160,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         return markList;
     }
 
-    public void validateSubjectAndClassBeforeSelecting(int subjectId,int classId) throws ServiceException {
+    public void validateSubjectAndClassBeforeSelecting(int subjectId, int classId) throws ServiceException {
         try {
             validateId(subjectId, "Subject");
             validateId(classId, "Class");
@@ -221,7 +221,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         return markList;
     }
 
-    private void validatePupilIdBeforeSelect(int pupilId)throws ServiceException {
+    private void validatePupilIdBeforeSelect(int pupilId) throws ServiceException {
         try {
             validateId(pupilId, "Pupil");
         } catch (ValidationException exc) {
@@ -231,20 +231,14 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     }
 
     private void checkTeacher(Mark mark, int id, Session session) {
-        try {
-            Teacher teacher = validateTeacher(id, session);
-            mark.setTeacher(teacher);
-        } catch (ServiceException exc) {
-            LOGGER.warn(exc);
-        }
-        Teacher teacher = (Teacher) session.load(Teacher.class, id);
+        Teacher teacher = (Teacher) session.get(Teacher.class, id);
         if (teacher != null) {
             mark.setTeacher(teacher);
         }
     }
 
-    private Teacher validateTeacher(int id,Session session) throws ServiceException {
-        Teacher teacher = (Teacher) session.load(Teacher.class, id);
+    private Teacher validateTeacher(int id, Session session) throws ServiceException {
+        Teacher teacher = (Teacher) session.get(Teacher.class, id);
         if (teacher == null) {
             throw new ServiceException("Error in Mark validation. Teacher is not exist");
         }
@@ -260,24 +254,24 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
     }
 
-    private Subject validateSubject(int id,Session session) throws ServiceException {
-        Subject subject = (Subject) session.load(Subject.class, id);
+    private Subject validateSubject(int id, Session session) throws ServiceException {
+        Subject subject = (Subject) session.get(Subject.class, id);
         if (subject == null) {
             throw new ServiceException("Error in Mark validation. Subject is not exist");
         }
         return subject;
     }
 
-    private void checkPupil(Mark mark, int id, Session session){
+    private void checkPupil(Mark mark, int id, Session session) {
         try {
-            Pupil pupil = validatePupil(id,session);
+            Pupil pupil = validatePupil(id, session);
             mark.setPupil(pupil);
         } catch (ServiceException exc) {
             LOGGER.warn(exc);
         }
     }
 
-    private Pupil validatePupil(int id,Session session) throws ServiceException {
+    private Pupil validatePupil(int id, Session session) throws ServiceException {
         Pupil pupil = (Pupil) session.get(Pupil.class, id);
         if (pupil == null) {
             throw new ServiceException("Error in Mark validation. Pupil is not exist");
@@ -290,7 +284,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         try {
             validateDate(date);
             mark.setDate(date);
-        } catch (ServiceException exc){
+        } catch (ServiceException exc) {
             LOGGER.warn(exc);
         }
     }
@@ -303,23 +297,21 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
     }
 
-    private void checkValue(Mark mark, Integer value){
+    private void checkValue(Mark mark, Integer value) {
         if (value == null) return;
         try {
             validateValue(value);
             mark.setValue(value);
-        }catch (ServiceException exc){
+        } catch (ServiceException exc) {
             LOGGER.warn(exc);
         }
     }
 
     private void validateValue(Integer value) throws ServiceException {
-        if (value==null) return;
+        if (value == null) return;
         if (value <= 0 || value >= 11) {
             throw new ServiceException("Invalid value");
         }
     }
-
-
 
 }

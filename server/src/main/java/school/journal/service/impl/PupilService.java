@@ -115,7 +115,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            repository.update(prepareEntityForUpdate(pupil, session), session);
+            pupil = repository.update(prepareEntityForUpdate(pupil, session), session);
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();
@@ -124,7 +124,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         } finally {
             session.close();
         }
-        return super.update(pupil);
+        return pupil;
     }
 
     @Override
@@ -177,11 +177,13 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     private void checkPupilBeforeCreate(Pupil pupil,Session session) throws ServiceException {
         try {
-            checkClassId(pupil,pupil.getClassId(),session);
+            checkClassId(pupil, pupil.getClassId(), session);
             validateString(pupil.getFirstName(), "First Name");
             validateString(pupil.getLastName(), "Last Name");
             validateNullableString(pupil.getPathronymic(), "Patronymic");
-            validatePhone(pupil.getPhoneNumber());
+            if (pupil.getPhoneNumber() != null) {
+                validatePhone(pupil.getPhoneNumber());
+            }
         } catch (ValidationException exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -190,7 +192,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     private void checkClassId(Pupil pupil, Integer classId,Session session) throws ServiceException, ValidationException {
         validateNullableId(classId, "Class");
-        Clazz clazz = (Clazz) session.load(Clazz.class, classId);
+        Clazz clazz = (Clazz) session.get(Clazz.class, classId);
         if (clazz != null) {
             pupil.setClassId(classId);
         }

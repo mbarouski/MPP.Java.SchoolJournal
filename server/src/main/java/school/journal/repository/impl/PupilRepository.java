@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Pupil;
+import school.journal.entity.User;
 import school.journal.repository.RepositoryAbstractClass;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
@@ -21,8 +22,8 @@ public class PupilRepository extends RepositoryAbstractClass<Pupil> {
 
     @Override
     public Pupil update(Pupil pupil, Session session) throws RepositoryException {
-        session.update(pupil);
-        return pupil;
+//        session.update(pupil);
+        return (Pupil) session.merge(pupil);
     }
 
     @Override
@@ -43,7 +44,9 @@ public class PupilRepository extends RepositoryAbstractClass<Pupil> {
 
     @Override
     public Pupil get(int id, Session session) throws RepositoryException {
-        return null;
+        Pupil pupil = (Pupil) session.get(Pupil.class, id);
+        if (pupil == null) throw new RepositoryException("Pupil not found");
+        return pupil;
     }
 }
 
