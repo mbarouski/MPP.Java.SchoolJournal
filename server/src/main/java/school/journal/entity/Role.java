@@ -1,23 +1,11 @@
 package school.journal.entity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class Role {
     private Integer roleId;
     private String name;
     private Integer level;
 
-<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
-    @Id
-    @Column(name = "role_id")
-    public int getRoleId() {
-=======
     public Integer getRoleId() {
->>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
         return roleId;
     }
 
@@ -25,8 +13,6 @@ public class Role {
         this.roleId = roleId;
     }
 
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -35,13 +21,7 @@ public class Role {
         this.name = name;
     }
 
-<<<<<<< 28488bca656d04fc5395b1769047d0039713e80e
-    @Basic
-    @Column(name = "level")
-    public int getLevel() {
-=======
     public Integer getLevel() {
->>>>>>> 60d5112bc89062b0dd824662e1516bbfec9be6ad
         return level;
     }
 
