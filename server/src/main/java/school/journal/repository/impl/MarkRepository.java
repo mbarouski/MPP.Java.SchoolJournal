@@ -14,20 +14,19 @@ import java.util.List;
 public class MarkRepository extends RepositoryAbstractClass<Mark> {
     @Override
     public Mark create(Mark mark, Session session) throws RepositoryException {
-        session.save(mark);
-        return mark;
+        return (Mark)session.save(mark);
     }
 
     @Override
     public Mark update(Mark mark, Session session) throws RepositoryException {
-        session.update(mark);
-        return mark;
+//        session.update(mark);
+        return (Mark)session.merge(mark);
     }
 
     @Override
     public Mark delete(Mark mark, Session session) throws RepositoryException {
         session.delete(mark);
-        return mark;
+        return null;
     }
 
     @Override

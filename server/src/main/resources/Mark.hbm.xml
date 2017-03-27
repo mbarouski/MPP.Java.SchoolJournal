@@ -7,9 +7,10 @@
     <class name="school.journal.entity.Mark" table="mark" schema="school_journal_db">
         <id name="markId">
             <column name="mark_id" sql-type="int(10) unsigned"/>
+            <generator class="native"/>
         </id>
         <property name="value">
-            <column name="value" sql-type="int(11)" not-null="true"/>
+            <column name="value" sql-type="int(11)" not-null="false"/>
         </property>
         <property name="type">
             <column name="type" sql-type="enum('simple', 'apsent', 'control', 'self', 'term', 'year')"/>
