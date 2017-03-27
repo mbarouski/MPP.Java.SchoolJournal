@@ -1,11 +1,17 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import school.journal.entity.Clazz;
+import school.journal.entity.Subject;
 import school.journal.entity.SubjectInSchedule;
+import school.journal.entity.Teacher;
 import school.journal.repository.IRepository;
+import school.journal.repository.exception.RepositoryException;
 import school.journal.service.CRUDService;
 import school.journal.service.ISubjectInScheduleService;
 import school.journal.service.exception.ServiceException;
@@ -36,17 +42,27 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             throw new ServiceException("Invalid begin time of subject");
     }
 
-    @Override
-    public SubjectInSchedule create(SubjectInSchedule subject) throws ServiceException {
+    public SubjectInSchedule create(SubjectInSchedule subject,int clazzId,int subjectId,int teacherId) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            validateId(subject.getClassId(),"Class");
-            validateNullableId(subject.getTeacherId(),"Teacher");
             validateString(subject.getPlace(),"Place");
-        } catch (ValidationException exc) {
+            checkTime(subject.getBeginTime());
+            subject.setClazz((Clazz)session.load(Clazz.class,clazzId));
+            subject.setSubject((Subject)session.load(Subject.class,subjectId));
+            subject.setTeacher((Teacher)session.load(Teacher.class,teacherId));
+
+            repository.create(subject, session);
+            transaction.commit();
+        } catch (RepositoryException | ValidationException exc) {
+            transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
+        } finally {
+            if(session != null) {
+                session.close();
+            }
         }
-        checkTime(subject.getBeginTime());
         return super.create(subject);
     }
 
