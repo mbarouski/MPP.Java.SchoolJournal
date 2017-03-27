@@ -43,15 +43,15 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
     }
 
     @Override
-    public SubjectInSchedule create(SubjectInSchedule subject,int clazzId,int subjectId,int teacherId) throws ServiceException {
+    public SubjectInSchedule create(SubjectInSchedule subject) throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
             validateString(subject.getPlace(),"Place");
             checkTime(subject.getBeginTime());
-            subject.setClazz((Clazz)session.load(Clazz.class,clazzId));
-            subject.setSubject((Subject)session.load(Subject.class,subjectId));
-            subject.setTeacher((Teacher)session.load(Teacher.class,teacherId));
+            subject.setClazz((Clazz)session.load(Clazz.class,subject.getClazz().getClassId()));
+            subject.setSubject((Subject)session.load(Subject.class,subject.getSubject().getSubjectId()));
+            subject.setTeacher((Teacher)session.load(Teacher.class,subject.getTeacher().getUserId()));
 
             repository.create(subject, session);
             transaction.commit();
@@ -71,8 +71,8 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
     public SubjectInSchedule update(SubjectInSchedule subject) throws ServiceException {
         try {
             validateId(subject.getSubectInScheduleId(),"SubjectInSchedule");
-            validateId(subject.getClassId(),"Class");
-            validateNullableId(subject.getTeacherId(),"Teacher");
+            validateId(subject.getClazz().getClassId(),"Class");
+            validateNullableId(subject.getTeacher().getUserId(),"Teacher");
             validateString(subject.getPlace(),"Place");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
