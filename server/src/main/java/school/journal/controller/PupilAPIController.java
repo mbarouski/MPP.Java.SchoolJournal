@@ -25,6 +25,7 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 public class PupilAPIController {
 
     private static Logger LOGGER = Logger.getLogger(PupilAPIController.class);
+    private static final String classSubject = "Mark Controller";
 
     @Autowired
     @Qualifier("PupilService")
@@ -40,7 +41,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.read(), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in getting pupil list"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get full list", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -58,7 +59,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.create(pupil), CREATED);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil creation"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Create", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -76,7 +77,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.update(pupil), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil updating"),
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Update", exc),
                     BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
@@ -96,7 +97,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in mark deleting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Delete", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -111,11 +112,10 @@ public class PupilAPIController {
         ResponseEntity resultResponse;
         try {
             LOGGER.info("Get Pupil entity Controller method");
-            resultResponse = new ResponseEntity(pupilService.getPupilInfo(pupilId),
-                    OK);
+            resultResponse = new ResponseEntity(pupilService.getPupilInfo(pupilId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil getting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get one", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -123,7 +123,7 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = GET,params = "classId")
+    @RequestMapping(method = GET, params = "classId")
     @ResponseBody
     public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @RequestParam(value = "classId") int classId)
             throws ControllerException {
@@ -133,7 +133,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.getListOfPupils(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil getting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get list for class", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -141,7 +141,7 @@ public class PupilAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = PUT,params = {"pupilId","classId"})
+    @RequestMapping(method = PUT, params = {"pupilId", "classId"})
     @ResponseBody
     public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId, @RequestParam(value = "classId") Integer classId)
             throws ControllerException {
@@ -151,7 +151,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.movePupilToAnotherClass(pupilId, classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in pupil updating"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Move to another Class", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);

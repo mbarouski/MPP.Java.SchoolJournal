@@ -38,7 +38,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(classService.read(), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject,"get full list",exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "get full list", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -74,7 +74,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(classService.update(clazz), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject,"Update",exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Update", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -93,7 +93,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject,"Delete",exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Delete", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -111,7 +111,7 @@ public class ClassAPIController {
             resultResponse = new ResponseEntity(classService.getOne(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject,"Delete",exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Delete", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
