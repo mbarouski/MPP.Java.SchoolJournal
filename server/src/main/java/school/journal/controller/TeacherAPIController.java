@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
+import school.journal.entity.Teacher;
 import school.journal.service.ITeacherService;
 import school.journal.service.exception.ServiceException;
 
@@ -26,8 +27,54 @@ public class TeacherAPIController {
     @Qualifier("TeacherService")
     private ITeacherService teacherService;
 
+    @PostMapping
+    public ResponseEntity create(HttpServletRequest request, Teacher teacher) throws ControllerException {
+        ResponseEntity resultResponse = null;
+        try {
+            resultResponse = new ResponseEntity(teacherService.create(teacher), OK);
+        } catch (ServiceException exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't create teacher"), BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    @PutMapping
+    public ResponseEntity update(HttpServletRequest request, Teacher teacher) throws ControllerException {
+        ResponseEntity resultResponse = null;
+        try {
+            resultResponse = new ResponseEntity(teacherService.update(teacher), OK);
+        } catch (ServiceException exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't update teacher"), BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    @DeleteMapping("/{teacherId}")
+    public ResponseEntity delete(HttpServletRequest request, @PathVariable("teacherId") int teacherId) throws ControllerException {
+        ResponseEntity resultResponse = null;
+        try {
+            teacherService.delete(teacherId);
+            resultResponse = new ResponseEntity(OK);
+        } catch (ServiceException exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't delete teacher"), BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
     @GetMapping("/{classId}")
-    public ResponseEntity get(HttpServletRequest request, @PathVariable("classId") int classId)
+    public ResponseEntity getListOfTeachersForClass(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
         ResponseEntity resultResponse = null;
         try {
@@ -35,6 +82,21 @@ public class TeacherAPIController {
         } catch (ServiceException exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(new ErrorObject("Can't get teacher list for class"), BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    @GetMapping("/")
+    public ResponseEntity getAll(HttpServletRequest request) throws ControllerException {
+        ResponseEntity resultResponse = null;
+        try {
+            resultResponse = new ResponseEntity(teacherService.read(), OK);
+        } catch (ServiceException exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't get teacher list"), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
