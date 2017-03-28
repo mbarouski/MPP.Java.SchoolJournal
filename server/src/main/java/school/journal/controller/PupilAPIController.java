@@ -1,6 +1,5 @@
 package school.journal.controller;
 
-import com.sun.org.glassfish.gmbal.ParameterNames;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +24,6 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 public class PupilAPIController {
 
     private static Logger LOGGER = Logger.getLogger(PupilAPIController.class);
-    private static final String classSubject = "Mark Controller";
 
     @Autowired
     @Qualifier("PupilService")
@@ -41,7 +39,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.read(), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get full list", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Get full list", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -59,7 +57,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.create(pupil), CREATED);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Create", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Create", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -77,7 +75,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.update(pupil), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Update", exc),
+            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Update", exc),
                     BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
@@ -97,7 +95,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Delete", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Delete", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -115,7 +113,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.getPupilInfo(pupilId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get one", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Get one", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -133,7 +131,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.getListOfPupils(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get list for class", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Get list for class", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -151,7 +149,7 @@ public class PupilAPIController {
             resultResponse = new ResponseEntity(pupilService.movePupilToAnotherClass(pupilId, classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Move to another Class", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Move to another Class", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);

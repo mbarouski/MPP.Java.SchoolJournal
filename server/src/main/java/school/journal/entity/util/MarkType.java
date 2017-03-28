@@ -27,8 +27,4 @@ public enum MarkType {
         throw new UnsupportedOperationException("The meaning " + meaning + "is unsupported");
     }
 
-    @Override
-    public String toString() {
-        return meaning;
-    }
 }

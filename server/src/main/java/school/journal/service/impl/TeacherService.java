@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import school.journal.entity.Clazz;
 import school.journal.entity.Role;
 import school.journal.entity.Teacher;
@@ -27,7 +28,7 @@ import static school.journal.entity.enums.RoleEnum.DIRECTOR_OF_STUDIES;
 import static school.journal.entity.enums.RoleEnum.TEACHER;
 import static school.journal.utils.ValidateServiceUtils.*;
 
-@Component("TeacherService")
+@Service("TeacherService")
 public class TeacherService extends CRUDService<Teacher> implements ITeacherService {
     private static final String SQL_QUERY_FOR_GET_TEACHERS_FOR_CLASS = "SELECT `teacher`.`teacher_id`, `teacher`.`phone_number`, " +
             "`teacher`.`class_id`, `teacher`.`first_name`, `teacher`.`last_name`, `teacher`.`pathronymic`, `teacher`.`description` " +

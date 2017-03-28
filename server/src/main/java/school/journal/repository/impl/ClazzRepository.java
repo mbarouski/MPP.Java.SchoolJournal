@@ -23,9 +23,9 @@ public class ClazzRepository extends RepositoryAbstractClass<Clazz> {
 
     @Override
     public Clazz update(Clazz clazz, Session session) throws RepositoryException {
-        session.merge(clazz);
+
 //        session.update(clazz);
-        return clazz;
+        return (Clazz) session.merge(clazz);
     }
 
     @Override

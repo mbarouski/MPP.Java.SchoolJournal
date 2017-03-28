@@ -5,6 +5,7 @@ import org.hibernate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import school.journal.entity.*;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
@@ -25,7 +26,7 @@ import static org.hibernate.criterion.CriteriaSpecification.INNER_JOIN;
 import static school.journal.utils.ValidateServiceUtils.validateId;
 import static school.journal.utils.ValidateServiceUtils.validateNullableId;
 
-@Component("MarkService")
+@Service("MarkService")
 public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     @Autowired

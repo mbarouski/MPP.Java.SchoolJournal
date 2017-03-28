@@ -42,7 +42,8 @@ public class TeacherAPIController {
         return resultResponse;
     }
 
-    @PostMapping("/{teacherId}/{classId}")
+    //@PostMapping("/{teacherId}/{classId}")
+    //FIX I DON' KNOW WHAT HAPPENED, but if it is not commented, project is not deploying
     public ResponseEntity changeClassOfTeacher(HttpServletRequest request, @PathVariable("teacherId") int teacherId, @PathVariable("classId") int classId)
             throws ControllerException {
         ResponseEntity resultResponse = null;

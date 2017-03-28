@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import school.journal.entity.Clazz;
 import school.journal.entity.Pupil;
 import school.journal.repository.IRepository;
@@ -21,7 +22,7 @@ import java.util.*;
 
 import static school.journal.utils.ValidateServiceUtils.*;
 
-@Component("PupilService")
+@Service("PupilService")
 public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     @Autowired

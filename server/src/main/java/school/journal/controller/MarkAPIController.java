@@ -27,7 +27,6 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 public class MarkAPIController {
 
     private static Logger LOGGER = Logger.getLogger(MarkAPIController.class);
-    private static final String classSubject = "Mark Controller";
 
     @Autowired
     @Qualifier("MarkService")
@@ -43,7 +42,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.read(), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get full list", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get full list", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -61,7 +60,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.create(mark), HttpStatus.CREATED);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Create", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Create", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -79,7 +78,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.update(mark), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Update", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Update", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -98,7 +97,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Delete", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Delete", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -116,7 +115,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.getOne(markId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get by id", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get by id", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -135,7 +134,7 @@ public class MarkAPIController {
                     getMarksForSubjectInClass(subjectId, classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get for Subject In Class", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get for Subject In Class", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -153,7 +152,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.getMarksForTermOrder(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get for class", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get for class", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -171,7 +170,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.getMarksForPupil(pupilId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject(classSubject, "Get for pupil id", exc), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get for pupil id", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
