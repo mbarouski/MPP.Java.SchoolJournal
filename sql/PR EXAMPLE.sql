@@ -6,6 +6,8 @@ INSERT INTO `user` (`role_id`,`username`,`pass_hash`,`locked`,`email`)
 VALUES 	(1,'v','v',false,'v'),
 		(1,'a','a',false,'a');
 		
+INSERT INTO `school_journal_db`.`user` (`role_id`, `username`, `pass_hash`, `locked`, `email`) VALUES ('1', 'pupil3', 'pupil3', '0', 'pupil3');
+INSERT INTO `school_journal_db`.`user` (`role_id`, `username`, `pass_hash`, `locked`, `email`) VALUES ('1', 'pupil4', 'pupil4', '0', 'pupil4');
 
 		
 INSERT INTO `class` (`number`,`letter_mark`)
@@ -14,9 +16,15 @@ VALUES 	(1,'v'),
 INSERT INTO `class` (`number`,`letter_mark`)
 VALUES 	(1,'v'),
 		(2,'a');
+		
+		
 INSERT INTO `pupil` (`pupil_id`,`class_id`,`first_name`,`pathronymic`,`last_name`)
 VALUES 	(1,1,'v','v','v'),
 		(2,2,'a','a','a');
+		
+INSERT INTO `school_journal_db`.`pupil` (`pupil_id`, `class_id`, `first_name`, `pathronymic`, `last_name`) VALUES ('8', '3', 'q', 'q', 'q');
+INSERT INTO `school_journal_db`.`pupil` (`pupil_id`, `class_id`, `first_name`, `pathronymic`, `last_name`) VALUES ('9', '4', 'w', 'w', 'w');
+		
 
 INSERT INTO `school_journal_db`.`subject` (`name`, `description`) VALUES ('Биология', 'Наука о живой природе, о закономерностях органической жизни.');
 INSERT INTO `school_journal_db`.`subject` (`name`, `description`) VALUES ('Математика', 'Наука о структурах, порядке и отношениях, исторически сложившаяся на основе операций подсчёта, измерения и описания формы объектов.');

@@ -26,6 +26,6 @@
         <property name="description">
             <column name="description" sql-type="text" not-null="true"/>
         </property>
-        <one-to-one name="user" class="school.journal.entity.User"/>
+        <one-to-one name="user" class="school.journal.entity.User" />
     </class>
 </hibernate-mapping>
