@@ -1,17 +1,16 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import school.journal.entity.Clazz;
-import school.journal.entity.Subject;
-import school.journal.entity.SubjectInSchedule;
-import school.journal.entity.Teacher;
+import school.journal.entity.*;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.subjectInSchedule.SubjectInScheduleSpecificationByClassId;
 import school.journal.service.CRUDService;
 import school.journal.service.ISubjectInScheduleService;
 import school.journal.service.exception.ServiceException;
@@ -69,16 +68,25 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
 
     @Override
     public SubjectInSchedule update(SubjectInSchedule subject) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         try {
             validateId(subject.getSubectInScheduleId(),"SubjectInSchedule");
-            validateId(subject.getClazz().getClassId(),"Class");
-            validateNullableId(subject.getTeacher().getUserId(),"Teacher");
+            subject.setClazz((Clazz)session.load(Clazz.class,subject.getClazz().getClassId()));
+            subject.setSubject((Subject)session.load(Subject.class,subject.getSubject().getSubjectId()));
+            subject.setTeacher((Teacher)session.load(Teacher.class,subject.getTeacher().getUserId()));
             validateString(subject.getPlace(),"Place");
-        } catch (ValidationException exc) {
+            checkTime(subject.getBeginTime());
+        } catch ( ValidationException exc) {
+            transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
+        } finally {
+            if(session != null) {
+                session.close();
+            }
         }
-        checkTime(subject.getBeginTime());
+
         return super.update(subject);
     }
 
@@ -90,26 +98,51 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        SubjectInSchedule subject = new SubjectInSchedule();
-        subject.setSubectInScheduleId(id);
-        super.delete(subject);
+        SubjectInSchedule subjectInSchedule = new SubjectInSchedule();
+        subjectInSchedule.setSubectInScheduleId(id);
+        super.delete(subjectInSchedule);
     }
 
     @Override
     public List<SubjectInSchedule> read() throws ServiceException {
+        /*Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<SubjectInSchedule> list;
+        try {
+            list = repository.query(null, session);
+            for(SubjectInSchedule subject : list){
+                subject.setClazz((Clazz) session.load(Clazz.class,subject.getClazz().getClassId()));
+                subject.setTeacher((Teacher) session.load(Teacher.class,subject.getTeacher().getUserId()));
+                subject.setSubject((Subject)session.load(Subject.class,subject.getSubject().getSubjectId()));
+            }
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return list;*/
         return super.read();
     }
 
     public List<SubjectInSchedule> getPupilSchedule(int id) throws ServiceException{
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<SubjectInSchedule> subjects = new ArrayList<>();
         try {
-            validateId(id,"Pupil");
-        }catch (ValidationException exc){
+            Pupil pupil =(Pupil) session.load(Pupil.class,id);
+            Clazz clazz = (Clazz)session.load(Clazz.class,pupil.getClassId());
+            if(clazz == null){
+                throw new ServiceException("This pupil haven't a class");
+            }
+            subjects = repository.query(new SubjectInScheduleSpecificationByClassId(clazz.getClassId()),session);
+        }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        ArrayList<SubjectInSchedule> schedule = new ArrayList<>();
-
-        return null;
+        return subjects;
     }
 
     //SET('simple', 'apsent', 'control', 'self', 'term', 'year')
