@@ -44,11 +44,11 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
         session.beginTransaction();
         try {
             tokenRepository.update(token, session);
+            session.getTransaction().commit();
         } catch (RepositoryException exc) {
             session.getTransaction().rollback();
             throw new ServiceException(exc);
         } finally {
-            session.getTransaction().commit();
             session.close();
         }
     }
@@ -57,9 +57,9 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
      * Returns token string value.
      */
     @Override
-    public String login(String username, String password) throws AuthException, ServiceException {
+    public Token login(String username, String password) throws AuthException, ServiceException {
         List<User> users;
-        String tokenValue = null;
+        Token token = null;
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         try {
@@ -71,15 +71,21 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
                 }
                 if(verifyPasswords(user.getPassHash(), password)) {
                     try {
-                        tokenValue = JWT.create().withSubject(username).sign(Algorithm.HMAC256(SECRET));
-                        Token token = new Token();
+                        String tokenValue = JWT.create().withSubject(username).sign(Algorithm.HMAC256(SECRET));
+                        boolean isNew = false;
+                        token = (Token)session.get(Token.class, user.getUserId());
+                        if (token == null) {
+                            isNew = true;
+                            token = new Token();
+                        }
+                        token.setUserId(user.getUserId());
                         token.setUser((User)session.load(User.class, user.getUserId()));
                         token.setValue(tokenValue);
                         token.setActive((byte)1);
-                        updateToken(token);
-                    } catch (UnsupportedEncodingException exc) {
-
-                    }
+                        token = isNew ? tokenRepository.create(token, session) : tokenRepository.update(token, session);
+                        session.getTransaction().commit();
+                        token.getUser().setPassHash(null);
+                    } catch (UnsupportedEncodingException exc) { }
                 } else {
                     throw new AuthException("Password is incorrect");
                 }
@@ -88,11 +94,11 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
             }
         } catch (RepositoryException exc) {
             session.getTransaction().rollback();
+            token = null;
         } finally {
-            session.getTransaction().commit();
             session.close();
         }
-        return tokenValue;
+        return token;
     }
 
     private boolean verifyPasswords(String hash, String pass) {

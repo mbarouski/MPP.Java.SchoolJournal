@@ -180,6 +180,24 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
     }
 
     @Override
+    public Teacher getOne(int teacherId) throws ServiceException {
+        Teacher teacher;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            teacher = repository.get(teacherId, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return teacher;
+    }
+
+    @Override
     public List<Teacher> read() throws ServiceException {
         return super.read();
     }

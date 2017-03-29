@@ -73,7 +73,7 @@ public class TeacherAPIController {
         return resultResponse;
     }
 
-    @GetMapping("/{classId}")
+    @GetMapping("/class/{classId}")
     public ResponseEntity getListOfTeachersForClass(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
         ResponseEntity resultResponse = null;
@@ -89,7 +89,24 @@ public class TeacherAPIController {
         return resultResponse;
     }
 
-    @GetMapping("/")
+
+
+    @RequestMapping(value = "/{teacherId}", method = RequestMethod.GET)
+    public ResponseEntity getOne(HttpServletRequest request, @PathVariable("teacherId") int teacherId) throws ControllerException {
+        ResponseEntity resultResponse = null;
+        try {
+            resultResponse = new ResponseEntity(teacherService.getOne(teacherId), OK);
+        } catch (ServiceException exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(new ErrorObject("Can't get teacher list"), BAD_REQUEST);
+        } catch (Exception exc) {
+            LOGGER.error(exc);
+            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity getAll(HttpServletRequest request) throws ControllerException {
         ResponseEntity resultResponse = null;
         try {
@@ -120,7 +137,7 @@ public class TeacherAPIController {
         return resultResponse;
     }
 
-    @PostMapping("/{teacherId}")
+    @PostMapping("/changeDirectorOfStudiesStatus/{teacherId}")
     public ResponseEntity changeDirectorOfStudiesStatus(HttpServletRequest request, @PathVariable("teacherId") int teacherId, @RequestParam("isDirector") boolean isDirector)
             throws ControllerException {
         ResponseEntity resultResponse = null;
