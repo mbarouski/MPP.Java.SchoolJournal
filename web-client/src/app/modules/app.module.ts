@@ -11,6 +11,11 @@ import {HttpModule} from "@angular/http";
 import {MenuComponent} from "../components/menu.component";
 import {Ng2BootstrapModule, CollapseModule} from "ng2-bootstrap";
 import {ProfileComponent} from "../components/profile.component";
+import {TeachersService} from "../services/teachers.service";
+import {LoginComponent} from "../components/login.component";
+import {FormsModule} from "@angular/forms";
+import {AuthService} from "../services/auth.service";
+import {UsersService} from "../services/users.service";
 
 @NgModule({
   imports: [
@@ -18,16 +23,21 @@ import {ProfileComponent} from "../components/profile.component";
     BrowserModule,
     AppRoutingModule,
     HttpModule,
-    CollapseModule.forRoot()
+    CollapseModule.forRoot(),
+    FormsModule
   ],
   declarations: [
     AppComponent,
     RolesComponent,
     MenuComponent,
-    ProfileComponent
+    ProfileComponent,
+    LoginComponent
   ],
   providers: [
     RolesService,
+    TeachersService,
+    AuthService,
+    UsersService,
     { provide: APP_CONFIG, useValue: AppConfig },
   ],
   bootstrap:    [

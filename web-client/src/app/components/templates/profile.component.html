@@ -1,17 +1,23 @@
+
+
 <section>
   <div class="container">
     <div class="row">
-      <div class="col-md-10 col-md-offset-1">
-        <h1>{{user.name}}</h1>
-        <p class="role">Ученик &middot; 11 А</p>
-        <p class="class"></p>
+      <div class="col-md-10 col-md-offset-1" *ngIf="user">
+        <h1>{{user.name || user.username}}</h1>
+        <p class="role">{{russianRoleName[user.role.name.toLowerCase()]()}}</p>
         <hr>
-        <h3>Описание</h3>
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis enim vehicula, euismod magna nec, mattis nibh. Curabitur orci est, mollis sit amet diam ac, venenatis viverra lacus. Donec euismod arcu et tellus auctor, ut suscipit ex luctus. Curabitur ornare metus et mauris feugiat rutrum. Donec nec enim et enim rutrum dignissim a et nisl. Praesent laoreet malesuada ullamcorper. In pulvinar ex id mi tristique, at auctor felis commodo. Pellentesque vel turpis ac neque vehicula congue ac ac magna. Morbi eu dolor eget nibh laoreet fermentum. Vestibulum vitae augue metus. Ut posuere quis ex nec tincidunt. Cras aliquam dictum diam ut dapibus. Aenean efficitur orci ut laoreet sollicitudin. Donec quis dictum lorem, aliquet varius nulla. In hac habitasse platea dictumst.</p>
-        <hr>
+        <div *ngIf="teacher || pupil">
+          <h3>Описание</h3>
+          <p class="description">{{teacher.description || pupil.description}}</p>
+          <hr>
+        </div>
         <h3>Контакты</h3>
-        <p><strong>Email:</strong> maksim.borovskij@yandex.ru</p>
-        <p><strong>Мобильный телефон:</strong> +375297053532</p>
+        <p *ngIf="user.email"><strong>Email:</strong> {{user.email}}</p>
+        <p *ngIf="teacher && teacher.phoneNumber || pupil && pupil.phoneNumber"><strong>Мобильный телефон:</strong> {{teacher.phoneNumber || pupil.phoneNumber}}</p>
+      </div>
+      <div class="col-md-10 col-md-offset-1" *ngIf="!user">
+        <h1>Нет информации</h1>
       </div>
     </div>
   </div>
