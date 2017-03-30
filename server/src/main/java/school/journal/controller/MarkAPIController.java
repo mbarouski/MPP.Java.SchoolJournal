@@ -42,7 +42,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.read(), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in getting mark list"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get full list", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -60,7 +60,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.create(mark), HttpStatus.CREATED);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in mark creation"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Create", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -78,7 +78,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.update(mark), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in mark updating"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Update", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -97,7 +97,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in mark deleting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Delete", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -115,7 +115,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.getOne(markId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in mark getting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get by id", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -123,7 +123,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = GET,params = "subjectId,classId")
+    @RequestMapping(method = GET, params = {"subjectId", "classId"})
     @ResponseBody
     public ResponseEntity getMarksForSubjectInClass(HttpServletRequest request, @RequestParam(value = "subjectId") int subjectId, @RequestParam(value = "classId") int classId)
             throws ControllerException {
@@ -134,7 +134,7 @@ public class MarkAPIController {
                     getMarksForSubjectInClass(subjectId, classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in class getting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get for Subject In Class", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -142,7 +142,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = GET,params = "classId")
+    @RequestMapping(method = GET, params = "classId")
     @ResponseBody
     public ResponseEntity getMarksForTermOrder(HttpServletRequest request, @RequestParam(value = "classId") int classId)
             throws ControllerException {
@@ -152,7 +152,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.getMarksForTermOrder(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Error in mark getting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get for class", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
@@ -160,7 +160,7 @@ public class MarkAPIController {
         return resultResponse;
     }
 
-    @RequestMapping(method = GET,params = "pupilId")
+    @RequestMapping(method = GET, params = "pupilId")
     @ResponseBody
     public ResponseEntity getMarksForPupil(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId)
             throws ControllerException {
@@ -170,8 +170,7 @@ public class MarkAPIController {
             resultResponse = new ResponseEntity(markService.getMarksForPupil(pupilId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity(
-                    new ErrorObject("Error in mark getting"), BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get for pupil id", exc), BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);

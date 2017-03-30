@@ -30,11 +30,13 @@ public class ValidateServiceUtils {
         validateNullableString(string, column);
     }
 
-    public static void validatePhone(String phone) throws ValidationException{
+    public static void validatePhone(String phone) throws ValidationException {
         validateNullableString(phone, "Phone");
-        Matcher m = PHONE_PATTERN.matcher(phone);
-        if (!m.matches()) {
-            throw new ValidationException("Phone isn't correct.");
+        if (phone != null) {
+            Matcher m = PHONE_PATTERN.matcher(phone);
+            if (!m.matches()) {
+                throw new ValidationException("Phone isn't correct.");
+            }
         }
     }
 

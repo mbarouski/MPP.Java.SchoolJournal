@@ -102,4 +102,5 @@ public class Pupil {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

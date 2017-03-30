@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import school.journal.entity.Role;
 import school.journal.entity.Token;
 import school.journal.entity.User;
@@ -25,7 +26,7 @@ import school.journal.utils.MD5Generator;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-@Component("AuthService")
+@Controller("AuthService")
 public class AuthService extends ServiceAbstractClass implements IAuthService {
     private final String SECRET = "simple_secret_string";
 

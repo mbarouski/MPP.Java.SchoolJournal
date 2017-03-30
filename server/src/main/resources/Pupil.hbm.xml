@@ -8,7 +8,7 @@
         <id name="userId">
             <column name="pupil_id"  sql-type="int(10) unsigned"/>
         </id>
-        <property name="classId">
+        <property name="classId" lazy="false">
             <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
         </property>
         <property name="firstName">
@@ -21,10 +21,10 @@
             <column name="last_name" sql-type="varchar(100)" length="100"/>
         </property>
         <property name="phoneNumber">
-            <column name="phone_number" sql-type="varchar(45)" length="45" not-null="true"/>
+            <column name="phone_number" sql-type="varchar(45)" length="45" not-null="false"/>
         </property>
         <property name="characteristic">
-            <column name="characteristic" sql-type="text" not-null="true"/>
+            <column name="characteristic" sql-type="text" not-null="false"/>
         </property>
         <one-to-one name="user" class="school.journal.entity.User"/>
     </class>

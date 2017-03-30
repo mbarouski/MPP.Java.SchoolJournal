@@ -3,7 +3,6 @@ package school.journal.service;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.service.exception.ServiceException;
@@ -78,4 +77,23 @@ public abstract class CRUDService<T> extends ServiceAbstractClass{
             }
             return list;
     }
+
+    public T getOne(int id) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        T t ;
+        try {
+            t = repository.get(id,session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return t;
+    }
+
+
 }
