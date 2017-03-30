@@ -7,24 +7,25 @@
     <class name="school.journal.entity.Mark" table="mark" schema="school_journal_db">
         <id name="markId">
             <column name="mark_id" sql-type="int(10) unsigned"/>
+            <generator class="native"/>
         </id>
         <property name="value">
-            <column name="value" sql-type="int(11)" not-null="true"/>
+            <column name="value" sql-type="int(11)" not-null="false"/>
         </property>
         <property name="type">
-            <column name="type" sql-type="set('simple', 'apsent', 'control', 'self', 'term', 'year')"/>
+            <column name="type" sql-type="enum('simple', 'apsent', 'control', 'self', 'term', 'year')"/>
         </property>
         <property name="date">
             <column name="date" sql-type="date"/>
         </property>
-        <many-to-one name="pupil" class="school.journal.entity.Pupil">
+        <many-to-one name="pupil" class="school.journal.entity.Pupil" fetch="join" lazy="false">
             <column name="pupil_id"/>
         </many-to-one>
-        <many-to-one name="subject" class="school.journal.entity.Subject">
+        <many-to-one name="subject" class="school.journal.entity.Subject" fetch="join">
             <column name="subject_id"/>
         </many-to-one>
-        <many-to-one name="teacher" class="school.journal.entity.Teacher">
-            <column name="teacher_id" not-null="true"/>
+        <many-to-one name="teacher" class="school.journal.entity.Teacher" lazy="false">
+            <column name="teacher_id" />
         </many-to-one>
     </class>
 </hibernate-mapping>

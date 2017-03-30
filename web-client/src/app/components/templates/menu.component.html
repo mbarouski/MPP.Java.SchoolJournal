@@ -1,0 +1,25 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" (click)="isCollapsed = !isCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" routerLink="/">Школьный Журнал</a>
+    </div>
+
+    <div class="collapse navbar-collapse" [collapse]="isCollapsed">
+      <ul class="nav navbar-nav">
+        <li class="active"><a routerLink="/profile">Профиль</a></li>
+        <li><a routerLink="/schedule">Расписание</a></li>
+        <li><a routerLink="/roles">Roles</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li *ngIf="username"><a routerLink="#" (click)="onLogoutClick(e)">{{username}} (Выйти)</a></li>
+        <li *ngIf="!username"><a routerLink="/">Войти</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,1 +1,173 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body.login {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+body:not(.login) {
+  margin-bottom: 60px;
+}
+h1,
+h2,
+h3 {
+  color: #1d71bb;
+}
+.navbar {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #f5f5f5;
+  text-transform: uppercase;
+}
+footer p {
+  margin: 0;
+}
+section {
+  margin-bottom: 20px;
+}
+.role {
+  margin: 2px 0 0 0;
+  padding: 0;
+  font-weight: bold;
+}
+.subject-in-schedule:hover {
+  text-decoration: none;
+}
+.subject-in-schedule {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.add-info-subject-in-schedule {
+  display: flex;
+  justify-content: space-between;
+}
+.add-info-subject-in-schedule p {
+  font-size: 0.8em;
+}
+a {
+  color: black;
+}
+a:hover {
+  color: #1d71bb;
+}
+.mark-input {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.mark-input.control-mark {
+  background-color: red;
+  color: #fff;
+}
+.mark-input.self-work-mark {
+  background-color: dodgerblue;
+  color: #fff;
+}
+.mark-input.absent {
+  background-color: lightgray;
+  color: #fff;
+}
+.section-marks,
+.full-schedule {
+  padding: 10px;
+}
+.marks .mark-td {
+  padding: 0;
+  margin: 0;
+  width: 10px;
+  height: 10px;
+  text-align: center;
+}
+.marks a {
+  display: block;
+}
+.marks a:hover {
+  text-decoration: none;
+}
+.context-menu-marks-type {
+  position: fixed;
+  display: none;
+  height: auto;
+  z-index: 1;
+  border: 2px solid #8c8c8c;
+  outline: none;
+}
+.context-menu-item:hover {
+  background: #eee;
+}
+.context-menu-item {
+  cursor: pointer;
+  list-style: none;
+  background: #fff;
+  margin: 0;
+}
+.context-menu-item a:focus,
+.context-menu-item a:hover {
+  text-decoration: none;
+  border: 0;
+  outline: none;
+}
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
+.actions.start {
+  justify-content: flex-start;
+}
+.actions.start a {
+  margin-right: 5px;
+}
+.lesson-date,
+.lesson-time {
+  transform: rotate(-35deg);
+}
+.green {
+  color: green;
+}
+.htooltip span {
+  /* Внешний вид нашего тултипа */
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 15px 15px 15px 0px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  margin-left: 2px;
+  margin-top: -75px;
+  opacity: 0;
+  /* Делаем его прозрачным */
+  padding: 10px 10px 10px 40px;
+  position: absolute;
+  text-decoration: none;
+  visibility: hidden;
+  /* И прячем */
+  z-index: 10;
+}
+.htooltip {
+  transition: background 0.2s linear;
+}
+.htooltip:hover {
+  background: #eee;
+}
+.htooltip:hover span {
+  /* По hover отображаем тултип */
+  opacity: 1;
+  visibility: visible;
+}
+.scroll-wrapper {
+  overflow-x: auto;
+}
+html,
+body {
+  overflow-x: hidden;
+}

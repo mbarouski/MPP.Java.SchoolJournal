@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import school.journal.controller.util.ErrorObject;
+import school.journal.entity.Token;
 import school.journal.entity.User;
 import school.journal.entity.util.TokenInfo;
 import school.journal.entity.util.UserAuthInfo;
@@ -17,6 +18,8 @@ import school.journal.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+@CrossOrigin
 @Controller
 @RequestMapping(value = "/api/auth")
 public class AuthAPIController {
@@ -26,18 +29,14 @@ public class AuthAPIController {
     @Qualifier("AuthService")
     private IAuthService authService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping(value = "/login")
     @ResponseBody
     public ResponseEntity login(@RequestBody UserAuthInfo user) {
-        String token = null;
+        Token token = null;
         ResponseEntity resultResponse = null;
         try {
             token = authService.login(user.getUsername(), user.getPassword());
-            if(token != null) {
-                TokenInfo tokenInfo = new TokenInfo();
-                tokenInfo.setValue(token);
-                resultResponse = new ResponseEntity(tokenInfo, HttpStatus.OK);
-            }
+            resultResponse = new ResponseEntity(token, HttpStatus.OK);
         } catch (AuthException exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(HttpStatus.UNAUTHORIZED);

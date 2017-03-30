@@ -1,11 +1,13 @@
 package school.journal.entity;
 
+import school.journal.entity.util.MarkType;
+
 import java.sql.Date;
 
 public class Mark {
     private Integer markId;
     private Integer value;
-    private Short type;
+    private String type;
     private Date date;
     private Pupil pupil;
     private Subject subject;
@@ -27,12 +29,12 @@ public class Mark {
         this.value = value;
     }
 
-    public Short getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Short type) {
-        this.type = type;
+    public void setType(String type) {
+        this.type = MarkType.fromMeaning(type).toString();
     }
 
     public Date getDate() {
@@ -90,4 +92,5 @@ public class Mark {
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
+
 }

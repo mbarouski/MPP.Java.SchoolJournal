@@ -6,7 +6,7 @@ import school.journal.entity.Pupil;
 
 public class PupilSpecificationByPupilId extends PupilSpecification {
 
-    int pupilId;
+    private int pupilId;
 
     public PupilSpecificationByPupilId(int pupilId) {
         this.pupilId = pupilId;
@@ -14,7 +14,7 @@ public class PupilSpecificationByPupilId extends PupilSpecification {
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("pupilId", this.pupilId);
+        return Restrictions.eq("userId", this.pupilId);
     }
 
     @Override

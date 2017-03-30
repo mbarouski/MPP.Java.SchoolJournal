@@ -6,7 +6,8 @@
 
     <class name="school.journal.entity.Clazz" table="class" schema="school_journal_db">
         <id name="classId">
-            <column name="class_id" sql-type="int(10) unsigned"/>
+            <column name="class_id" sql-type="int(10) unsigned "/>
+            <generator class="native"/>
         </id>
         <property name="number">
             <column name="number" sql-type="int(11)"/>

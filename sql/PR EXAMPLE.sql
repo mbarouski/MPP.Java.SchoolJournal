@@ -4,18 +4,26 @@ Value ('test',1);
 
 INSERT INTO `user` (`role_id`,`username`,`pass_hash`,`locked`,`email`)
 VALUES 	(1,'v','v',false,'v'),
+<<<<<<< HEAD
 		(1,'a','a',false,'a');
 		
 INSERT INTO `school_journal_db`.`user` (`role_id`, `username`, `pass_hash`, `locked`, `email`) VALUES ('1', 'pupil3', 'pupil3', '0', 'pupil3');
 INSERT INTO `school_journal_db`.`user` (`role_id`, `username`, `pass_hash`, `locked`, `email`) VALUES ('1', 'pupil4', 'pupil4', '0', 'pupil4');
 
 		
+=======
+		(1,'a','a',false,'a'),
+        (1,'anton','vanton',false,'vanton@mail.com'),
+		(1,'avlera','avlera',false,'avlera@mail.com');
+        
+>>>>>>> Maxim/master
 INSERT INTO `class` (`number`,`letter_mark`)
 VALUES 	(1,'v'),
 		(2,'a');
 INSERT INTO `class` (`number`,`letter_mark`)
 VALUES 	(1,'v'),
 		(2,'a');
+<<<<<<< HEAD
 		
 		
 INSERT INTO `pupil` (`pupil_id`,`class_id`,`first_name`,`pathronymic`,`last_name`)
@@ -57,10 +65,21 @@ INSERT INTO `school_journal_db`.`teacher` (`teacher_id`, `phone_number`, `first_
 
 
 /*insert into `mark` (`pupil_id`,`type`,`date`,`subject_id`)
+=======
+INSERT INTO `pupil` (`pupil_id`,`class_id`,`first_name`,`pathronymic`,`last_name`)
+VALUES 	(1,1,'v','v','v'),
+		(2,2,'a','a','a');
+
+insert into `subject` (`name`,`description`)
+values ('math','mathematics'),('supermath','high math');
+
+insert into `mark` (`pupil_id`,`type`,`date`,`subject_id`)
+>>>>>>> Maxim/master
 values 	(1,'simple',str_to_date('01-01-2017','%d-%m-%Y'),1),
 		(1,'simple',str_to_date('01-01-2017','%d-%m-%Y'),2),
         (2,'simple',str_to_date('01-01-2017','%d-%m-%Y'),1),
         (2,'simple',str_to_date('01-01-2017','%d-%m-%Y'),2);
+<<<<<<< HEAD
         */
         
 INSERT INTO `school_journal_db`.`subject_in_schedule` (`subject_id`, `teacher_id`, `day_of_week`, `begin_time`, `place`, `class_id`) VALUES ('1', '3', '1', '08:00', 'Аудитория 3', '1');
@@ -71,3 +90,6 @@ INSERT INTO `school_journal_db`.`subject_in_schedule` (`subject_id`, `teacher_id
 INSERT INTO `school_journal_db`.`subject_in_schedule` (`subject_id`, `teacher_id`, `day_of_week`, `begin_time`, `place`, `class_id`) VALUES ('3', '5', '1', '8:55', 'Аудитория 7', '1');
 INSERT INTO `school_journal_db`.`subject_in_schedule` (`subject_id`, `teacher_id`, `day_of_week`, `begin_time`, `place`, `class_id`) VALUES ('4', '6', '1', '8:00', 'Аудитория 8', '4');
 INSERT INTO `school_journal_db`.`subject_in_schedule` (`subject_id`, `teacher_id`, `day_of_week`, `begin_time`, `place`, `class_id`) VALUES ('4', '6', '1', '8:55', 'Аудитория 8 ', '2');
+=======
+        
+>>>>>>> Maxim/master
