@@ -43,6 +43,8 @@ public class SubjectInScheduleRepository extends RepositoryAbstractClass<Subject
 
     @Override
     public SubjectInSchedule get(int id, Session session) throws RepositoryException {
-        return null;
+        SubjectInSchedule subject = (SubjectInSchedule) session.get(SubjectInSchedule.class, id);
+        if (subject == null) throw new RepositoryException("Subject In Schedule not found");
+        return subject;
     }
 }

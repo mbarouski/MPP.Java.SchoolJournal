@@ -7,6 +7,7 @@
     <class name="school.journal.entity.SubjectInSchedule" table="subject_in_schedule" schema="school_journal_db">
         <id name="subectInScheduleId">
             <column name="subect_in_schedule_id" sql-type="int(10) unsigned"/>
+            <generator class="increment"/>
         </id>
         <property name="dayOfWeek">
             <column name="day_of_week" sql-type="set('mon', 'tue', 'wed', 'thu', 'fri', 'sut')"/>
@@ -17,13 +18,13 @@
         <property name="place">
             <column name="place" sql-type="varchar(45)" length="45"/>
         </property>
-        <many-to-one name="subject" class="school.journal.entity.Subject">
+        <many-to-one name="subject" class="school.journal.entity.Subject" fetch="join">
             <column name="subject_id"/>
         </many-to-one>
-        <many-to-one name="teacher" class="school.journal.entity.Teacher">
+        <many-to-one name="teacher" class="school.journal.entity.Teacher" fetch="join">
             <column name="teacher_id" not-null="true"/>
         </many-to-one>
-        <many-to-one name="clazz" class="school.journal.entity.Clazz">
+        <many-to-one name="clazz" class="school.journal.entity.Clazz" fetch="join">
             <column name="class_id"/>
         </many-to-one>
     </class>

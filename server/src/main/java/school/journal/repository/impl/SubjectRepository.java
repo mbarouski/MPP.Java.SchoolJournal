@@ -43,7 +43,9 @@ public class SubjectRepository extends RepositoryAbstractClass<Subject> {
 
     @Override
     public Subject get(int id, Session session) throws RepositoryException {
-        return null;
+        Subject subject = (Subject) session.get(Subject.class, id);
+        if (subject == null) throw new RepositoryException("Subject not found");
+        return subject;
     }
 }
 

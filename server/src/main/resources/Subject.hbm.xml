@@ -7,6 +7,7 @@
     <class name="school.journal.entity.Subject" table="subject" schema="school_journal_db">
         <id name="subjectId">
             <column name="subject_id" sql-type="int(10) unsigned"/>
+            <generator class="increment"/>
         </id>
         <property name="name">
             <column name="name" sql-type="varchar(100)" length="100"/>
