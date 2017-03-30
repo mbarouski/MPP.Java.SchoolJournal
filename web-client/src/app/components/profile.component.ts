@@ -3,6 +3,7 @@ import {AuthService} from "../services/auth.service";
 import {UsersService} from "../services/users.service";
 import {TeachersService} from "../services/teachers.service";
 import {Router} from "@angular/router";
+import {PupilsService} from "../services/pupils.service";
 
 @Component({
   moduleId: module.id,
@@ -24,6 +25,7 @@ export class ProfileComponent implements AfterViewInit {
 
   constructor(private usersService: UsersService,
               private teachersService: TeachersService,
+              private pupilsService: PupilsService,
               private authService: AuthService,
               private router: Router) { }
 
@@ -42,16 +44,33 @@ export class ProfileComponent implements AfterViewInit {
       case 'teacher':
         this.teachersService.fetchTeacher(this.authService.user.userId)
           .then(teacher => {
-            debugger;
             this.teacher = teacher;
           });
         break;
       case 'pupil':
+        this.pupilsService.fetchPupil(this.authService.user.userId)
+          .then(pupil => {
+            this.pupil = pupil;
+          });
         break;
       default:
         break;
     }
     this.user = this.authService.user.user;
+  }
+
+  getFullName() {
+    switch(this.role) {
+      case 'pupil':
+        if(!this.pupil) return '';
+        return `${this.pupil.firstName} ${this.pupil.pathronymic} ${this.pupil.lastName}`;
+      case 'teacher':
+      case 'director_of_studies':
+        if(!this.teacher) return '';
+        return `${this.teacher.firstName} ${this.teacher.pathronymic} ${this.teacher.lastName}`;
+      default:
+        return '';
+    }
   }
 
 }

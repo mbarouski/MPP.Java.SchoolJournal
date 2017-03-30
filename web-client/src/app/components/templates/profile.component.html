@@ -1,20 +1,18 @@
-
-
 <section>
   <div class="container">
     <div class="row">
       <div class="col-md-10 col-md-offset-1" *ngIf="user">
-        <h1>{{user.name || user.username}}</h1>
+        <h1>{{getFullName() || user.username}}</h1>
         <p class="role">{{russianRoleName[user.role.name.toLowerCase()]()}}</p>
         <hr>
-        <div *ngIf="teacher || pupil">
+        <div *ngIf="teacher && teacher.description || pupil && pupil.characteristic">
           <h3>Описание</h3>
-          <p class="description">{{teacher.description || pupil.description}}</p>
+          <p class="description">{{teacher && teacher.description || pupil && pupil.characteristic}}</p>
           <hr>
         </div>
         <h3>Контакты</h3>
         <p *ngIf="user.email"><strong>Email:</strong> {{user.email}}</p>
-        <p *ngIf="teacher && teacher.phoneNumber || pupil && pupil.phoneNumber"><strong>Мобильный телефон:</strong> {{teacher.phoneNumber || pupil.phoneNumber}}</p>
+        <p *ngIf="teacher && teacher.phoneNumber || pupil && pupil.phoneNumber"><strong>Мобильный телефон:</strong> {{teacher && teacher.phoneNumber || pupil && pupil.phoneNumber}}</p>
       </div>
       <div class="col-md-10 col-md-offset-1" *ngIf="!user">
         <h1>Нет информации</h1>

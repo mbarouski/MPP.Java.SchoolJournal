@@ -17,7 +17,8 @@
         <li><a routerLink="/roles">Roles</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a routerLink="/">Выйти</a></li>
+        <li *ngIf="username"><a routerLink="#" (click)="onLogoutClick(e)">{{username}} (Выйти)</a></li>
+        <li *ngIf="!username"><a routerLink="/">Войти</a></li>
       </ul>
     </div>
   </div>

@@ -36,24 +36,30 @@ export class AuthService {
         .subscribe((user) => {
           this.token = user.token;
           this._user = user;
-          this.userSubject.next(user);
+          this.userSubject.next(this._user);
           resolve();
         });
     });
   }
 
   logout() {
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': this.token || ''
-    });
-    let options = new RequestOptions({ headers: headers });
-
-    return this.http.post(`${this.AUTH_ROUTE}/logout`, {}, options)
-      .subscribe(() => {
-        this.token = '';
-        this._user = null;
+    return new Promise((resolve, reject) => {
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': this.token || ''
       });
+      let options = new RequestOptions({ headers: headers });
+
+      this.http.post(`${this.AUTH_ROUTE}/logout`, {}, options)
+        .map(res => res.json())
+        .subscribe(() => {
+          this.token = '';
+          this._user = null;
+          this.userSubject.next(this._user);
+          resolve();
+        });
+
+    });
   }
 
 }

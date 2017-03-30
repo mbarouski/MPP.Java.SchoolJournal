@@ -70,17 +70,12 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     }
 
     @Override
-    public Pupil getPupilInfo(int id) throws ServiceException {
-        checkPupilId(id);
+    public Pupil getPupilInfo(int pupilId) throws ServiceException {
         Pupil pupil = null;
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            List<Pupil> pupilList = repository.query(
-                    new PupilSpecificationByPupilId(id), session);
-            if (pupilList.size() > 0) {
-                pupil = pupilList.get(0);
-            }
+            pupil = repository.get(pupilId, session);
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();

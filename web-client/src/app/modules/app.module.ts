@@ -16,6 +16,7 @@ import {LoginComponent} from "../components/login.component";
 import {FormsModule} from "@angular/forms";
 import {AuthService} from "../services/auth.service";
 import {UsersService} from "../services/users.service";
+import {PupilsService} from "../services/pupils.service";
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import {UsersService} from "../services/users.service";
     TeachersService,
     AuthService,
     UsersService,
+    PupilsService,
     { provide: APP_CONFIG, useValue: AppConfig },
   ],
   bootstrap:    [
