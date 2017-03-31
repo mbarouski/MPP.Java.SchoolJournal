@@ -13,8 +13,8 @@ export class MenuComponent {
   username: string;
 
   constructor(private authService: AuthService, private router: Router) {
-    authService.userSubject.subscribe(user => {
-      this.username = user.user.username;
+    this.authService.userSubject.subscribe(user => {
+      this.username = user ? user.username : null;
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, AfterViewInit} from '@angular/core';
 import {LoginData} from "../models/LoginData";
 import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   templateUrl: './templates/login.component.html',
   styleUrls: ['./styles/login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit{
   loginData = new LoginData("", "");
 
   constructor(public router: Router, private authService: AuthService) {}
@@ -24,5 +24,9 @@ export class LoginComponent {
           console.log(err);
         });
     }
+  }
+
+  ngAfterViewInit() {
+    if(this.authService.isLogged()) this.router.navigate(['/profile']);
   }
 }

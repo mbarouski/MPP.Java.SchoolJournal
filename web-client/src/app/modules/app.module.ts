@@ -18,6 +18,9 @@ import {AuthService} from "../services/auth.service";
 import {UsersService} from "../services/users.service";
 import {PupilsService} from "../services/pupils.service";
 import {HttpUtil} from "../services/http.util";
+import {ScheduleComponent} from "../components/schedule.component";
+import {MarksComponent} from "../components/marks.component";
+import {ScheduleService} from "../services/schedule.service";
 
 @NgModule({
   imports: [
@@ -33,7 +36,9 @@ import {HttpUtil} from "../services/http.util";
     RolesComponent,
     MenuComponent,
     ProfileComponent,
-    LoginComponent
+    LoginComponent,
+    ScheduleComponent,
+    MarksComponent
   ],
   providers: [
     RolesService,
@@ -42,6 +47,7 @@ import {HttpUtil} from "../services/http.util";
     UsersService,
     PupilsService,
     HttpUtil,
+    ScheduleService,
     { provide: APP_CONFIG, useValue: AppConfig },
   ],
   bootstrap:    [

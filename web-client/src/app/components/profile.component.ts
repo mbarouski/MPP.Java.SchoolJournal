@@ -30,15 +30,15 @@ export class ProfileComponent implements AfterViewInit {
               private router: Router) { }
 
   ngAfterViewInit() {
-    if(!this.authService.user){
+    if(!this.authService.isLogged()){
       return this.router.navigate(['/login']);
     }
     this.fetchUser();
   }
 
   fetchUser() {
-    if(!this.authService.user) return;
-    this.role = this.authService.user.user.role.name.toLowerCase();
+    if(!this.authService.isLogged()) return;
+    this.role = this.authService.role;
 
     switch (this.role) {
       case 'teacher':
@@ -56,7 +56,7 @@ export class ProfileComponent implements AfterViewInit {
       default:
         break;
     }
-    this.user = this.authService.user.user;
+    this.user = this.authService.user;
   }
 
   getFullName() {

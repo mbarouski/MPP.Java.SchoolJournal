@@ -11,18 +11,30 @@ import {HttpUtil} from "./http.util";
 export class AuthService {
   private AUTH_ROUTE: string = `${this.config.apiEndpoint}/auth`;
 
-  private _token: string;
+  userSubject: ReplaySubject<any> = new ReplaySubject(1);
+
   private _user: any;
 
-  get token() {
-    return this._token;
+  get userData():any {
+    return JSON.parse(localStorage.getItem('school-journal-user-data'));
   }
 
-  get user() {
-    return this._user;
+  set userData(value:any) {
+    debugger;
+    localStorage.setItem('school-journal-user-data', JSON.stringify(value));
   }
 
-  userSubject: ReplaySubject<any> = new ReplaySubject(1);
+  get user():any {
+    return this.userData ? this.userData.user : null;
+  }
+
+  get token():string {
+    return this.userData ? this.userData.value : '';
+  }
+
+  get role():string {
+    return this.userData ? this.userData.user.role.name.toLowerCase() : '';
+  }
 
   constructor(@Inject(APP_CONFIG) private config: any, private http: Http){}
 
@@ -34,9 +46,9 @@ export class AuthService {
           return res.json();
         })
         .subscribe((user) => {
-          this._token = user.value;
-          this._user = user;
-          this.userSubject.next(this._user);
+          debugger;
+          this.userData = user;
+          this.userSubject.next(this.user);
           resolve();
         });
     });
@@ -46,17 +58,19 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       this.http.post(`${this.AUTH_ROUTE}/logout?token=${this.token}`, null, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
         .map(res => {
-          if(res.status != 200) reject();
           res.json();
         })
         .subscribe((data) => {
-          this._token = '';
-          this._user = null;
-          this.userSubject.next(this._user);
+          this.userData = null;
+          this.userSubject.next(null);
           resolve();
         });
 
     });
+  }
+
+  isLogged() {
+    return !!this.token;
   }
 
 }
