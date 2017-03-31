@@ -5,13 +5,18 @@ import {Http, Headers, RequestOptions} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
 import {LoginData} from "../models/LoginData";
 import {Token} from "../models/Token";
+import {HttpUtil} from "./http.util";
 
 @Injectable()
 export class AuthService {
   private AUTH_ROUTE: string = `${this.config.apiEndpoint}/auth`;
 
-  private token: string;
+  private _token: string;
   private _user: any;
+
+  get token() {
+    return this._token;
+  }
 
   get user() {
     return this._user;
@@ -23,18 +28,13 @@ export class AuthService {
 
   login(loginData: LoginData) {
     return new Promise((resolve, reject) => {
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        'Authorization': this.token || ''
-      });
-      let options = new RequestOptions({ headers: headers });
 
-      return this.http.post(`${this.AUTH_ROUTE}/login`, loginData, options)
+      return this.http.post(`${this.AUTH_ROUTE}/login`, loginData, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
         .map(res => {
           return res.json();
         })
         .subscribe((user) => {
-          this.token = user.token;
+          this._token = user.value;
           this._user = user;
           this.userSubject.next(this._user);
           resolve();
@@ -44,16 +44,13 @@ export class AuthService {
 
   logout() {
     return new Promise((resolve, reject) => {
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        'Authorization': this.token || ''
-      });
-      let options = new RequestOptions({ headers: headers });
-
-      this.http.post(`${this.AUTH_ROUTE}/logout`, {}, options)
-        .map(res => res.json())
-        .subscribe(() => {
-          this.token = '';
+      this.http.post(`${this.AUTH_ROUTE}/logout?token=${this.token}`, null, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
+        .map(res => {
+          if(res.status != 200) reject();
+          res.json();
+        })
+        .subscribe((data) => {
+          this._token = '';
           this._user = null;
           this.userSubject.next(this._user);
           resolve();

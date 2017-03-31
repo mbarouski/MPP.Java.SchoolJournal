@@ -17,6 +17,7 @@ import {FormsModule} from "@angular/forms";
 import {AuthService} from "../services/auth.service";
 import {UsersService} from "../services/users.service";
 import {PupilsService} from "../services/pupils.service";
+import {HttpUtil} from "../services/http.util";
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import {PupilsService} from "../services/pupils.service";
     AuthService,
     UsersService,
     PupilsService,
+    HttpUtil,
     { provide: APP_CONFIG, useValue: AppConfig },
   ],
   bootstrap:    [

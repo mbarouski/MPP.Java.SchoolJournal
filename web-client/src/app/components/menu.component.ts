@@ -18,7 +18,8 @@ export class MenuComponent {
     });
   }
 
-  onLogoutClick() {
+  onLogoutClick(e) {
+    e.preventDefault();
     this.authService.logout()
       .then(() => this.router.navigate(['/login']));
   }

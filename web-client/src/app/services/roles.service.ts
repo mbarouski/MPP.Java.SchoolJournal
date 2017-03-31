@@ -3,6 +3,8 @@ import {ReplaySubject} from "rxjs";
 import {Subject, Observable} from 'rxjs';
 import {Http} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
+import {AuthService} from "./auth.service";
+import {HttpUtil} from "./http.util";
 
 
 @Injectable()
@@ -10,12 +12,12 @@ export class RolesService {
 
   rolesSubject: ReplaySubject<any> = new ReplaySubject(1);
 
-  constructor(@Inject(APP_CONFIG) private config: any, private http: Http){
+  constructor(@Inject(APP_CONFIG) private config: any, private http: Http, private httpUtil: HttpUtil){
     this.updateRoles();
   }
 
   updateRoles(){
-    return this.http.get(`${this.config.apiEndpoint}/roles`)
+    return this.http.get(`${this.config.apiEndpoint}/roles`, this.httpUtil.createURLSearchParamsWithToken())
       .map(res => {
         return res.json();
       })

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.*;
+import org.springframework.stereotype.Service;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.subjectInSchedule.SubjectInScheduleSpecificationByClass;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.validateString;
 
-@Component("SubjectInScheduleService")
+@Service("SubjectInScheduleService")
 public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> implements ISubjectInScheduleService {
 
     private static final long START_WORK_DAY_TIME_MILLIS = 28799999 - 10800000;//7h*60m*60s*1000ms+59m*60s*1000ms+59s*1000ms+999ms

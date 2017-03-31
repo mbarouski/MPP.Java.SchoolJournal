@@ -38,6 +38,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");
+//                .allowedMethods("PUT", "DELETE", "HEAD", "OPTIONS", "GET", "POST")
+//                .allowedHeaders("Authorization");
     }
 
 }

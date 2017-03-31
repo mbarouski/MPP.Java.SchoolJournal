@@ -18,7 +18,6 @@ import school.journal.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 @CrossOrigin
 @Controller
 @RequestMapping(value = "/api/auth")

@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import school.journal.entity.Role;
 import school.journal.entity.Token;
 import school.journal.entity.User;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.*;
 
-@Component("UserService")
+@Service("UserService")
 public class UserService extends CRUDService<User> implements IUserService {
     private static final int USER_ROLE = 2;
 

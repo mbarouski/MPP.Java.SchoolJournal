@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import school.journal.entity.Role;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
@@ -19,7 +20,7 @@ import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.*;
 
-@Component("RoleService")
+@Service("RoleService")
 public class RoleService extends CRUDService<Role> implements IRoleService {
 
     @Autowired

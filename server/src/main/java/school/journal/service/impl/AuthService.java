@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import school.journal.entity.Role;
 import school.journal.entity.Token;
 import school.journal.entity.User;
@@ -26,7 +27,7 @@ import school.journal.utils.MD5Generator;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-@Controller("AuthService")
+@Service(value = "AuthService")
 public class AuthService extends ServiceAbstractClass implements IAuthService {
     private final String SECRET = "simple_secret_string";
 
@@ -78,9 +79,9 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
                         if (token == null) {
                             isNew = true;
                             token = new Token();
+                            token.setUser((User)session.get(User.class, user.getUserId()));
                         }
                         token.setUserId(user.getUserId());
-                        token.setUser((User)session.load(User.class, user.getUserId()));
                         token.setValue(tokenValue);
                         token.setActive((byte)1);
                         token = isNew ? tokenRepository.create(token, session) : tokenRepository.update(token, session);
@@ -112,15 +113,15 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
         session.beginTransaction();
         try {
             Token token = new Token();
-            token.setUser((User)session.load(User.class, user.getUserId()));
+            token.setUserId(user.getUserId());
             token.setActive((byte)0);
             token.setValue("");
             tokenRepository.update(token, session);
+            session.getTransaction().commit();
         } catch (RepositoryException exc) {
             session.getTransaction().rollback();
             throw new ServiceException(exc);
         } finally {
-            session.getTransaction().commit();
             session.close();
         }
     }
@@ -150,7 +151,7 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
                     List<User> users = userRepository.query(new UserSpecificationByUsername(username), session);
                     if (users.size() > 0) {
                         user = users.get(0);
-                        Token tokenObj = tokenRepository.query(new TokenSpecificationByTokenId(user.getUserId()), session).get(0);
+                        Token tokenObj = (Token) session.get(Token.class, user.getUserId());
                         if(tokenObj.getActive() == 0) {
                             throw new AuthException("Token is not active");
                         }
