@@ -57,10 +57,8 @@ export class AuthService {
   logout() {
     return new Promise((resolve, reject) => {
       this.http.post(`${this.AUTH_ROUTE}/logout?token=${this.token}`, null, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
-        .map(res => {
-          res.json();
-        })
-        .subscribe((data) => {
+        .subscribe((res) => {
+          debugger;
           this.userData = null;
           this.userSubject.next(null);
           resolve();
