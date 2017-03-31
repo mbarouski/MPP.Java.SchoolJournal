@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
 import school.journal.entity.SubjectInSchedule;
+import school.journal.entity.User;
 import school.journal.service.ISubjectInScheduleService;
 import school.journal.service.exception.ServiceException;
 
@@ -47,12 +48,12 @@ public class SubjectInScheduleAPIController {
         return resultResponse;
     }
 
-    @GetMapping("/pupil/{pupilId}")
-    public ResponseEntity getPupilSchedule(HttpServletRequest request, @PathVariable("pupilId") int pupilId)
+    @GetMapping("/pupil")
+    public ResponseEntity getPupilSchedule(HttpServletRequest request)
             throws ControllerException {
         ResponseEntity resultResponse = null;
         try {
-            resultResponse = new ResponseEntity(subjectInScheduleService.getPupilSchedule(pupilId), OK);
+            resultResponse = new ResponseEntity(subjectInScheduleService.getPupilSchedule(((User)request.getAttribute("user")).getUserId()), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(new ErrorObject("Can't get pupil schedule"), BAD_REQUEST);
@@ -63,12 +64,12 @@ public class SubjectInScheduleAPIController {
         return resultResponse;
     }
 
-    @GetMapping("/teacher/{teacherId}")
-    public ResponseEntity getTeacherShedule(HttpServletRequest request, @PathVariable("teacherId") int teacherId)
+    @GetMapping("/teacher")
+    public ResponseEntity getTeacherShedule(HttpServletRequest request)
             throws ControllerException {
         ResponseEntity resultResponse = null;
         try {
-            resultResponse = new ResponseEntity(subjectInScheduleService.getTeacherSchedule(teacherId), OK);
+            resultResponse = new ResponseEntity(subjectInScheduleService.getTeacherSchedule(((User)request.getAttribute("user")).getUserId()), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(new ErrorObject("Can't get teacher schedule"), BAD_REQUEST);
