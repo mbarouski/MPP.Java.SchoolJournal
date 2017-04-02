@@ -20,7 +20,6 @@ export class AuthService {
   }
 
   set userData(value:any) {
-    debugger;
     localStorage.setItem('school-journal-user-data', JSON.stringify(value));
   }
 

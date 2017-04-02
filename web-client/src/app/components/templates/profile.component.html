@@ -1,8 +1,8 @@
 <section>
-  <div class="container">
+  <div class="container" *ngIf="user">
     <div class="row">
       <div class="col-md-10 col-md-offset-1" *ngIf="user">
-        <h1>{{getFullName() || user.username}}</h1>
+        <h1>{{fullName || user.username}}</h1>
         <p class="role">{{russianRoleName[user.role.name.toLowerCase()]()}}</p>
         <hr>
         <div *ngIf="teacher && teacher.description || pupil && pupil.characteristic">
