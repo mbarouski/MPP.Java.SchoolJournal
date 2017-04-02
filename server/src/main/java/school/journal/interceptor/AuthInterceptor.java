@@ -25,11 +25,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter{
         try {
             if ((token != null) && ((user = authService.checkToken(token)) != null)) {
                 req.setAttribute("user", user);
+            } else {
+                throw new AuthException("Invalid token");
             }
         } catch (AuthException exc) {
             resp.sendError(401);
             return false;
         }
         return user != null;
+//        return true;
     }
 }
