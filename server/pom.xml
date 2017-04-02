@@ -16,7 +16,7 @@
   </repositories>
 
   <properties>
-    <jdk.version>1.7</jdk.version>
+    <jdk.version>1.8</jdk.version>
     <spring.version>4.3.7.RELEASE</spring.version>
     <jstl.version>1.2</jstl.version>
     <javax.servlet>3.0.1</javax.servlet>

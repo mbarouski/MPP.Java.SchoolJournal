@@ -21,7 +21,7 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api/teachers")
-public class TeacherAPIController {
+public class TeacherAPIController extends BaseController<Teacher> {
     private static final Logger LOGGER = Logger.getLogger(TeacherAPIController.class);
 
     @Autowired
@@ -30,127 +30,47 @@ public class TeacherAPIController {
 
     @PostMapping
     public ResponseEntity create(HttpServletRequest request, Teacher teacher) throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(teacherService.create(teacher), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't create teacher"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse((Teacher t) -> teacherService.create(t), teacher, "Can't create teacher", LOGGER);
     }
 
     @PutMapping
     public ResponseEntity update(HttpServletRequest request, Teacher teacher) throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(teacherService.update(teacher), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't update teacher"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse((Teacher t) -> teacherService.update(t), teacher, "Can't update teacher", LOGGER);
     }
 
     @DeleteMapping("/{teacherId}")
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("teacherId") int teacherId) throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            teacherService.delete(teacherId);
-            resultResponse = new ResponseEntity(OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't delete teacher"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse((int id) -> teacherService.delete(id), teacherId, "Can't delete teacher", LOGGER);
     }
 
     @GetMapping("/class/{classId}")
     public ResponseEntity getListOfTeachersForClass(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(teacherService.getListOfTeachersForClass(classId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't get teacher list for class"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse((int id) -> teacherService.getListOfTeachersForClass(id), classId,
+                "Can't get teacher list for class", LOGGER);
     }
-
-
 
     @RequestMapping(value = "/{teacherId}", method = RequestMethod.GET)
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("teacherId") int teacherId) throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(teacherService.getOne(teacherId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't get teacher list"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse((int i) -> teacherService.getOne(i), teacherId, "Can't get teacher by id", LOGGER);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity getAll(HttpServletRequest request) throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(teacherService.read(), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't get teacher list"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse(() -> teacherService.read(), "Can't get teacher list", LOGGER);
     }
 
     @PostMapping("/{teacherId}/{classId}")
     public ResponseEntity changeClassOfTeacher(HttpServletRequest request, @PathVariable("teacherId") int teacherId, @PathVariable("classId") int classId)
             throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(teacherService.changeClassOfTeacher(teacherId, classId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't change class of teacher"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse((int tId, int cId) -> teacherService.changeClassOfTeacher(tId, cId),
+                teacherId, classId, "Can't change class of teacher", LOGGER, false);
     }
 
     @PostMapping("/changeDirectorOfStudiesStatus/{teacherId}")
     public ResponseEntity changeDirectorOfStudiesStatus(HttpServletRequest request, @PathVariable("teacherId") int teacherId, @RequestParam("isDirector") boolean isDirector)
             throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(teacherService.changeDirectorOfStudies(teacherId, isDirector), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't change director of studies status"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse((int i, boolean f) -> teacherService.changeDirectorOfStudies(i, f), teacherId, isDirector,
+                "Can't change director of studies status", LOGGER);
     }
 }
