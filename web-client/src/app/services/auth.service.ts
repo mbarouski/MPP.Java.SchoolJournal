@@ -36,7 +36,9 @@ export class AuthService {
     return this.userData ? this.userData.user.role.name.toLowerCase() : '';
   }
 
-  constructor(@Inject(APP_CONFIG) private config: any, private http: Http){}
+  constructor(@Inject(APP_CONFIG) private config: any, private http: Http){
+    this.userSubject.next(this.user);
+  }
 
   login(loginData: LoginData) {
     return new Promise((resolve, reject) => {
@@ -46,7 +48,6 @@ export class AuthService {
           return res.json();
         })
         .subscribe((user) => {
-          debugger;
           this.userData = user;
           this.userSubject.next(this.user);
           resolve();
@@ -58,7 +59,6 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       this.http.post(`${this.AUTH_ROUTE}/logout?token=${this.token}`, null, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
         .subscribe((res) => {
-          debugger;
           this.userData = null;
           this.userSubject.next(null);
           resolve();

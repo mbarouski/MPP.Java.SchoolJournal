@@ -1,27 +1,18 @@
 package school.journal.controller;
 
 import org.apache.log4j.Logger;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import school.journal.aop.Loggable;
 import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
-import school.journal.controller.util.ErrorObject;
 import school.journal.entity.Clazz;
 import school.journal.entity.enums.RoleEnum;
-import school.journal.service.exception.ServiceException;
 import school.journal.service.impl.ClassService;
 
 import javax.servlet.http.HttpServletRequest;
-
-import java.util.Formatter;
-
-import static org.springframework.http.HttpStatus.*;
-import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 @Controller
 @RequestMapping(value = "/api/classes")
@@ -62,8 +53,7 @@ public class ClassAPIController extends BaseController<Clazz>{
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.GET)
     @ResponseBody
-    @Loggable
-    @Secured(RoleEnum.DIRECTOR)
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
         return getOne((int id) -> classService.getOne(classId), classId, "Can't get class by id", LOGGER);

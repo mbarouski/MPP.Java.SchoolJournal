@@ -129,7 +129,6 @@ public class MarkAPIController {
             throws ControllerException {
         ResponseEntity resultResponse;
         try {
-            LOGGER.info("Get mark entities by subject and class Controller method");
             resultResponse = new ResponseEntity(markService.
                     getMarksForSubjectInClass(subjectId, classId), OK);
         } catch (ServiceException exc) {
