@@ -129,6 +129,9 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         List<SubjectInSchedule> subjects = new ArrayList<>();
         try {
             Pupil pupil =(Pupil) session.get(Pupil.class,id);
+            if(pupil == null){
+                throw new ServiceException("There isn't this pupil");
+            }
             Clazz clazz = (Clazz)session.get(Clazz.class,pupil.getClassId());
             if(clazz.getClassId() == null){
                 throw new ServiceException("This pupil haven't a class");
