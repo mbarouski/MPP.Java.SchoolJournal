@@ -14,13 +14,14 @@ import school.journal.service.impl.ClassService;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Formatter;
+
 import static org.springframework.http.HttpStatus.*;
 import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 @Controller
 @RequestMapping(value = "/api/classes")
-public class ClassAPIController {
-
+public class ClassAPIController extends BaseController<Clazz>{
     private static Logger LOGGER = Logger.getLogger(ClassAPIController.class);
 
     @Autowired
@@ -29,93 +30,37 @@ public class ClassAPIController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity get(HttpServletRequest request)
+    public ResponseEntity getAll(HttpServletRequest request)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Get Class list controller method");
-            resultResponse = new ResponseEntity(classService.read(), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Class Controller", "get full list", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return read(() -> classService.read(), "Can't get full class list", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity create(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Create Class controller method");
-            resultResponse = new ResponseEntity(classService.create(clazz), CREATED);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Class Controller", "Create", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return createOrUpdate((Clazz c) -> classService.create(c), clazz, "Can't create class", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity update(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            LOGGER.info("Update Class controller method");
-            resultResponse = new ResponseEntity(classService.update(clazz), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Class Controller", "Update", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return createOrUpdate((Clazz c) -> classService.update(c), clazz, "Can't update class", LOGGER);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Delete Class controller method");
-            classService.delete(classId);
-            resultResponse = new ResponseEntity(OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Class Controller", "Delete", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return delete((int id) -> classService.delete(id), classId, "Can't delete class by id", LOGGER);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Get Class entity Controller method");
-            resultResponse = new ResponseEntity(classService.getOne(classId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Class Controller", "Delete", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return getOne((int id) -> classService.getOne(classId), classId, "Can't get class by id", LOGGER);
     }
 }
 

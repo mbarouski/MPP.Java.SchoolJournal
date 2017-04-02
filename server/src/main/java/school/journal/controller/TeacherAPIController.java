@@ -30,34 +30,34 @@ public class TeacherAPIController extends BaseController<Teacher> {
 
     @PostMapping
     public ResponseEntity create(HttpServletRequest request, Teacher teacher) throws ControllerException {
-        return doResponse((Teacher t) -> teacherService.create(t), teacher, "Can't create teacher", LOGGER);
+        return createOrUpdate((Teacher t) -> teacherService.create(t), teacher, "Can't create teacher", LOGGER);
     }
 
     @PutMapping
     public ResponseEntity update(HttpServletRequest request, Teacher teacher) throws ControllerException {
-        return doResponse((Teacher t) -> teacherService.update(t), teacher, "Can't update teacher", LOGGER);
+        return createOrUpdate((Teacher t) -> teacherService.update(t), teacher, "Can't update teacher", LOGGER);
     }
 
     @DeleteMapping("/{teacherId}")
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("teacherId") int teacherId) throws ControllerException {
-        return doResponse((int id) -> teacherService.delete(id), teacherId, "Can't delete teacher", LOGGER);
+        return delete((int id) -> teacherService.delete(id), teacherId, "Can't delete teacher by id", LOGGER);
     }
 
     @GetMapping("/class/{classId}")
     public ResponseEntity getListOfTeachersForClass(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
         return doResponse((int id) -> teacherService.getListOfTeachersForClass(id), classId,
-                "Can't get teacher list for class", LOGGER);
+                "Can't get teacher list for class with class id", LOGGER);
     }
 
     @RequestMapping(value = "/{teacherId}", method = RequestMethod.GET)
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("teacherId") int teacherId) throws ControllerException {
-        return doResponse((int i) -> teacherService.getOne(i), teacherId, "Can't get teacher by id", LOGGER);
+        return getOne((int i) -> teacherService.getOne(i), teacherId, "Can't get teacher by id", LOGGER);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity getAll(HttpServletRequest request) throws ControllerException {
-        return doResponse(() -> teacherService.read(), "Can't get teacher list", LOGGER);
+        return read(() -> teacherService.read(), "Can't get teacher list", LOGGER);
     }
 
     @PostMapping("/{teacherId}/{classId}")
