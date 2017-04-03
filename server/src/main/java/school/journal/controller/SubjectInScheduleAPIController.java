@@ -49,6 +49,7 @@ public class SubjectInScheduleAPIController {
     }
 
     @GetMapping("/class/{classId}")
+    @ResponseBody
     public ResponseEntity getPupilSchedule(HttpServletRequest request, @PathVariable int classId)
             throws ControllerException {
         ResponseEntity resultResponse = null;
@@ -65,6 +66,7 @@ public class SubjectInScheduleAPIController {
     }
 
     @GetMapping("/teacher")
+    @ResponseBody
     public ResponseEntity getTeacherShedule(HttpServletRequest request)
             throws ControllerException {
         ResponseEntity resultResponse = null;

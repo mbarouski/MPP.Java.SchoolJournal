@@ -1,10 +1,14 @@
 package school.journal.entity;
 
+import school.journal.entity.enums.DayOfWeekEnum;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.sql.Time;
 
 public class SubjectInSchedule {
     private Integer subectInScheduleId;
-    private Short dayOfWeek;
+    private DayOfWeekEnum dayOfWeek;
     private Time beginTime;
     private String place;
     private Subject subject;
@@ -20,11 +24,12 @@ public class SubjectInSchedule {
         this.subectInScheduleId = subectInScheduleId;
     }
 
-    public Short getDayOfWeek() {
+    @Enumerated(EnumType.STRING)
+    public DayOfWeekEnum getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(Short dayOfWeek) {
+    public void setDayOfWeek(DayOfWeekEnum dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 

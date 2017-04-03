@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import school.journal.entity.*;
 import org.springframework.stereotype.Service;
+import school.journal.entity.enums.DayOfWeekEnum;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.subjectInSchedule.SubjectInScheduleSpecificationByClass;
@@ -155,7 +156,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         Transaction transaction = session.beginTransaction();
         List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
         try {
-            subjects = session.createCriteria(SubjectInSchedule.class).add(Restrictions.eq("teacherId", teacherId)).list();
+            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0}", teacherId)).list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -170,8 +171,8 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         subject.setPlace(place);
     }
 
-    private void checkDayOfWeek(Short day) throws ValidationException {
-        if (day<1 || day>6){
+    private void checkDayOfWeek(DayOfWeekEnum day) throws ValidationException {
+        if (day.getValue()<1 || day.getValue()>6){
             throw new ValidationException("Wrong day of week parameter");
         }
     }

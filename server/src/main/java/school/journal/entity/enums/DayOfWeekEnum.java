@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum DayOfWeekEnum{
-    Monday(1),
-    Tuesday(2),
-    Wednesday(3),
-    Thursday(4),
-    Friday(5),
-    Saturday(6);
+    mon(1),
+    tue(2),
+    wed(3),
+    thu(4),
+    fri(5),
+    sat(6);
 
     private int id;
 
