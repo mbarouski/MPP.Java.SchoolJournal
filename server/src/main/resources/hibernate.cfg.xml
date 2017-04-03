@@ -20,5 +20,6 @@
         <mapping resource="Teacher.hbm.xml"/>
         <mapping resource="Token.hbm.xml"/>
         <mapping resource="User.hbm.xml"/>
+        <mapping resource="Term.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
