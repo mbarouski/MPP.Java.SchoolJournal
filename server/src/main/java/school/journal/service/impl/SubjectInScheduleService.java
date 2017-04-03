@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -19,13 +20,25 @@ import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
 import java.sql.Time;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Formatter;
 import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.validateString;
 
 @Service("SubjectInScheduleService")
 public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> implements ISubjectInScheduleService {
+
+    private static final String SQL_FOR_GET_CLASS_SCHEDULE = "SELECT * \n" +
+            "FROM `subject_in_schedule`\n" +
+            "WHERE `class_id` = {0}\n" +
+            "ORDER BY  `day_of_week`, `begin_time`; ";
+    private static final String SQL_FOR_GET_TEACHER_SCHEDULE = "SELECT * \n" +
+            "FROM `subject_in_schedule`\n" +
+            "WHERE `teacher_id` = {0}\n" +
+            "ORDER BY  `day_of_week`, `begin_time`; ";
 
     private static final long START_WORK_DAY_TIME_MILLIS = 28799999 - 10800000;//7h*60m*60s*1000ms+59m*60s*1000ms+59s*1000ms+999ms
     private static final long END_WORK_DAY_TIME_MILLIS = 72_000_000-10800000;//20h*60m*60s*1000ms
@@ -126,14 +139,9 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
     public List<SubjectInSchedule> getPupilSchedule(int id) throws ServiceException{
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        List<SubjectInSchedule> subjects = new ArrayList<>();
+        List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
         try {
-            Pupil pupil =(Pupil) session.get(Pupil.class,id);
-            Clazz clazz = (Clazz)session.get(Clazz.class,pupil.getClassId());
-            if(clazz.getClassId() == null){
-                throw new ServiceException("This pupil haven't a class");
-            }
-            subjects = repository.query(new SubjectInScheduleSpecificationByClass(clazz),session);
+            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.clazz.classId = {0}", id)).list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -145,17 +153,15 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
     public List<SubjectInSchedule> getTeacherSchedule(int teacherId) throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        List<SubjectInSchedule> subjects = new ArrayList<>();
+        List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
         try {
-            Teacher teacher = (Teacher) session.get(Teacher.class, teacherId);
-            subjects = repository.query(new SubjectInScheduleSpecificationByTeacher(teacher), session);
+            subjects = session.createCriteria(SubjectInSchedule.class).add(Restrictions.eq("teacherId", teacherId)).list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
         return subjects;
     }
-
 
     private void checkPlace(SubjectInSchedule newSubject, SubjectInSchedule subject) throws ValidationException {
         String place = newSubject.getPlace();

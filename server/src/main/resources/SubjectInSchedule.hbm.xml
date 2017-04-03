@@ -10,7 +10,7 @@
             <generator class="increment"/>
         </id>
         <property name="dayOfWeek">
-            <column name="day_of_week" sql-type="set('mon', 'tue', 'wed', 'thu', 'fri', 'sut')"/>
+            <column name="day_of_week" sql-type="set('mon', 'tue', 'wed', 'thu', 'fri', 'sat')"/>
         </property>
         <property name="beginTime">
             <column name="begin_time" sql-type="time"/>
