@@ -9,8 +9,11 @@
             <column name="subect_in_schedule_id" sql-type="int(10) unsigned"/>
             <generator class="increment"/>
         </id>
-        <property name="dayOfWeek">
-            <column name="day_of_week" sql-type="set('mon', 'tue', 'wed', 'thu', 'fri', 'sat')"/>
+        <property name="dayOfWeek" column="day_of_week">
+            <!--<column name="day_of_week" sql-type="set('mon', 'tue', 'wed', 'thu', 'fri', 'sat')"/>-->
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">school.journal.entity.enums.DayOfWeekEnum</param>
+            </type>
         </property>
         <property name="beginTime">
             <column name="begin_time" sql-type="time"/>
