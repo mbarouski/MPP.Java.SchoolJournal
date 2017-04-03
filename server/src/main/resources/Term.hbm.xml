@@ -14,5 +14,8 @@
         <property name="end">
             <column name="end" sql-type="date"/>
         </property>
+        <property name="number">
+            <column name="number" sql-type="int(10)"/>
+        </property>
     </class>
 </hibernate-mapping>

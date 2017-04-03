@@ -6,6 +6,7 @@ public class Term {
     private Integer termId;
     private Date start;
     private Date end;
+    private Integer number;
 
     public Integer getTermId() {
         return termId;
@@ -29,6 +30,14 @@ public class Term {
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     @Override
