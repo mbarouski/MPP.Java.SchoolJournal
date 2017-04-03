@@ -48,12 +48,12 @@ public class SubjectInScheduleAPIController {
         return resultResponse;
     }
 
-    @GetMapping("/pupil")
-    public ResponseEntity getPupilSchedule(HttpServletRequest request)
+    @GetMapping("/class/{classId}")
+    public ResponseEntity getPupilSchedule(HttpServletRequest request, @PathVariable int classId)
             throws ControllerException {
         ResponseEntity resultResponse = null;
         try {
-            resultResponse = new ResponseEntity(subjectInScheduleService.getPupilSchedule(((User)request.getAttribute("user")).getUserId()), OK);
+            resultResponse = new ResponseEntity(subjectInScheduleService.getPupilSchedule(classId), OK);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(new ErrorObject("Can't get pupil schedule"), BAD_REQUEST);
