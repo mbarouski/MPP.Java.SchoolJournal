@@ -104,7 +104,7 @@ public class SubjectInScheduleAPIController {
         try{
             resultResponse = new ResponseEntity(subjectInScheduleService.update(subjectInSchedule), HttpStatus.OK);
         } catch (ServiceException exc){
-            resultResponse = new ResponseEntity(new ErrorObject("Error in subject updating"), HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity(new ErrorObject("Error in subjectInSchedule updating"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
