@@ -21,6 +21,7 @@ import {HttpUtil} from "../services/http.util";
 import {ScheduleComponent} from "../components/schedule.component";
 import {MarksComponent} from "../components/marks.component";
 import {ScheduleService} from "../services/schedule.service";
+import {MarksService} from "../services/marks.service";
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import {ScheduleService} from "../services/schedule.service";
     PupilsService,
     HttpUtil,
     ScheduleService,
+    MarksService,
     { provide: APP_CONFIG, useValue: AppConfig },
   ],
   bootstrap:    [

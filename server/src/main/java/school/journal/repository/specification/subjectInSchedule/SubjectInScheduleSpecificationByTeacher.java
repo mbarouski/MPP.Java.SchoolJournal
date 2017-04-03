@@ -14,11 +14,11 @@ public class SubjectInScheduleSpecificationByTeacher extends SubjectInScheduleSp
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.eq("teacher",teacher);
+        return Restrictions.eq("teacher", teacher);
     }
 
     @Override
     public boolean specified(SubjectInSchedule subjectInSchedule) {
-        return subjectInSchedule.getTeacher()==teacher;
+        return subjectInSchedule.getTeacher().getUserId() == teacher.getUserId();
     }
 }

@@ -8,23 +8,23 @@ import {HttpUtil} from "./http.util";
 
 
 @Injectable()
-export class PupilsService {
+export class MarksService {
 
   constructor(@Inject(APP_CONFIG) private config: any,
               private http: Http,
               private authService: AuthService){
   }
 
-  fetchPupil(pupilId) {
+  fetchMarksForSubjectInClass(subjectId, classId) {
     return new Promise((resolve, reject) => {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
-      this.http.get(`${this.config.apiEndpoint}/pupils/${pupilId}`, {search: params})
-        .map(res => {
-          return res.json();
-        })
-        .subscribe((pupil) => {
-          resolve(pupil);
+      params.append('subjectId', subjectId);
+      params.append('classId', classId);
+      this.http.get(`${this.config.apiEndpoint}/marks`, {search: params})
+        .map(res => res.json())
+        .subscribe((marks) => {
+          resolve(marks);
         });
     });
   }

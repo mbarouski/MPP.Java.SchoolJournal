@@ -9,6 +9,7 @@ public class SubjectInSchedule {
     private String place;
     private Subject subject;
     private Teacher teacher;
+    private Integer teacherId;
     private Clazz clazz;
 
     public Integer getSubectInScheduleId() {
@@ -41,6 +42,14 @@ public class SubjectInSchedule {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
     @Override
@@ -81,6 +90,7 @@ public class SubjectInSchedule {
     }
 
     public void setTeacher(Teacher teacher) {
+        setTeacherId(teacher != null ? teacher.getUserId() : null);
         this.teacher = teacher;
     }
 
