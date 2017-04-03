@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="school.journal.entity.Term" table="term" schema="school_journal_db">
+        <id name="termId">
+            <column name="term_id"  sql-type="int(10) unsigned"/>
+        </id>
+        <property name="start">
+            <column name="start" sql-type="date"/>
+        </property>
+        <property name="end">
+            <column name="end" sql-type="date"/>
+        </property>
+        <property name="number">
+            <column name="number" sql-type="int(10)"/>
+        </property>
+    </class>
+</hibernate-mapping>

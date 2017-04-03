@@ -147,8 +147,8 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         Transaction transaction = session.beginTransaction();
         List<SubjectInSchedule> subjects = new ArrayList<>();
         try {
-            Teacher teacher = (Teacher) session.get(Teacher.class,teacherId);
-            subjects = repository.query(new SubjectInScheduleSpecificationByTeacher(teacher),session);
+            Teacher teacher = (Teacher) session.get(Teacher.class, teacherId);
+            subjects = repository.query(new SubjectInScheduleSpecificationByTeacher(teacher), session);
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
