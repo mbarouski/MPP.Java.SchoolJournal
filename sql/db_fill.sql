@@ -622,3 +622,11 @@ values
 		(55,	9,'simple',str_to_date('11-02-2017','%d-%m-%Y'),6,72),
 		(57,	8,'simple',str_to_date('11-02-2017','%d-%m-%Y'),6,72),
 		(59,	7,'simple',str_to_date('11-02-2017','%d-%m-%Y'),6,72);
+
+
+INSERT INTO `term` 
+		(`start`,`end`,`number`)
+VALUES 	(str_to_date('01-09-2016','%d-%m-%Y'),str_to_date('20-10-2016','%d-%m-%Y'),1),
+	(str_to_date('23-10-2016','%d-%m-%Y'),str_to_date('25-12-2016','%d-%m-%Y'),2),
+        (str_to_date('10-01-2017','%d-%m-%Y'),str_to_date('20-03-2017','%d-%m-%Y'),3),
+	(str_to_date('25-03-2017','%d-%m-%Y'),str_to_date('31-05-2017','%d-%m-%Y'),4);
