@@ -19,20 +19,20 @@ public class AuthInterceptor extends HandlerInterceptorAdapter{
     
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object o) throws Exception {
-        if (req.getMethod().equals("OPTIONS")) return true;
-        String token = req.getParameter("token");
-        User user = null;
-        try {
-            if ((token != null) && ((user = authService.checkToken(token)) != null)) {
-                req.setAttribute("user", user);
-            } else {
-                throw new AuthException("Invalid token");
-            }
-        } catch (AuthException exc) {
-            resp.sendError(401);
-            return false;
-        }
-        return user != null;
-//        return true;
+//        if (req.getMethod().equals("OPTIONS")) return true;
+//        String token = req.getParameter("token");
+//        User user = null;
+//        try {
+//            if ((token != null) && ((user = authService.checkToken(token)) != null)) {
+//                req.setAttribute("user", user);
+//            } else {
+//                throw new AuthException("Invalid token");
+//            }
+//        } catch (AuthException exc) {
+//            resp.sendError(401);
+//            return false;
+//        }
+//        return user != null;
+        return true;
     }
 }

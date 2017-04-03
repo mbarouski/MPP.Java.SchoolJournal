@@ -25,7 +25,7 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 @CrossOrigin
 @Controller
 @RequestMapping(value = "/api/marks")
-public class MarkAPIController {
+public class MarkAPIController extends BaseController<Mark>{
 
     private static Logger LOGGER = Logger.getLogger(MarkAPIController.class);
 
@@ -37,36 +37,38 @@ public class MarkAPIController {
     @ResponseBody
     public ResponseEntity get(HttpServletRequest request)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Get Mark list controller method");
-            resultResponse = new ResponseEntity(markService.read(), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get full list", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+//        ResponseEntity resultResponse;
+//        try {
+//            LOGGER.info("Get Mark list controller method");
+//            resultResponse = new ResponseEntity(markService.read(), OK);
+//        } catch (ServiceException exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get full list", exc), BAD_REQUEST);
+//        } catch (Exception exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+//        }
+//        return resultResponse;
+        return read(()->markService.read(),"Can't get full mark list",LOGGER);
     }
 
     @RequestMapping(method = POST)
     @ResponseBody
     public ResponseEntity create(HttpServletRequest request, @RequestBody Mark mark)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Create Mark controller method");
-            resultResponse = new ResponseEntity(markService.create(mark), HttpStatus.CREATED);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Create", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+//        ResponseEntity resultResponse;
+//        try {
+//            LOGGER.info("Create Mark controller method");
+//            resultResponse = new ResponseEntity(markService.create(mark), HttpStatus.CREATED);
+//        } catch (ServiceException exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Create", exc), BAD_REQUEST);
+//        } catch (Exception exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+//        }
+//        return resultResponse;
+        return createOrUpdate((m) -> markService.create(m), mark, "Can't create mark", LOGGER);
     }
 
     @RequestMapping(method = PUT)
@@ -74,72 +76,64 @@ public class MarkAPIController {
     public ResponseEntity update(HttpServletRequest request, @RequestBody Mark mark)
             throws ControllerException {
         ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Update Mark controller method");
-            resultResponse = new ResponseEntity(markService.update(mark), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Update", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+//        try {
+//            LOGGER.info("Update Mark controller method");
+//            resultResponse = new ResponseEntity(markService.update(mark), OK);
+//        } catch (ServiceException exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Update", exc), BAD_REQUEST);
+//        } catch (Exception exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+//        }
+//        return resultResponse;
+        return createOrUpdate((m) -> markService.update(m), mark, "Can't update mark", LOGGER);
     }
 
     @RequestMapping(value = "/{markId}", method = DELETE)
     @ResponseBody
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("markId") int markId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Delete mark controller method");
-            markService.delete(markId);
-            resultResponse = new ResponseEntity(OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Delete", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+//        ResponseEntity resultResponse;
+//        try {
+//            LOGGER.info("Delete mark controller method");
+//            markService.delete(markId);
+//            resultResponse = new ResponseEntity(OK);
+//        } catch (ServiceException exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Delete", exc), BAD_REQUEST);
+//        } catch (Exception exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+//        }
+//        return resultResponse;
+        return delete((i) -> markService.delete(i), markId, "Can't delete mark", LOGGER);
     }
 
     @RequestMapping(value = "/{markId}", method = GET)
     @ResponseBody
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("markId") int markId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Get mark entity Controller method");
-            resultResponse = new ResponseEntity(markService.getOne(markId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get by id", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+//        ResponseEntity resultResponse;
+//        try {
+//            LOGGER.info("Get mark entity Controller method");
+//            resultResponse = new ResponseEntity(markService.getOne(markId), OK);
+//        } catch (ServiceException exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get by id", exc), BAD_REQUEST);
+//        } catch (Exception exc) {
+//            LOGGER.error(exc);
+//            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+//        }
+//        return resultResponse;
+        return getOne((i) -> markService.getOne(i), markId, "Can't delete Mark", LOGGER);
     }
 
     @RequestMapping(method = GET, params = {"subjectId", "classId"})
     @ResponseBody
     public ResponseEntity getMarksForSubjectInClass(HttpServletRequest request, @RequestParam(value = "subjectId") int subjectId, @RequestParam(value = "classId") int classId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            resultResponse = new ResponseEntity(markService.
-                    getMarksForSubjectInClass(subjectId, classId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Mark Controller", "Get for Subject In Class", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse((i, j) -> markService.getMarksForSubjectInClass(i, j), subjectId, classId,"Cant get marks for subject in class",LOGGER);
     }
 
     @RequestMapping(method = GET, params = "classId")
