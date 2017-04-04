@@ -7,10 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
 import school.journal.entity.SubjectInSchedule;
 import school.journal.entity.User;
+import school.journal.entity.enums.RoleEnum;
 import school.journal.service.ISubjectInScheduleService;
 import school.journal.service.exception.ServiceException;
 
@@ -24,7 +26,7 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 @Controller
 @RequestMapping(value = "/api/schedule")
-public class SubjectInScheduleAPIController {
+public class SubjectInScheduleAPIController extends BaseController<SubjectInSchedule>{
     private Logger LOGGER = Logger.getLogger(SubjectInScheduleAPIController.class);
 
     @Autowired
@@ -33,101 +35,49 @@ public class SubjectInScheduleAPIController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
+    //@Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity getFullSchedule(HttpServletRequest req)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try{
-            LOGGER.info("get subject in schedule list controller method");
-            resultResponse = new ResponseEntity(subjectInScheduleService.read(), HttpStatus.OK);
-        } catch (ServiceException exc){
-            resultResponse = new ResponseEntity(new ArrayList<>(), HttpStatus.BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return read(() -> subjectInScheduleService.read(), "Can't get full schedule of sujects", LOGGER);
     }
 
     @GetMapping("/class/{classId}")
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getPupilSchedule(HttpServletRequest request, @PathVariable int classId)
             throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(subjectInScheduleService.getPupilSchedule(classId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't get pupil schedule"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return read(() -> subjectInScheduleService.getPupilSchedule(classId), "Can't get pupil schedule", LOGGER);
     }
 
     @GetMapping("/teacher")
     @ResponseBody
+    @Secured(RoleEnum.TEACHER)
     public ResponseEntity getTeacherShedule(HttpServletRequest request)
             throws ControllerException {
-        ResponseEntity resultResponse = null;
-        try {
-            resultResponse = new ResponseEntity(subjectInScheduleService.getTeacherSchedule(((User)request.getAttribute("user")).getUserId()), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Can't get teacher schedule"), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return read(() -> subjectInScheduleService.getTeacherSchedule(((User)request.getAttribute("user")).getUserId()), "Can't get teacher schedule", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity create(@RequestBody SubjectInSchedule subject)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    public ResponseEntity create(@RequestBody SubjectInSchedule subjectInSchedule)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try{
-            resultResponse = new ResponseEntity(subjectInScheduleService.create(subject), HttpStatus.OK);
-        } catch (ServiceException exc){
-            resultResponse = new ResponseEntity(new ErrorObject("Error in subjectInSchedule creating"), HttpStatus.BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return createOrUpdate((SubjectInSchedule s) -> subjectInScheduleService.create(s), subjectInSchedule, "Can't create subject in schedule", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
+    //@Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(@RequestBody SubjectInSchedule subjectInSchedule)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try{
-            resultResponse = new ResponseEntity(subjectInScheduleService.update(subjectInSchedule), HttpStatus.OK);
-        } catch (ServiceException exc){
-            resultResponse = new ResponseEntity(new ErrorObject("Error in subjectInSchedule updating"), HttpStatus.BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return createOrUpdate((SubjectInSchedule s) -> subjectInScheduleService.update(s), subjectInSchedule, "Can't update subjectInSchedule", LOGGER);
     }
 
     @RequestMapping(value = "/{subjectInScheduleId}", method = RequestMethod.DELETE)
     @ResponseBody
+    //@Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(@PathVariable("subjectInScheduleId") int subjectId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try{
-            subjectInScheduleService.delete(subjectId);
-            resultResponse = new ResponseEntity(HttpStatus.OK);
-        } catch (ServiceException exc){
-            resultResponse = new ResponseEntity(new ErrorObject("Error in subjectInSchedule deleting"), HttpStatus.BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return delete((int id) -> subjectInScheduleService.delete(id), subjectId, "Can't delete subjectInShcedule by id", LOGGER);
     }
 }

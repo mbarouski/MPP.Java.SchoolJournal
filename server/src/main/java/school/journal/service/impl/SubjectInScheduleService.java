@@ -142,7 +142,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         Transaction transaction = session.beginTransaction();
         List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
         try {
-            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.clazz.classId = {0}", id)).list();
+            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.clazz.classId = {0} order by s.dayOfWeek,s.beginTime ", id)).list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -156,7 +156,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         Transaction transaction = session.beginTransaction();
         List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
         try {
-            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0}", teacherId)).list();
+            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0} order by s.dayOfWeek,s.beginTime", teacherId)).list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
