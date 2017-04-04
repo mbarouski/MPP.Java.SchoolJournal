@@ -81,22 +81,6 @@ public class SubjectService extends CRUDService<Subject> implements ISubjectServ
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Subject subject = null;
-        try {
-            List list = repository.query(
-                    new SubjectSpecificationBySubjectId(subjectId), session);
-            session.getTransaction().commit();
-            if (list.size() > 0) {
-                subject = (Subject) list.get(0);
-            }
-        } catch (RepositoryException exc) {
-            transaction.rollback();
-            LOGGER.error(exc);
-        } finally {
-            session.close();
-        }
-        return subject;
+        return super.getOne(subjectId);
     }
 }
