@@ -24,6 +24,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
+@CrossOrigin
 @Controller
 @RequestMapping(value = "/api/schedule")
 public class SubjectInScheduleAPIController extends BaseController<SubjectInSchedule>{

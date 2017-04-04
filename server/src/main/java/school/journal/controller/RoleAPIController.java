@@ -18,6 +18,7 @@ import school.journal.service.exception.ServiceException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
+@CrossOrigin
 @Controller
 @RequestMapping(value = "/api/roles")
 public class RoleAPIController {

@@ -14,6 +14,7 @@ import school.journal.service.impl.ClassService;
 
 import javax.servlet.http.HttpServletRequest;
 
+@CrossOrigin
 @Controller
 @RequestMapping(value = "/api/classes")
 public class ClassAPIController extends BaseController<Clazz>{

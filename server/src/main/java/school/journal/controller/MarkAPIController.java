@@ -22,6 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
+@CrossOrigin
 @Controller
 @RequestMapping(value = "/api/marks")
 public class MarkAPIController {

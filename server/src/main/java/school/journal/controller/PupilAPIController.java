@@ -18,6 +18,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
+@CrossOrigin
 @SuppressWarnings("unchecked")
 @Controller
 @RequestMapping(value = "/api/pupils")
