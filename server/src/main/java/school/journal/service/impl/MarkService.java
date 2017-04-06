@@ -2,6 +2,7 @@ package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
 import org.hibernate.*;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -121,6 +122,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         criteria.add(new MarkSpecificationByTerm(term).toCriteria());
         criteria.createCriteria("subject", INNER_JOIN).add(new SubjectSpecificationBySubjectId(subjectId).toCriteria());
         criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByClassId(classId).toCriteria());
+        criteria.addOrder(Order.asc("classId")).addOrder(Order.asc("pupil.pupilId")).addOrder(Order.asc("date"));
         List<Mark> markList;
         try {
             markList = (List<Mark>) criteria.list();
@@ -146,6 +148,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             Criteria criteria = session.createCriteria(Mark.class);
             criteria.add(new MarkSpecificationByTerm(term).toCriteria());
             criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByClassId(classId).toCriteria());
+            criteria.addOrder(Order.asc("classId")).addOrder(Order.asc("pupil.pupilId")).addOrder(Order.asc("date"));
             markList = (List<Mark>) criteria.list();
             transaction.commit();
         } catch (HibernateException exc) {
@@ -173,6 +176,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             Criteria criteria = session.createCriteria(Mark.class);
             criteria.add(new MarkSpecificationByTerm(term).toCriteria());
             criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByPupilId(pupilId).toCriteria());
+            criteria.addOrder(Order.asc("classId")).addOrder(Order.asc("pupil.pupilId")).addOrder(Order.asc("date"));
             markList = (List<Mark>) criteria.list();
             transaction.commit();
         } finally {
