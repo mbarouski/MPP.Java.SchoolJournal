@@ -24,4 +24,3 @@ public class TermService extends CRUDService<Term> implements ITermService {
         return terms.size() > 0 ? terms.get(0) : null;
     }
 }
-m

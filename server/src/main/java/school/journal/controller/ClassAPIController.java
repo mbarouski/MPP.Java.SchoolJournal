@@ -20,9 +20,12 @@ import javax.servlet.http.HttpServletRequest;
 public class ClassAPIController extends BaseController<Clazz>{
     private static Logger LOGGER = Logger.getLogger(ClassAPIController.class);
 
+    private final ClassService classService;
+
     @Autowired
-    @Qualifier("ClassService")
-    private ClassService classService;
+    public ClassAPIController(@Qualifier("ClassService") ClassService classService) {
+        this.classService = classService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -35,21 +38,21 @@ public class ClassAPIController extends BaseController<Clazz>{
     @ResponseBody
     public ResponseEntity create(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
-        return createOrUpdate((Clazz c) -> classService.create(c), clazz, "Can't create class", LOGGER);
+        return create(classService, clazz, "Can't create class", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity update(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
-        return createOrUpdate((Clazz c) -> classService.update(c), clazz, "Can't update class", LOGGER);
+        return update(classService, clazz, "Can't update class", LOGGER);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
-        return delete((int id) -> classService.delete(id), classId, "Can't delete class by id", LOGGER);
+        return delete(classService, classId, "Can't delete class by id", LOGGER);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.GET)

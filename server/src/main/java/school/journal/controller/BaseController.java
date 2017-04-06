@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import school.journal.controller.util.callable.*;
 import school.journal.controller.util.ErrorObject;
+import school.journal.service.IService;
 import school.journal.service.exception.ServiceException;
 
 import java.util.concurrent.Callable;
@@ -139,6 +140,21 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
+    ResponseEntity doResponse(CallableWithResultListWithParamsIntIntInt<T> operation, int a, int b, int c,
+                              String errorMessage, Logger logger) {
+        ResponseEntity resultResponse = null;
+        try {
+            resultResponse = createResponseEntity(operation.call(a, b, c), OK);
+        } catch (ServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
+        } catch (Exception exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
     ResponseEntity doResponse(CallableWithParamsInt<T> operation, int i, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
@@ -167,4 +183,63 @@ public abstract class BaseController<T> {
         }
         return resultResponse;
     }
+// NORMAL REQUESTS
+
+    ResponseEntity delete(IService<T> service, int i, String errorMessage, Logger logger) {
+        ResponseEntity resultResponse;
+        try {
+            service.delete(i);
+            resultResponse = createResponseEntity(OK);
+        } catch (ServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
+        } catch (Exception exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    ResponseEntity create(IService<T> service, T obj, String errorMessage, Logger logger) {
+        ResponseEntity resultResponse;
+        try {
+            resultResponse = createResponseEntity(service.create(obj), OK);
+        } catch (ServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
+        } catch (Exception exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    ResponseEntity update(IService<T> service, T obj, String errorMessage, Logger logger) {
+        ResponseEntity resultResponse;
+        try {
+            resultResponse = createResponseEntity(service.update(obj), OK);
+        } catch (ServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
+        } catch (Exception exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
+    ResponseEntity read(IService<T> service, String errorMessage, Logger logger) {
+        ResponseEntity resultResponse;
+        try {
+            resultResponse = createResponseEntity(service.read(), OK);
+        } catch (ServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
+        } catch (Exception exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
 }
