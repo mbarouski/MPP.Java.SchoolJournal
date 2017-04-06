@@ -5,14 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import school.journal.controller.util.callable.*;
 import school.journal.controller.util.ErrorObject;
-import school.journal.service.IService;
 import school.journal.service.exception.ServiceException;
 
-import java.util.concurrent.Callable;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 public abstract class BaseController<T> {
