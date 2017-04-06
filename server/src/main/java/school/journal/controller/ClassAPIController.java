@@ -29,6 +29,7 @@ public class ClassAPIController extends BaseController<Clazz>{
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getAll(HttpServletRequest request)
             throws ControllerException {
         return read(() -> classService.read(), "Can't get full class list", LOGGER);
@@ -36,6 +37,7 @@ public class ClassAPIController extends BaseController<Clazz>{
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity create(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
         return create(classService, clazz, "Can't create class", LOGGER);
@@ -43,6 +45,7 @@ public class ClassAPIController extends BaseController<Clazz>{
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
         return update(classService, clazz, "Can't update class", LOGGER);
@@ -50,6 +53,7 @@ public class ClassAPIController extends BaseController<Clazz>{
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.DELETE)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
         return delete(classService, classId, "Can't delete class by id", LOGGER);

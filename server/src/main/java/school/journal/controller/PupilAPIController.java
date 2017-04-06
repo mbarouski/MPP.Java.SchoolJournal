@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
 import school.journal.entity.Pupil;
+import school.journal.entity.enums.RoleEnum;
 import school.journal.service.IPupilService;
 import school.journal.service.exception.ServiceException;
 
@@ -35,6 +37,7 @@ public class PupilAPIController extends BaseController<Pupil>{
 
     @RequestMapping(method = GET)
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity get(HttpServletRequest request)
             throws ControllerException {
         return read(pupilService, "Can't get pupil list", LOGGER);
@@ -42,6 +45,7 @@ public class PupilAPIController extends BaseController<Pupil>{
 
     @RequestMapping(method = POST)
     @ResponseBody
+    @Secured(RoleEnum.TEACHER)
     public ResponseEntity create(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
         return create(pupilService,pupil,"Can't create pupil", LOGGER);
@@ -49,6 +53,7 @@ public class PupilAPIController extends BaseController<Pupil>{
 
     @RequestMapping(method = PUT)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
         return update(pupilService, pupil, "Can't update pupil", LOGGER);
@@ -56,6 +61,7 @@ public class PupilAPIController extends BaseController<Pupil>{
 
     @RequestMapping(value = "/{pupilId}", method = DELETE)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("pupilId") int pupilId)
             throws ControllerException {
         return delete(pupilService, pupilId, "Can't delete pupil", LOGGER);
@@ -63,6 +69,7 @@ public class PupilAPIController extends BaseController<Pupil>{
 
     @RequestMapping(value = "/{pupilId}", method = GET)
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getPupilInfo(HttpServletRequest request, @PathVariable("pupilId") int pupilId)
             throws ControllerException {
         return getOne(pupilService::getOne, pupilId, "Can't get info about Pupil", LOGGER);
@@ -70,6 +77,7 @@ public class PupilAPIController extends BaseController<Pupil>{
 
     @RequestMapping(method = GET, params = "classId")
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @RequestParam(value = "classId") int classId)
             throws ControllerException {
         return doResponse(pupilService::getListOfPupils, classId, "Can't get list of pupils of class", LOGGER);
@@ -77,6 +85,7 @@ public class PupilAPIController extends BaseController<Pupil>{
 
     @RequestMapping(method = PUT, params = {"pupilId", "classId"})
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId, @RequestParam(value = "classId") Integer classId)
             throws ControllerException {
         return doResponse(pupilService::movePupilToAnotherClass, pupilId, classId, "Can't move pupil to another class", LOGGER, false);
