@@ -36,7 +36,7 @@ public class MarkAPIController extends BaseController<Mark> {
     @Secured(RoleEnum.PUPIL)
     public ResponseEntity get(HttpServletRequest request)
             throws ControllerException {
-        return read(markService, "Can't get full mark list", LOGGER);
+        return read(markService::read, "Can't get full mark list", LOGGER);
     }
 
     @RequestMapping(method = POST)
@@ -44,7 +44,7 @@ public class MarkAPIController extends BaseController<Mark> {
     @Secured(RoleEnum.TEACHER)
     public ResponseEntity create(HttpServletRequest request, @RequestBody Mark mark)
             throws ControllerException {
-        return create(markService, mark, "Can't create mark", LOGGER);
+        return createOrUpdate(markService::create, mark, "Can't create mark", LOGGER);
     }
 
     @RequestMapping(method = PUT)
@@ -52,7 +52,7 @@ public class MarkAPIController extends BaseController<Mark> {
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Mark mark)
             throws ControllerException {
-        return update(markService, mark, "Can't update mark", LOGGER);
+        return createOrUpdate(markService::update, mark, "Can't update mark", LOGGER);
     }
 
     @RequestMapping(value = "/{markId}", method = DELETE)
@@ -60,7 +60,7 @@ public class MarkAPIController extends BaseController<Mark> {
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("markId") int markId)
             throws ControllerException {
-        return delete(markService, markId, "Can't delete mark", LOGGER);
+        return delete(markService::delete, markId, "Can't delete mark", LOGGER);
     }
 
     @RequestMapping(value = "/{markId}", method = GET)

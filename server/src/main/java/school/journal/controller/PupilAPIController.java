@@ -24,7 +24,7 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 @SuppressWarnings("unchecked")
 @Controller
 @RequestMapping(value = "/api/pupils")
-public class PupilAPIController extends BaseController<Pupil>{
+public class PupilAPIController extends BaseController<Pupil> {
 
     private static Logger LOGGER = Logger.getLogger(PupilAPIController.class);
 
@@ -40,7 +40,7 @@ public class PupilAPIController extends BaseController<Pupil>{
     @Secured(RoleEnum.PUPIL)
     public ResponseEntity get(HttpServletRequest request)
             throws ControllerException {
-        return read(pupilService, "Can't get pupil list", LOGGER);
+        return read(pupilService::read, "Can't get pupil list", LOGGER);
     }
 
     @RequestMapping(method = POST)
@@ -48,7 +48,7 @@ public class PupilAPIController extends BaseController<Pupil>{
     @Secured(RoleEnum.TEACHER)
     public ResponseEntity create(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
-        return create(pupilService,pupil,"Can't create pupil", LOGGER);
+        return createOrUpdate(pupilService::create, pupil, "Can't create pupil", LOGGER);
     }
 
     @RequestMapping(method = PUT)
@@ -56,7 +56,7 @@ public class PupilAPIController extends BaseController<Pupil>{
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
-        return update(pupilService, pupil, "Can't update pupil", LOGGER);
+        return createOrUpdate(pupilService::update, pupil, "Can't update pupil", LOGGER);
     }
 
     @RequestMapping(value = "/{pupilId}", method = DELETE)
@@ -64,7 +64,7 @@ public class PupilAPIController extends BaseController<Pupil>{
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("pupilId") int pupilId)
             throws ControllerException {
-        return delete(pupilService, pupilId, "Can't delete pupil", LOGGER);
+        return delete(pupilService::delete, pupilId, "Can't delete pupil", LOGGER);
     }
 
     @RequestMapping(value = "/{pupilId}", method = GET)

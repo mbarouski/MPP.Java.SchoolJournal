@@ -32,7 +32,7 @@ public class ClassAPIController extends BaseController<Clazz>{
     @Secured(RoleEnum.PUPIL)
     public ResponseEntity getAll(HttpServletRequest request)
             throws ControllerException {
-        return read(() -> classService.read(), "Can't get full class list", LOGGER);
+        return read(classService::read, "Can't get full class list", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -40,7 +40,7 @@ public class ClassAPIController extends BaseController<Clazz>{
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity create(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
-        return create(classService, clazz, "Can't create class", LOGGER);
+        return createOrUpdate(classService::create, clazz, "Can't create class", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
@@ -48,7 +48,7 @@ public class ClassAPIController extends BaseController<Clazz>{
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
-        return update(classService, clazz, "Can't update class", LOGGER);
+        return createOrUpdate(classService::update, clazz, "Can't update class", LOGGER);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.DELETE)
@@ -56,7 +56,7 @@ public class ClassAPIController extends BaseController<Clazz>{
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
-        return delete(classService, classId, "Can't delete class by id", LOGGER);
+        return delete(classService::delete, classId, "Can't delete class by id", LOGGER);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.GET)
@@ -64,7 +64,7 @@ public class ClassAPIController extends BaseController<Clazz>{
     @Secured(RoleEnum.PUPIL)
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
-        return getOne((int id) -> classService.getOne(classId), classId, "Can't get class by id", LOGGER);
+        return getOne(classService::getOne, classId, "Can't get class by id", LOGGER);
     }
 }
 
