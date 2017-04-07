@@ -1,225 +1,25 @@
 <section *ngIf="authService.role === 'pupil' && schedule">
   <div class="container">
     <div class="row">
-      <div class="col-md-4 col-md-offset-1">
-        <h3>{{day.MONDAY.rus}}</h3>
-        <table *ngIf="schedule[day.MONDAY.short]" class="table table-hover">
+      <div *ngFor="let day of days" class="col-md-6">
+        <h3>{{day.rus}}</h3>
+        <table *ngIf="schedule[day.short]" class="table table-hover">
           <tbody>
-          <tr *ngFor="let subject of schedule[day.MONDAY.short]">
+          <tr *ngFor="let subject of schedule[day.short]">
             <td>
               <a routerLink="/marks" class="subject-in-schedule">
                 <strong>{{subject.subject.name}}</strong>
                 <div class="add-info-subject-in-schedule">
-                  <p>{{decorateTime(subject.beginTime)}}</p>
-                  <p>{{subject.teacher.firstName}} {{subject.teacher.pathronymic}} {{subject.teacher.lastName}}</p>
+                  <p class="small-text">{{decorateTime(subject.beginTime)}}</p>
+                  <p class="small-text">{{subject.teacher.firstName}} {{subject.teacher.pathronymic}} {{subject.teacher.lastName}}</p>
                 </div>
+                <p class="small-text">{{subject.place}}</p>
               </a>
             </td>
           </tr>
           </tbody>
         </table>
-        <p *ngIf="!schedule[day.MONDAY.short]">Нет занятий</p>
-      </div>
-      <div class="col-md-4 col-md-offset-2">
-        <h3>Вторник</h3>
-        <table class="table table-hover">
-          <tbody>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Математика</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:00</p>
-                  <p>Петраков Владимир Николаевич</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Биология</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:55</p>
-                  <p>Довыдовская Виолетта Николаевна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Химия</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>9:50</p>
-                  <p>Синицына Галина Степановна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Физкультура</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>11:00</p>
-                  <p>Конопляник Борис Михайлович</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 col-md-offset-1">
-        <h3>Среда</h3>
-        <table class="table table-hover">
-          <tbody>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Математика</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:00</p>
-                  <p>Петраков Владимир Николаевич</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Биология</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:55</p>
-                  <p>Довыдовская Виолетта Николаевна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Химия</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>9:50</p>
-                  <p>Синицына Галина Степановна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Физкультура</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>11:00</p>
-                  <p>Конопляник Борис Михайлович</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-md-4 col-md-offset-2">
-        <h3>Четверг</h3>
-        <table class="table table-hover">
-          <tbody>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Математика</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:00</p>
-                  <p>Петраков Владимир Николаевич</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Биология</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:55</p>
-                  <p>Довыдовская Виолетта Николаевна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Химия</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>9:50</p>
-                  <p>Синицына Галина Степановна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 col-md-offset-1">
-        <h3>Пятница</h3>
-        <table class="table table-hover">
-          <tbody>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Математика</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:00</p>
-                  <p>Петраков Владимир Николаевич</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Биология</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:55</p>
-                  <p>Довыдовская Виолетта Николаевна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Химия</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>9:50</p>
-                  <p>Синицына Галина Степановна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Физкультура</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>11:00</p>
-                  <p>Конопляник Борис Михайлович</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-md-4 col-md-offset-2">
-        <h3>Суббота</h3>
-        <p>Нет занятий</p>
+        <p *ngIf="!schedule[day.short]">Нет занятий</p>
       </div>
     </div>
   </div>

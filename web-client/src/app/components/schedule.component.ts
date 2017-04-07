@@ -17,13 +17,13 @@ export class ScheduleComponent implements AfterViewInit{
 
   schedule: any;
   role: string;
-  day: any;
+  days: any;
 
   constructor(private authService: AuthService,
               private router: Router,
               private scheduleService: ScheduleService,
               private pupilsService: PupilsService) {
-    this.day = DAY;
+    this.days = DAY;
   }
 
   ngAfterViewInit() {
@@ -39,7 +39,6 @@ export class ScheduleComponent implements AfterViewInit{
             this.scheduleService.fetchPupilSchedule(pupil.classId)
               .then(schedule => {
                 this.schedule = this.divideScheduleOnDays(schedule);
-                debugger;
               });
           });
         break;

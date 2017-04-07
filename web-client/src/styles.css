@@ -52,9 +52,11 @@ section {
   display: flex;
   justify-content: space-between;
 }
-.add-info-subject-in-schedule p {
+
+.small-text {
   font-size: 0.8em;
 }
+
 a {
   color: black;
 }
