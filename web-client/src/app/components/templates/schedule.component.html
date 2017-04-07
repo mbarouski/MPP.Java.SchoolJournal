@@ -1,56 +1,24 @@
-<section>
+<section *ngIf="authService.role === 'pupil' && schedule">
   <div class="container">
     <div class="row">
       <div class="col-md-4 col-md-offset-1">
-        <h3>Понедельник</h3>
-        <table class="table table-hover">
+        <h3>{{day.MONDAY.rus}}</h3>
+        <table *ngIf="schedule[day.MONDAY.short]" class="table table-hover">
           <tbody>
-          <tr>
+          <tr *ngFor="let subject of schedule[day.MONDAY.short]">
             <td>
               <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Математика</strong>
+                <strong>{{subject.subject.name}}</strong>
                 <div class="add-info-subject-in-schedule">
-                  <p>8:00</p>
-                  <p>Петраков Владимир Николаевич</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Биология</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>8:55</p>
-                  <p>Довыдовская Виолетта Николаевна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Химия</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>9:50</p>
-                  <p>Синицына Галина Степановна</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a routerLink="/marks" class="subject-in-schedule">
-                <strong>Физкультура</strong>
-                <div class="add-info-subject-in-schedule">
-                  <p>11:00</p>
-                  <p>Конопляник Борис Михайлович</p>
+                  <p>{{decorateTime(subject.beginTime)}}</p>
+                  <p>{{subject.teacher.firstName}} {{subject.teacher.pathronymic}} {{subject.teacher.lastName}}</p>
                 </div>
               </a>
             </td>
           </tr>
           </tbody>
         </table>
+        <p *ngIf="!schedule[day.MONDAY.short]">Нет занятий</p>
       </div>
       <div class="col-md-4 col-md-offset-2">
         <h3>Вторник</h3>
