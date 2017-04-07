@@ -3,6 +3,9 @@ import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
 import {ScheduleService} from "../services/schedule.service";
 import {PupilsService} from "../services/pupils.service";
+import DAY from "./schedule.constants";
+
+declare let moment: any;
 
 @Component({
   moduleId: module.id,
@@ -12,11 +15,15 @@ import {PupilsService} from "../services/pupils.service";
 })
 export class ScheduleComponent implements AfterViewInit{
 
+  schedule: any;
+  role: string;
+  days: any;
+
   constructor(private authService: AuthService,
               private router: Router,
               private scheduleService: ScheduleService,
               private pupilsService: PupilsService) {
-
+    this.days = DAY;
   }
 
   ngAfterViewInit() {
@@ -31,7 +38,7 @@ export class ScheduleComponent implements AfterViewInit{
           .then((pupil: any) => {
             this.scheduleService.fetchPupilSchedule(pupil.classId)
               .then(schedule => {
-                debugger;
+                this.schedule = this.divideScheduleOnDays(schedule);
               });
           });
         break;
@@ -51,4 +58,18 @@ export class ScheduleComponent implements AfterViewInit{
     }
   }
 
+  divideScheduleOnDays(schedule) {
+    let result = {};
+    schedule.forEach(subject => {
+      if (!result[subject.dayOfWeek]) {
+        result[subject.dayOfWeek] = [];
+      }
+      result[subject.dayOfWeek].push(subject);
+    });
+    return result;
+  }
+
+  decorateTime(strTime) {
+    return moment(strTime, 'HH:mm:ss').format('HH:mm');
+  }
 }

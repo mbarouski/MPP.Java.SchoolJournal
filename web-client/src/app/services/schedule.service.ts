@@ -18,9 +18,7 @@ export class ScheduleService {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/schedule/class/${classId}`, {search: params})
-        .map(res => {
-          return res.json();
-        })
+        .map(res => res.json())
         .subscribe((schedule) => {
           resolve(schedule);
         });
