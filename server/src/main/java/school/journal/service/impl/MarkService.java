@@ -2,24 +2,24 @@ package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
 import org.hibernate.*;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import school.journal.entity.*;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.mark.MarkSpecificationByTerm;
 import school.journal.repository.specification.pupil.PupilSpecificationByClassId;
 import school.journal.repository.specification.pupil.PupilSpecificationByPupilId;
 import school.journal.repository.specification.subject.SubjectSpecificationBySubjectId;
 import school.journal.service.IMarkService;
 import school.journal.service.CRUDService;
+import school.journal.service.ITermService;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.hibernate.criterion.CriteriaSpecification.INNER_JOIN;
@@ -29,10 +29,13 @@ import static school.journal.utils.ValidateServiceUtils.validateNullableId;
 @Service("MarkService")
 public class MarkService extends CRUDService<Mark> implements IMarkService {
 
+    private ITermService termService;
+
     @Autowired
-    public MarkService(@Qualifier("MarkRepository") IRepository<Mark> repository) {
+    public MarkService(@Qualifier("MarkRepository") IRepository<Mark> repository,@Qualifier("TermService") ITermService termService) {
         LOGGER = Logger.getLogger(MarkService.class);
         this.repository = repository;
+        this.termService = termService;
     }
 
     @Override
@@ -80,6 +83,111 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         super.delete(mark);
     }
 
+    @Override
+    public List<Mark> read() throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<Mark> list;
+        try {
+            list = repository.query(new MarkSpecificationByTerm(termService.getCurrentTerm()), session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public Mark getOne(int id) throws ServiceException {
+        try {
+            validateId(id, "Mark");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+        return super.getOne(id);
+    }
+
+    @Override
+    public List<Mark> getMarksForSubjectInClass(int subjectId, int classId, int termId) throws ServiceException {
+        validateSubjectAndClassBeforeSelecting(subjectId, classId);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Term term = (termId != 0) ? (Term) session.get(Term.class, termId) : termService.getCurrentTerm();
+        Criteria criteria = session.createCriteria(Mark.class);
+        criteria.add(new MarkSpecificationByTerm(term).toCriteria());
+        criteria.createCriteria("subject", INNER_JOIN).add(new SubjectSpecificationBySubjectId(subjectId).toCriteria());
+        criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByClassId(classId).toCriteria());
+        criteria.addOrder(Order.asc("classId")).addOrder(Order.asc("pupil.pupilId")).addOrder(Order.asc("date"));
+        List<Mark> markList;
+        try {
+            markList = (List<Mark>) criteria.list();
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            session.close();
+        }
+        return markList;
+    }
+
+    @Override
+    public List<Mark> getMarksForTermOrderInClass(int classId, int termId) throws ServiceException {
+        List<Mark> markList;
+        validateTermId(termId);
+        validateClassIdBeforeSelect(classId);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Term term = (termId!=0)?(Term) session.get(Term.class, termId):termService.getCurrentTerm();
+            Criteria criteria = session.createCriteria(Mark.class);
+            criteria.add(new MarkSpecificationByTerm(term).toCriteria());
+            criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByClassId(classId).toCriteria());
+            criteria.addOrder(Order.asc("classId")).addOrder(Order.asc("pupil.pupilId")).addOrder(Order.asc("date"));
+            markList = (List<Mark>) criteria.list();
+            transaction.commit();
+        } catch (HibernateException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            session.close();
+        }
+        return markList;
+    }
+
+    @Override
+    public List<Mark> getMarksForPupil(int pupilId, int termId) throws ServiceException {
+        validateTermId(termId);
+        validatePupilIdBeforeSelect(pupilId);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<Mark> markList;
+        try {
+            Term term = (termId!=0)?(Term) session.get(Term.class, termId):termService.getCurrentTerm();
+            Criteria criteria = session.createCriteria(Mark.class);
+            criteria.add(new MarkSpecificationByTerm(term).toCriteria());
+            criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByPupilId(pupilId).toCriteria());
+            criteria.addOrder(Order.asc("classId")).addOrder(Order.asc("pupil.pupilId")).addOrder(Order.asc("date"));
+            markList = (List<Mark>) criteria.list();
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            session.close();
+        }
+        return markList;
+    }
+
     private void checkMarkBeforeCreate(Mark newMark, Session session) throws ServiceException {
         try {
             validateNullableId(newMark.getMarkId(), "Mark");
@@ -89,7 +197,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             }
             validateDate(newMark.getDate());
             validateValue(newMark.getValue());
-            //validateType(newMark.getType());
+//            validateType(newMark.getType());
             validatePupil(newMark.getPupil().getUser().getUserId(), session);
         } catch (ValidationException exc) {
             LOGGER.error(exc);
@@ -121,47 +229,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
     }
 
-
-    @Override
-    public List<Mark> read() throws ServiceException {
-        return super.read();
-    }
-
-    @Override
-    public Mark getOne(int id) throws ServiceException {
-        try {
-            validateId(id, "Mark");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        }
-        return super.getOne(id);
-    }
-
-    @Override
-    public List<Mark> getMarksForSubjectInClass(int subjectId, int classId) throws ServiceException {
-        validateSubjectAndClassBeforeSelecting(subjectId, classId);
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Criteria criteria = session.createCriteria(Mark.class);
-        criteria.createCriteria("subject", INNER_JOIN).add(
-                new SubjectSpecificationBySubjectId(subjectId).toCriteria());
-        criteria.createCriteria("pupil", INNER_JOIN).add(
-                new PupilSpecificationByClassId(classId).toCriteria());
-        List<Mark> markList;
-        try {
-            markList = (List<Mark>) criteria.list();
-            transaction.commit();
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            session.close();
-        }
-        return markList;
-    }
-
-    public void validateSubjectAndClassBeforeSelecting(int subjectId, int classId) throws ServiceException {
+    private void validateSubjectAndClassBeforeSelecting(int subjectId, int classId) throws ServiceException {
         try {
             validateId(subjectId, "Subject");
             validateId(classId, "Class");
@@ -171,27 +239,6 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
     }
 
-    @Override
-    public List<Mark> getMarksForTermOrder(int classId) throws ServiceException {
-        List<Mark> markList;
-        validateClassIdBeforeSelect(classId);
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            Criteria criteria = session.createCriteria(Mark.class);
-            criteria.createCriteria("pupil", INNER_JOIN).add(
-                    new PupilSpecificationByClassId(classId).toCriteria());
-            markList = (List<Mark>) criteria.list();
-            transaction.commit();
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            session.close();
-        }
-        return markList;
-    }
-
     private void validateClassIdBeforeSelect(int classId) throws ServiceException {
         try {
             validateId(classId, "Class");
@@ -199,27 +246,6 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
-    }
-
-    @Override
-    public List<Mark> getMarksForPupil(int pupilId) throws ServiceException {
-        validatePupilIdBeforeSelect(pupilId);
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        List<Mark> markList;
-        try {
-            Criteria criteria = session.createCriteria(Mark.class);
-            criteria.createCriteria("pupil", INNER_JOIN).add(
-                    new PupilSpecificationByPupilId(pupilId).toCriteria());
-            markList = criteria.list();
-            transaction.commit();
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            session.close();
-        }
-        return markList;
     }
 
     private void validatePupilIdBeforeSelect(int pupilId) throws ServiceException {
@@ -291,9 +317,11 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     }
 
     private void validateDate(Date date) throws ServiceException {
-        Calendar c = new GregorianCalendar();
-        c.add(Calendar.DAY_OF_YEAR, 1);
-        if (date.after(c.getTime())) {
+        Session session = sessionFactory.openSession();
+        Term firstTerm = (Term) session.get(Term.class, 1);
+        Term lastTerm = termService.getCurrentTerm();
+        session.close();
+        if (date.after(lastTerm.getEnd()) || date.before(firstTerm.getStart())) {
             throw new ServiceException("Invalid date");
         }
     }
@@ -315,4 +343,9 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
     }
 
+    private void validateTermId(int termId) throws ServiceException{
+        if (termId<0||termId>4){
+            throw new ServiceException("Wrong term number");
+        }
+    }
 }

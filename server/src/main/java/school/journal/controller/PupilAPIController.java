@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
 import school.journal.entity.Pupil;
+import school.journal.entity.enums.RoleEnum;
 import school.journal.service.IPupilService;
 import school.journal.service.exception.ServiceException;
 
@@ -22,140 +24,71 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 @SuppressWarnings("unchecked")
 @Controller
 @RequestMapping(value = "/api/pupils")
-public class PupilAPIController {
+public class PupilAPIController extends BaseController<Pupil> {
 
     private static Logger LOGGER = Logger.getLogger(PupilAPIController.class);
 
+    private final IPupilService pupilService;
+
     @Autowired
-    @Qualifier("PupilService")
-    private IPupilService pupilService;
+    public PupilAPIController(@Qualifier("PupilService") IPupilService pupilService) {
+        this.pupilService = pupilService;
+    }
 
     @RequestMapping(method = GET)
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity get(HttpServletRequest request)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Get Pupil list controller method");
-            resultResponse = new ResponseEntity(pupilService.read(), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Get full list", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return read(pupilService::read, "Can't get pupil list", LOGGER);
     }
 
     @RequestMapping(method = POST)
     @ResponseBody
+    @Secured(RoleEnum.TEACHER)
     public ResponseEntity create(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Create Pupil controller method");
-            resultResponse = new ResponseEntity(pupilService.create(pupil), CREATED);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Create", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return createOrUpdate(pupilService::create, pupil, "Can't create pupil", LOGGER);
     }
 
     @RequestMapping(method = PUT)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Update Pupil controller method");
-            resultResponse = new ResponseEntity(pupilService.update(pupil), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Update", exc),
-                    BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return createOrUpdate(pupilService::update, pupil, "Can't update pupil", LOGGER);
     }
 
     @RequestMapping(value = "/{pupilId}", method = DELETE)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("pupilId") int pupilId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Delete Pupil controller method");
-            pupilService.delete(pupilId);
-            resultResponse = new ResponseEntity(OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Delete", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return delete(pupilService::delete, pupilId, "Can't delete pupil", LOGGER);
     }
 
     @RequestMapping(value = "/{pupilId}", method = GET)
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getPupilInfo(HttpServletRequest request, @PathVariable("pupilId") int pupilId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Get Pupil entity Controller method");
-            resultResponse = new ResponseEntity(pupilService.getPupilInfo(pupilId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Get one", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return getOne(pupilService::getOne, pupilId, "Can't get info about Pupil", LOGGER);
     }
 
     @RequestMapping(method = GET, params = "classId")
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @RequestParam(value = "classId") int classId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Get Pupil entities Controller method");
-            resultResponse = new ResponseEntity(pupilService.getListOfPupils(classId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Get list for class", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse(pupilService::getListOfPupils, classId, "Can't get list of pupils of class", LOGGER);
     }
 
     @RequestMapping(method = PUT, params = {"pupilId", "classId"})
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId, @RequestParam(value = "classId") Integer classId)
             throws ControllerException {
-        ResponseEntity resultResponse;
-        try {
-            LOGGER.info("Update Pupil controller method");
-            resultResponse = new ResponseEntity(pupilService.movePupilToAnotherClass(pupilId, classId), OK);
-        } catch (ServiceException exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(new ErrorObject("Pupil Controller", "Move to another Class", exc), BAD_REQUEST);
-        } catch (Exception exc) {
-            LOGGER.error(exc);
-            resultResponse = new ResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
-        }
-        return resultResponse;
+        return doResponse(pupilService::movePupilToAnotherClass, pupilId, classId, "Can't move pupil to another class", LOGGER, false);
     }
 
 }

@@ -70,7 +70,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     }
 
     @Override
-    public Pupil getPupilInfo(int pupilId) throws ServiceException {
+    public Pupil getOne(int pupilId) throws ServiceException {
         Pupil pupil = null;
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();

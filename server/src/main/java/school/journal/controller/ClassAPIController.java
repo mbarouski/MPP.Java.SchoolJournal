@@ -20,36 +20,43 @@ import javax.servlet.http.HttpServletRequest;
 public class ClassAPIController extends BaseController<Clazz>{
     private static Logger LOGGER = Logger.getLogger(ClassAPIController.class);
 
+    private final ClassService classService;
+
     @Autowired
-    @Qualifier("ClassService")
-    private ClassService classService;
+    public ClassAPIController(@Qualifier("ClassService") ClassService classService) {
+        this.classService = classService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getAll(HttpServletRequest request)
             throws ControllerException {
-        return read(() -> classService.read(), "Can't get full class list", LOGGER);
+        return read(classService::read, "Can't get full class list", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity create(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
-        return createOrUpdate((Clazz c) -> classService.create(c), clazz, "Can't create class", LOGGER);
+        return createOrUpdate(classService::create, clazz, "Can't create class", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Clazz clazz)
             throws ControllerException {
-        return createOrUpdate((Clazz c) -> classService.update(c), clazz, "Can't update class", LOGGER);
+        return createOrUpdate(classService::update, clazz, "Can't update class", LOGGER);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.DELETE)
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
-        return delete((int id) -> classService.delete(id), classId, "Can't delete class by id", LOGGER);
+        return delete(classService::delete, classId, "Can't delete class by id", LOGGER);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.GET)
@@ -57,7 +64,7 @@ public class ClassAPIController extends BaseController<Clazz>{
     @Secured(RoleEnum.PUPIL)
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
-        return getOne((int id) -> classService.getOne(classId), classId, "Can't get class by id", LOGGER);
+        return getOne(classService::getOne, classId, "Can't get class by id", LOGGER);
     }
 }
 

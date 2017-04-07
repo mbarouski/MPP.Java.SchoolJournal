@@ -83,7 +83,10 @@ VALUES
 	(3,'YachmenevaE',		'5e8667a439c68f5145dd2fcbecf02209',false,'YachmenevaE@mail.com'),
 	(3,'KraevichP',			'5e8667a439c68f5145dd2fcbecf02209',false,'KraevichP@mail.com'),
 	(3,'TrediakovskayaM',	'5e8667a439c68f5145dd2fcbecf02209',false,'TrediakovskayaM@mail.com'),
-	(3,'SlavskayaV',		'5e8667a439c68f5145dd2fcbecf02209',false,'SlavskayaV@mail.com'); 
+	(3,'SlavskayaV',		'5e8667a439c68f5145dd2fcbecf02209',false,'SlavskayaV@mail.com'),
+    (4,'MarkoP',			'5e8667a439c68f5145dd2fcbecf02209',false,'MarkoP@mail.com'),
+    (5,'Principal',			'5e8667a439c68f5145dd2fcbecf02209',false,'Principal@mail.com'),
+    (6,'Odmeen',			'ff92dc23938eea1f20ea69c1c48090db',false,'Odmeen@mail.com'); -- 10111111
     
 INSERT INTO `class` 
 		(`number`,`letter_mark`)

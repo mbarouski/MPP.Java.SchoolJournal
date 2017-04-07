@@ -7,11 +7,7 @@ import school.journal.controller.util.callable.*;
 import school.journal.controller.util.ErrorObject;
 import school.journal.service.exception.ServiceException;
 
-import java.util.concurrent.Callable;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 public abstract class BaseController<T> {
@@ -139,6 +135,21 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
+    ResponseEntity doResponse(CallableWithResultListWithParamsIntIntInt<T> operation, int a, int b, int c,
+                              String errorMessage, Logger logger) {
+        ResponseEntity resultResponse = null;
+        try {
+            resultResponse = createResponseEntity(operation.call(a, b, c), OK);
+        } catch (ServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
+        } catch (Exception exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
     ResponseEntity doResponse(CallableWithParamsInt<T> operation, int i, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
@@ -167,4 +178,5 @@ public abstract class BaseController<T> {
         }
         return resultResponse;
     }
+
 }

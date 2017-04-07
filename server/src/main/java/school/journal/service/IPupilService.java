@@ -11,7 +11,7 @@ public interface IPupilService extends IService<Pupil>{
 
     Pupil movePupilToAnotherClass(int pupilId, Integer classId) throws ServiceException;
 
-    Pupil getPupilInfo(int pupilId) throws ServiceException;
+    Pupil getOne(int pupilId) throws ServiceException;
 
 
 }
