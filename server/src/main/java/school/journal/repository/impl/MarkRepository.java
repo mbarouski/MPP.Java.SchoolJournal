@@ -37,7 +37,7 @@ public class MarkRepository extends RepositoryAbstractClass<Mark> {
         if((specification != null) && ((criterion = specification.toCriteria()) != null)){
             criteria.add(criterion);
         }
-        criteria.addOrder(Order.asc("classId")).addOrder(Order.asc("pupil.pupilId")).addOrder(Order.asc("date"));
+        criteria.addOrder(Order.asc("pupil")).addOrder(Order.asc("date"));
         return criteria.list();
     }
 
