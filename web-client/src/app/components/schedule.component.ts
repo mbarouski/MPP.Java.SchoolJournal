@@ -3,7 +3,7 @@ import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
 import {ScheduleService} from "../services/schedule.service";
 import {PupilsService} from "../services/pupils.service";
-import DAY from "./schedule.constants";
+import DAYS from "./constants/schedule.constants";
 
 declare let moment: any;
 
@@ -13,17 +13,21 @@ declare let moment: any;
   templateUrl: './templates/schedule.component.html',
   styleUrls: ['./styles/schedule.component.css']
 })
+
 export class ScheduleComponent implements AfterViewInit{
 
+  items = [
+    'ggg', 'gg', 'f'
+  ];
+
   schedule: any;
-  role: string;
   days: any;
 
   constructor(private authService: AuthService,
               private router: Router,
               private scheduleService: ScheduleService,
               private pupilsService: PupilsService) {
-    this.days = DAY;
+    this.days = DAYS;
   }
 
   ngAfterViewInit() {
@@ -43,17 +47,14 @@ export class ScheduleComponent implements AfterViewInit{
           });
         break;
       case 'teacher':
+      case 'director_of_studies':
+      case 'director':
         this.scheduleService.fetchTeacherSchedule()
           .then(schedule => {
             debugger;
           });
         break;
-      case 'director_of_studies':
-      case 'director':
-        this.scheduleService.fetchFullSchedule()
-          .then(schedule => {
-            debugger;
-          });
+      default:
         break;
     }
   }

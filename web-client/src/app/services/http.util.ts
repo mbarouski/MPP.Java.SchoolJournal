@@ -15,7 +15,6 @@ export class HttpUtil {
 
   createURLSearchParamsWithToken() {
     var params = new URLSearchParams();
-    debugger;
     params.append('token', this.authService.token);
     return params;
   }

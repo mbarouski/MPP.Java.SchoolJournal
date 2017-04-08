@@ -1,0 +1,52 @@
+<section *ngIf="dividedOnTeachersSchedule" class="full-schedule">
+  <div class="row">
+    <div class="col-md-12 col-md-offset-0">
+      <h1>Расписание учителей</h1>
+      <div class="scroll-wrapper">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th class="text-center"></th>
+            <th colspan="8" class="text-center">Пн</th>
+            <th colspan="8" class="text-center">Вт</th>
+            <th colspan="8" class="text-center">Ср</th>
+            <th colspan="8" class="text-center">Чт</th>
+            <th colspan="8" class="text-center">Пт</th>
+            <th colspan="8" class="text-center">Сб</th>
+          </tr>
+          <tr>
+            <th class="text-center">Учитель</th>
+            <th class="lesson-time" *ngFor="let time of times">{{time}}</th>
+            <th class="lesson-time" *ngFor="let time of times">{{time}}</th>
+            <th class="lesson-time" *ngFor="let time of times">{{time}}</th>
+            <th class="lesson-time" *ngFor="let time of times">{{time}}</th>
+            <th class="lesson-time" *ngFor="let time of times">{{time}}</th>
+            <th class="lesson-time" *ngFor="let time of times">{{time}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let teacherSubjects of dividedOnTeachersSchedule | keys">
+            <td>{{teacherSubjects.key}}</td>
+            <td *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)" data-id="{{getSubjectForDayAndTime(teacherSubjects.value, dayTime) | get:'subectInScheduleId'}}"
+              [contextMenu]="editMenu" [contextMenuSubject]="getSubjectForDayAndTime(teacherSubjects.value, dayTime)">
+              <i *ngIf="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)" class="glyphicon glyphicon-ok green"></i>
+              <span *ngIf="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)">{{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'place'}}<br> {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'subject.name'}} <br> {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'clazz.number'}} {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'clazz.letterMark'}}</span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<context-menu>
+  <template contextMenuItem (execute)="event.preventDefault(); deleteSubject(event.item);">
+    Delete
+  </template>
+  <template contextMenuItem (execute)="event.preventDefault(); openModalForAddSubject();">
+    Add
+  </template>
+</context-menu>
+
+

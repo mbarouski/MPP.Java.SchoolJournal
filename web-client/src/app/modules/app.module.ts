@@ -9,7 +9,7 @@ import { RolesService } from "../services/roles.service";
 import {APP_CONFIG, AppConfig} from "../configs/app.config";
 import {HttpModule} from "@angular/http";
 import {MenuComponent} from "../components/menu.component";
-import {Ng2BootstrapModule, CollapseModule} from "ng2-bootstrap";
+import {Ng2BootstrapModule, CollapseModule, ModalModule} from "ng2-bootstrap";
 import {ProfileComponent} from "../components/profile.component";
 import {TeachersService} from "../services/teachers.service";
 import {LoginComponent} from "../components/login.component";
@@ -22,6 +22,12 @@ import {ScheduleComponent} from "../components/schedule.component";
 import {MarksComponent} from "../components/marks.component";
 import {ScheduleService} from "../services/schedule.service";
 import {MarksService} from "../services/marks.service";
+import {FullScheduleComponent} from "../components/full-schedule.component";
+import {SchoolInfoService} from "../services/school-info.service";
+import {KeysPipe} from "../pipes/keys.pipe";
+import {DayTimePipe} from "../pipes/day-time.pipe";
+import {GetPipe} from "../pipes/get.pipe";
+import {ContextMenuModule} from "angular2-contextmenu";
 
 @NgModule({
   imports: [
@@ -30,6 +36,7 @@ import {MarksService} from "../services/marks.service";
     AppRoutingModule,
     HttpModule,
     CollapseModule.forRoot(),
+    ContextMenuModule,
     FormsModule
   ],
   declarations: [
@@ -39,7 +46,11 @@ import {MarksService} from "../services/marks.service";
     ProfileComponent,
     LoginComponent,
     ScheduleComponent,
-    MarksComponent
+    MarksComponent,
+    FullScheduleComponent,
+    KeysPipe,
+    DayTimePipe,
+    GetPipe,
   ],
   providers: [
     RolesService,
@@ -50,10 +61,12 @@ import {MarksService} from "../services/marks.service";
     HttpUtil,
     ScheduleService,
     MarksService,
+    SchoolInfoService,
     { provide: APP_CONFIG, useValue: AppConfig },
+
   ],
   bootstrap:    [
     AppComponent
-  ]
+  ],
 })
 export class AppModule { }
