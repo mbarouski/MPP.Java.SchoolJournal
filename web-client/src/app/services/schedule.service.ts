@@ -5,6 +5,7 @@ import {Http, Headers, RequestOptions, URLSearchParams} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
 import {HttpUtil} from "./http.util";
+import {SubjectInSchedule} from "../models/SubjectInSchedule";
 
 
 @Injectable()
@@ -21,6 +22,19 @@ export class ScheduleService {
         .map(res => res.json())
         .subscribe((schedule) => {
           resolve(schedule);
+        });
+    });
+  }
+
+  addSubject(subject: SubjectInSchedule) {
+    return new Promise((resolve, reject) => {
+      debugger;
+      return this.http.post(`${this.config.apiEndpoint}/schedule?token=${this.authService.token}`, subject, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
+        .map(res => {
+          return res.json();
+        })
+        .subscribe((data) => {
+          resolve(data);
         });
     });
   }

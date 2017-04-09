@@ -24,10 +24,12 @@ import {ScheduleService} from "../services/schedule.service";
 import {MarksService} from "../services/marks.service";
 import {FullScheduleComponent} from "../components/full-schedule.component";
 import {SchoolInfoService} from "../services/school-info.service";
-import {KeysPipe} from "../pipes/keys.pipe";
+import {KeysPipe} from "../pipes/key-value.pipe";
 import {DayTimePipe} from "../pipes/day-time.pipe";
 import {GetPipe} from "../pipes/get.pipe";
 import {ContextMenuModule, ContextMenuService} from "angular2-contextmenu";
+import {ClassesService} from "../services/classes.service";
+import {SubjectsService} from "../services/subjects.service";
 
 @NgModule({
   imports: [
@@ -59,10 +61,11 @@ import {ContextMenuModule, ContextMenuService} from "angular2-contextmenu";
     AuthService,
     UsersService,
     PupilsService,
-    HttpUtil,
     ScheduleService,
     MarksService,
     SchoolInfoService,
+    ClassesService,
+    SubjectsService,
     { provide: APP_CONFIG, useValue: AppConfig },
     ContextMenuService
   ],

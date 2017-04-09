@@ -7,6 +7,11 @@ import {SchoolInfoService} from "../services/school-info.service";
 import * as _ from "lodash";
 import {ContextMenuComponent, ContextMenuService} from "angular2-contextmenu";
 import {ModalDirective} from "ng2-bootstrap";
+import {TeachersService} from "../services/teachers.service";
+import {SubjectInSchedule} from "../models/SubjectInSchedule";
+import DAYS from "./constants/schedule.constants";
+import {ClassesService} from "../services/classes.service";
+import {SubjectsService} from "../services/subjects.service";
 
 declare let moment: any;
 declare let $: JQueryStatic;
@@ -19,10 +24,14 @@ declare let $: JQueryStatic;
 })
 
 export class FullScheduleComponent implements AfterViewInit{
-
-  schedule: any;
-  dividedOnTeachersSchedule: any;
+  schedule = [];
   times = [];
+  days = DAYS;
+  currentSubject: SubjectInSchedule;
+  teachers = [];
+  classes = [];
+  subjects = [];
+  isEdit: boolean;
 
   @ViewChild(ContextMenuComponent) public addMenu: ContextMenuComponent;
   @ViewChild(ContextMenuComponent) public deleteMenu: ContextMenuComponent;
@@ -32,8 +41,20 @@ export class FullScheduleComponent implements AfterViewInit{
               private router: Router,
               private scheduleService: ScheduleService,
               private schoolInfoService: SchoolInfoService,
-              private contextMenuService: ContextMenuService) {
+              private contextMenuService: ContextMenuService,
+              private teachersService: TeachersService,
+              private classesService: ClassesService,
+              private subjectsService: SubjectsService) {
     this.times = schoolInfoService.timesForSubjects;
+    teachersService.teachersSubject.subscribe(teachers => {
+      this.teachers = teachers;
+    });
+    classesService.classesSubject.subscribe(classes => {
+      this.classes = classes;
+    });
+    subjectsService.subjectsSubject.subscribe(subjects => {
+      this.subjects = subjects;
+    })
   }
 
   ngAfterViewInit() {
@@ -43,33 +64,27 @@ export class FullScheduleComponent implements AfterViewInit{
 
   loadSchedule() {
     this.scheduleService.fetchFullSchedule()
-      .then(schedule => {
+      .then((schedule: any) => {
         this.schedule = schedule;
-        this.dividedOnTeachersSchedule = this.divideOnTeachersAndDays(schedule);
       });
-  }
-
-  divideOnTeachersAndDays(schedule) {
-    let result = {};
-    schedule.forEach(subject => {
-      const fullName = `${subject.teacher.firstName} ${subject.teacher.pathronymic} ${subject.teacher.lastName}`;
-      if(!result[fullName]) {
-        result[fullName] = {};
-      }
-      if(!result[fullName][subject.dayOfWeek]) {
-        result[fullName][subject.dayOfWeek] = {};
-      }
-      result[fullName][subject.dayOfWeek][this.decorateTime(subject.beginTime)] = (subject);
-    });
-    return result;
   }
 
   decorateTime(strTime) {
     return moment(strTime, 'HH:mm:ss').format('HH:mm');
   }
 
-  getSubjectForDayAndTime(subjects, dayTime) {
-    return _.get(subjects, `${dayTime.day.short}.${dayTime.time}`, undefined);
+  subjectForTeacherAndDayAndTime;
+
+  getSubjectForTeacherAndDayAndTime(teacher, dayTime) {
+    let filtered = this.schedule.filter(subject => {
+
+      return ((subject.teacher.userId === teacher.userId)
+        && (subject.dayOfWeek === dayTime.day.short)
+        && (this.decorateTime(subject.beginTime) === dayTime.time));
+    });
+
+    this.subjectForTeacherAndDayAndTime = filtered.length ? filtered[0] : undefined;
+    return this.subjectForTeacherAndDayAndTime;
   }
 
   cellForEdit: any;
@@ -93,18 +108,48 @@ export class FullScheduleComponent implements AfterViewInit{
       });
   }
 
-  addSubject() {
+  addSubject(subject: SubjectInSchedule) {
+    subject.beginTime = `${subject.beginTime}:00`;
+    this.scheduleService.addSubject(this.currentSubject)
+      .then((data) => {
+        debugger;
+        this.closeSubjectModal();
+      });
+  }
 
+  saveSubject(subject: SubjectInSchedule) {
+
+  }
+
+  closeSubjectModal() {
+    this.currentSubject = null;
+    this.subjectModal.hide();
   }
 
   openModalForAddSubject(event) {
     event.event.preventDefault();
+    this.isEdit = false;
+    let teacherName = $(this.cellForEdit.parent().children()[0]).text();
+    let subject = new SubjectInSchedule(0);
+    subject.teacherId = this.teachersService.getTeacherByFullName(teacherName).userId;
+    subject.dayOfWeek = this.days[Math.floor((this.cellForEdit.index() - 1) / 8)].short;
+    subject.beginTime = this.times[(this.cellForEdit.index() - 1) % 8];
+    this.currentSubject = subject;
     this.subjectModal.show();
   }
 
   openModalForEditSubject(event) {
     event.event.preventDefault();
-    debugger;
+    this.isEdit = true;
+    this.subjectModal.show();
+  }
+
+  onSubmit() {
+    if (this.isEdit) {
+
+    } else {
+      this.addSubject(this.currentSubject);
+    }
   }
 
 }

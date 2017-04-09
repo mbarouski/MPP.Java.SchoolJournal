@@ -1,7 +1,7 @@
-<section *ngIf="dividedOnTeachersSchedule" class="full-schedule">
+<section class="full-schedule">
   <div class="row">
     <div class="col-md-12 col-md-offset-0">
-      <h1>Расписание учителей</h1>
+      <h1>Полное расписание</h1>
       <div class="scroll-wrapper">
         <table class="table table-bordered">
           <thead>
@@ -25,12 +25,12 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let teacherSubjects of dividedOnTeachersSchedule | keys">
-            <td>{{teacherSubjects.key}}</td>
-            <td *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)" data-id="(getSubjectForDayAndTime(teacherSubjects.value, dayTime) | get:'subectInScheduleId') || 0"
-                (contextmenu)="openContextMenuForEdit($event, getSubjectForDayAndTime(teacherSubjects.value, dayTime), !!getSubjectForDayAndTime(teacherSubjects.value, dayTime) ? deleteMenu : addMenu)">
-              <i *ngIf="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)" class="glyphicon glyphicon-ok green"></i>
-              <span *ngIf="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)">{{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'place'}}<br> {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'subject.name'}} <br> {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'clazz.number'}} {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'clazz.letterMark'}}</span>
+          <tr *ngFor="let teacher of teachers">
+            <td>{{teachersService.getTeacherFullName(teacher)}}</td>
+            <td *ngFor="let dayTime of null | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)"
+                (contextmenu)="openContextMenuForEdit($event, getSubjectForTeacherAndDayAndTime(teacher, dayTime), !!getSubjectForTeacherAndDayAndTime(teacher, dayTime) ? deleteMenu : addMenu)">
+              <i *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" class="glyphicon glyphicon-ok green"></i>
+              <span *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)">{{subjectForTeacherAndDayAndTime | get:'place'}}<br> {{subjectForTeacherAndDayAndTime | get:'subject.name'}} <br> {{subjectForTeacherAndDayAndTime | get:'clazz.number'}} {{subjectForTeacherAndDayAndTime | get:'clazz.letterMark'}}</span>
             </td>
           </tr>
           </tbody>
@@ -57,16 +57,52 @@
 
 <div class="modal fade" bsModal #subjectModal="bs-modal" [config]="{backdrop: 'static'}"
      tabindex="-1" role="dialog" aria-labelledby="subjectForm" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+  <div *ngIf="currentSubject" class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Предмет расписания</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="subjectModal.hide()">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeSubjectModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        
+        <form>
+          <div class="form-group">
+            <label>Предмет</label>
+            <select class="form-control" [(ngModel)]="currentSubject.subjectId" name="subject">
+              <option *ngFor="let subject of subjects" value="{{subject.subjectId}}">{{subject.name}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Класс</label>
+            <select class="form-control" [(ngModel)]="currentSubject.clazzId" name="clazz">
+              <option *ngFor="let clazz of classes" value="{{clazz.classId}}">{{clazz.number}} {{clazz.letterMark}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Учитель</label>
+            <select class="form-control" disabled [(ngModel)]="currentSubject.teacherId" name="teacher">
+              <option *ngFor="let teacher of teachers" value="{{teacher.userId}}">{{teachersService.getTeacherFullName(teacher)}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Место проведения</label>
+            <input type="text" class="form-control" [(ngModel)]="currentSubject.place" name="place">
+          </div>
+          <div class="form-group">
+            <label>День</label>
+            <select class="form-control" disabled [(ngModel)]="currentSubject.dayOfWeek" name="day">
+              <option *ngFor="let day of days" value="{{day.short}}">{{day.rus}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Время начала</label>
+            <select class="form-control" disabled [(ngModel)]="currentSubject.beginTime" name="time">
+              <option *ngFor="let time of times" value="{{time}}">{{time}}</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-default" (click)="onSubmit()">Готово</button>
+        </form>
       </div>
     </div>
   </div>

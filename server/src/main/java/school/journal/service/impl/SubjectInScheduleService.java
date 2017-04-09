@@ -63,24 +63,31 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             validateString(subject.getPlace(),"Place");
             checkTime(subject.getBeginTime());
             checkDayOfWeek(subject.getDayOfWeek());
-            subject.setClazz((Clazz)session.get(Clazz.class,subject.getClazz().getClassId()));
-            subject.setSubject((Subject)session.get(Subject.class,subject.getSubject().getSubjectId()));
-            subject.setTeacher((Teacher)session.get(Teacher.class,subject.getTeacher().getUserId()));
-            if(subject.getClazz().getClassId() == null || subject.getTeacher().getUserId() == null || subject.getSubject().getSubjectId() == null){
-                throw new ServiceException("No such class,teacher or subject");
+            Clazz clazz = (Clazz)session.get(Clazz.class, subject.getClazzId());
+            if(clazz == null) {
+                throw new ServiceException("Class not found");
             }
-            repository.create(subject, session);
+            subject.setClazz(clazz);
+            Subject s = (Subject)session.get(Subject.class, subject.getSubjectId());
+            if(s == null) {
+                throw new ServiceException("Subject not found");
+            }
+            subject.setSubject(s);
+            Teacher teacher = (Teacher)session.get(Teacher.class, subject.getTeacherId());
+            if(teacher == null) {
+                throw new ServiceException("Teacher not found");
+            }
+            subject.setTeacher(teacher);
+            subject = repository.create(subject, session);
             transaction.commit();
-        } catch (RepositoryException | ValidationException exc) {
+        } catch (RepositoryException | ValidationException | ObjectNotFoundException exc) {
             transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
-        return super.create(subject);
+        return subject;
     }
 
     @Override

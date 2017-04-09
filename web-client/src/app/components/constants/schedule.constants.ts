@@ -1,4 +1,4 @@
-const DAY = [{
+const DAYS = [{
     short: 'mon',
     rus: 'Понедельик'
   }, {
@@ -18,4 +18,4 @@ const DAY = [{
     rus: 'Суббота'
   }];
 
-export default DAY;
+export default DAYS;

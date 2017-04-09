@@ -61,7 +61,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity create(@RequestBody SubjectInSchedule subjectInSchedule)
+    public ResponseEntity create(HttpServletRequest req, @RequestBody SubjectInSchedule subjectInSchedule)
             throws ControllerException {
         return createOrUpdate((SubjectInSchedule s) -> subjectInScheduleService.create(s), subjectInSchedule, "Can't create subject in schedule", LOGGER);
     }
@@ -69,7 +69,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity update(@RequestBody SubjectInSchedule subjectInSchedule)
+    public ResponseEntity update(HttpServletRequest req, @RequestBody SubjectInSchedule subjectInSchedule)
             throws ControllerException {
         return createOrUpdate((SubjectInSchedule s) -> subjectInScheduleService.update(s), subjectInSchedule, "Can't update subjectInSchedule", LOGGER);
     }
@@ -77,7 +77,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
     @RequestMapping(value = "/{subjectInScheduleId}", method = RequestMethod.DELETE)
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity delete(@PathVariable("subjectInScheduleId") int subjectId)
+    public ResponseEntity delete(HttpServletRequest req, @PathVariable("subjectInScheduleId") int subjectId)
             throws ControllerException {
         return delete((int id) -> subjectInScheduleService.delete(id), subjectId, "Can't delete subjectInShcedule by id", LOGGER);
     }
