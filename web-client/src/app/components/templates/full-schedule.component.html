@@ -27,8 +27,8 @@
           <tbody>
           <tr *ngFor="let teacherSubjects of dividedOnTeachersSchedule | keys">
             <td>{{teacherSubjects.key}}</td>
-            <td *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)" data-id="{{getSubjectForDayAndTime(teacherSubjects.value, dayTime) | get:'subectInScheduleId'}}"
-              [contextMenu]="editMenu" [contextMenuSubject]="getSubjectForDayAndTime(teacherSubjects.value, dayTime)">
+            <td *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)" data-id="(getSubjectForDayAndTime(teacherSubjects.value, dayTime) | get:'subectInScheduleId') || 0"
+                (contextmenu)="openContextMenuForEdit($event, getSubjectForDayAndTime(teacherSubjects.value, dayTime), !!getSubjectForDayAndTime(teacherSubjects.value, dayTime) ? deleteMenu : addMenu)">
               <i *ngIf="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)" class="glyphicon glyphicon-ok green"></i>
               <span *ngIf="!!getSubjectForDayAndTime(teacherSubjects.value, dayTime)">{{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'place'}}<br> {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'subject.name'}} <br> {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'clazz.number'}} {{teacherSubjects.value[dayTime.day.short][dayTime.time] | get:'clazz.letterMark'}}</span>
             </td>
@@ -40,13 +40,35 @@
   </div>
 </section>
 
-<context-menu>
-  <template contextMenuItem (execute)="event.preventDefault(); deleteSubject(event.item);">
-    Delete
+<context-menu #deleteMenu style="pointer-events:all">
+  <template contextMenuItem (execute)="deleteSubject($event)">
+    <p>Удалить</p>
   </template>
-  <template contextMenuItem (execute)="event.preventDefault(); openModalForAddSubject();">
-    Add
+  <template contextMenuItem (execute)="openModalForEditSubject($event)">
+    <p>Редактировать</p>
   </template>
 </context-menu>
 
+<context-menu #addMenu style="pointer-events:all">
+  <template contextMenuItem (execute)="openModalForAddSubject($event)">
+    <p>Добавить</p>
+  </template>
+</context-menu>
+
+<div class="modal fade" bsModal #subjectModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="subjectForm" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Предмет расписания</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="subjectModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+    </div>
+  </div>
+</div>
 

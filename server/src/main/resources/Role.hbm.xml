@@ -4,8 +4,8 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="school.journal.entity.Role" table="role" schema="school_journal_db">
-        <id name="roleId" column="role_id"/>
-        <property name="name" column="name"/>
-        <property name="level" column="level"/>
+        <id name="roleId" column="role_id"> </id>
+        <property name="name" column="name" />
+        <property name="level" column="level" />
     </class>
 </hibernate-mapping>

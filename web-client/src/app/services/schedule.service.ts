@@ -52,4 +52,15 @@ export class ScheduleService {
         });
     });
   }
+
+  deleteSubjectInSchedule(id: number) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.delete(`${this.config.apiEndpoint}/schedule/${id}`, {search: params})
+        .subscribe((response) => {
+          resolve({});
+        });
+    });
+  }
 }

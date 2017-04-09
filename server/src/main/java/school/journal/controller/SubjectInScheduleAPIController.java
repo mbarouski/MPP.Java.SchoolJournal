@@ -36,7 +36,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    //@Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity getFullSchedule(HttpServletRequest req)
             throws ControllerException {
         return read(() -> subjectInScheduleService.read(), "Can't get full schedule of sujects", LOGGER);
@@ -68,7 +68,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
-    //@Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(@RequestBody SubjectInSchedule subjectInSchedule)
             throws ControllerException {
         return createOrUpdate((SubjectInSchedule s) -> subjectInScheduleService.update(s), subjectInSchedule, "Can't update subjectInSchedule", LOGGER);
@@ -76,7 +76,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
 
     @RequestMapping(value = "/{subjectInScheduleId}", method = RequestMethod.DELETE)
     @ResponseBody
-    //@Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(@PathVariable("subjectInScheduleId") int subjectId)
             throws ControllerException {
         return delete((int id) -> subjectInScheduleService.delete(id), subjectId, "Can't delete subjectInShcedule by id", LOGGER);

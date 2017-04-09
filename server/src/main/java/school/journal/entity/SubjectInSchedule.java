@@ -12,9 +12,11 @@ public class SubjectInSchedule {
     private Time beginTime;
     private String place;
     private Subject subject;
+    private Integer subjectId;
     private Teacher teacher;
     private Integer teacherId;
     private Clazz clazz;
+    private Integer clazzId;
 
     public Integer getSubectInScheduleId() {
         return subectInScheduleId;
@@ -55,6 +57,14 @@ public class SubjectInSchedule {
 
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    public Integer getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Integer subjectId) {
+        this.subjectId = subjectId;
     }
 
     @Override
@@ -101,6 +111,14 @@ public class SubjectInSchedule {
 
     public Clazz getClazz() {
         return clazz;
+    }
+
+    public Integer getClazzId() {
+        return clazzId;
+    }
+
+    public void setClazzId(Integer clazzId) {
+        this.clazzId = clazzId;
     }
 
     public void setClazz(Clazz clazz) {

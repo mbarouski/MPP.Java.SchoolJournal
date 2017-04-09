@@ -6,12 +6,12 @@ import DAY from "./constants/schedule.constants";
 import {SchoolInfoService} from "../services/school-info.service";
 import * as _ from "lodash";
 import {ContextMenuComponent, ContextMenuService} from "angular2-contextmenu";
+import {ModalDirective} from "ng2-bootstrap";
 
 declare let moment: any;
 declare let $: JQueryStatic;
 
 @Component({
-  providers: [ ContextMenuService ],
   moduleId: module.id,
   selector: 'full-schedule-component',
   templateUrl: './templates/full-schedule.component.html',
@@ -20,20 +20,19 @@ declare let $: JQueryStatic;
 
 export class FullScheduleComponent implements AfterViewInit{
 
-  items = [
-    'ggg','gg'
-  ];
-
   schedule: any;
   dividedOnTeachersSchedule: any;
   times = [];
 
-  @ViewChild(ContextMenuComponent) public editMenu: ContextMenuComponent;
+  @ViewChild(ContextMenuComponent) public addMenu: ContextMenuComponent;
+  @ViewChild(ContextMenuComponent) public deleteMenu: ContextMenuComponent;
+  @ViewChild('subjectModal') public subjectModal: ModalDirective;
 
   constructor(private authService: AuthService,
               private router: Router,
               private scheduleService: ScheduleService,
-              private schoolInfoService: SchoolInfoService) {
+              private schoolInfoService: SchoolInfoService,
+              private contextMenuService: ContextMenuService) {
     this.times = schoolInfoService.timesForSubjects;
   }
 
@@ -71,6 +70,41 @@ export class FullScheduleComponent implements AfterViewInit{
 
   getSubjectForDayAndTime(subjects, dayTime) {
     return _.get(subjects, `${dayTime.day.short}.${dayTime.time}`, undefined);
+  }
+
+  cellForEdit: any;
+
+  openContextMenuForEdit(event, subject, contextMenu) {
+    this.cellForEdit = $(event.currentTarget);
+    this.contextMenuService.show.next({
+      contextMenu,
+      event,
+      item: subject ? subject : {}
+    });
+    event.preventDefault();
+  }
+
+  deleteSubject(event) {
+    event.event.preventDefault();
+    this.scheduleService.deleteSubjectInSchedule(event.item.subectInScheduleId)
+      .then(() => {
+        this.cellForEdit.removeClass('htooltip');
+        this.cellForEdit.empty();
+      });
+  }
+
+  addSubject() {
+
+  }
+
+  openModalForAddSubject(event) {
+    event.event.preventDefault();
+    this.subjectModal.show();
+  }
+
+  openModalForEditSubject(event) {
+    event.event.preventDefault();
+    debugger;
   }
 
 }

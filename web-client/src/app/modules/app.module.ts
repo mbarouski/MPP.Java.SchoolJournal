@@ -27,7 +27,7 @@ import {SchoolInfoService} from "../services/school-info.service";
 import {KeysPipe} from "../pipes/keys.pipe";
 import {DayTimePipe} from "../pipes/day-time.pipe";
 import {GetPipe} from "../pipes/get.pipe";
-import {ContextMenuModule} from "angular2-contextmenu";
+import {ContextMenuModule, ContextMenuService} from "angular2-contextmenu";
 
 @NgModule({
   imports: [
@@ -36,6 +36,7 @@ import {ContextMenuModule} from "angular2-contextmenu";
     AppRoutingModule,
     HttpModule,
     CollapseModule.forRoot(),
+    ModalModule.forRoot(),
     ContextMenuModule,
     FormsModule
   ],
@@ -63,7 +64,7 @@ import {ContextMenuModule} from "angular2-contextmenu";
     MarksService,
     SchoolInfoService,
     { provide: APP_CONFIG, useValue: AppConfig },
-
+    ContextMenuService
   ],
   bootstrap:    [
     AppComponent
