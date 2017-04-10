@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import school.journal.entity.Clazz;
 import school.journal.entity.Pupil;
+import school.journal.entity.SubjectInSchedule;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.pupil.PupilSpecificationByClassId;
@@ -18,6 +19,7 @@ import school.journal.service.IPupilService;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 import static school.journal.utils.ValidateServiceUtils.*;
@@ -56,20 +58,50 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     }
 
     @Override
+    @SuppressWarnings("Duplicates")
     public Pupil movePupilToAnotherClass(int pupilId, Integer classId) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Pupil pupil = (Pupil)session.get(Pupil.class, pupilId);
+        if(pupil == null) throw new ServiceException("Pupil not found");
+        Clazz clazz = (Clazz)session.get(Clazz.class, classId);
+        if(clazz == null) throw new ServiceException("Class not found");
+        pupil.setClassId(classId);
         try {
-            validateId(classId, "Class");
-            validateId(pupilId, "Pupil");
-        } catch (ValidationException exc) {
+            repository.update(pupil, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
+        } finally {
+            session.close();
         }
-        Pupil pupil = new Pupil();
-        pupil.setClassId(classId);
-        return update(pupil);
+        return pupil;
     }
 
     @Override
+    public Pupil removeFromClass(int pupilId) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Pupil pupil = (Pupil)session.get(Pupil.class, pupilId);
+        if(pupil == null) throw new ServiceException("Pupil not found");
+        pupil.setClassId(null);
+        try {
+            repository.update(pupil, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return pupil;
+    }
+
+    @Override
+    @SuppressWarnings("Duplicates")
     public Pupil getOne(int pupilId) throws ServiceException {
         Pupil pupil = null;
         Session session = sessionFactory.openSession();
@@ -145,6 +177,20 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         return super.read();
     }
 
+    @Override
+    public List<Pupil> getPupilsWithoutClass() throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<Pupil> pupils = Collections.EMPTY_LIST;
+        try {
+            pupils = session.createQuery("from Pupil as p where p.classId = null").list();
+        }catch (Exception exc){
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+        return pupils;
+    }
+
     private void checkPupilId(int id) throws ServiceException {
         try {
             validateId(id, "Pupil");
@@ -215,14 +261,12 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         }
     }
 
-
     private void checkCharacteristic(Pupil oldPupil, String characteristic) throws ValidationException {
         validateNullableString(characteristic, "Characteristic");
         if (characteristic != null) {
             oldPupil.setCharacteristic(characteristic);
         }
     }
-
 
     private void checkPhoneNumber(Pupil oldPupil,String phone) throws ValidationException {
         validatePhone(phone);

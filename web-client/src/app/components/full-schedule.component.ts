@@ -109,10 +109,9 @@ export class FullScheduleComponent implements AfterViewInit{
   }
 
   addOrSaveSubject(subject: SubjectInSchedule, serviceMethod) {
-    subject.beginTime = `${subject.beginTime}:00`;
+    subject.beginTime = `${subject.time}:00`;
     serviceMethod(this.currentSubject)
       .then((data) => {
-        debugger;
         this.closeSubjectModal();
         this.loadSchedule();
       });
@@ -138,7 +137,7 @@ export class FullScheduleComponent implements AfterViewInit{
     let subject = new SubjectInSchedule(0);
     subject.teacherId = this.teachersService.getTeacherByFullName(teacherName).userId;
     subject.dayOfWeek = this.days[Math.floor((this.cellForEdit.index() - 1) / 8)].short;
-    subject.beginTime = this.times[(this.cellForEdit.index() - 1) % 8];
+    subject.time = this.times[(this.cellForEdit.index() - 1) % 8];
     this.currentSubject = subject;
     this.subjectModal.show();
   }
@@ -149,7 +148,7 @@ export class FullScheduleComponent implements AfterViewInit{
     let item = event.item;
     let subject = new SubjectInSchedule(item.subectInScheduleId);
     subject.dayOfWeek = item.dayOfWeek;
-    subject.beginTime = this.decorateTime(item.beginTime);
+    subject.time = this.decorateTime(item.beginTime);
     subject.place = item.place;
     subject.teacherId = item.teacher.userId;
     subject.subjectId = item.subject.subjectId;

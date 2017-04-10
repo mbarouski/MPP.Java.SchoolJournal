@@ -73,11 +73,11 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             List<SubjectInSchedule> sameSubjects = Collections.EMPTY_LIST;
             List<SubjectInSchedule> sameClass = Collections.EMPTY_LIST;
             try {
-                sameSubjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0} and s.dayOfWeek = :day and s.beginTime = :time", subject.getTeacher().getUserId(), subject.getDayOfWeek()))
+                sameSubjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0} and s.dayOfWeek = :day and s.beginTime = :time", subject.getTeacher().getUserId()))
                         .setParameter("time", (Object) subject.getBeginTime())
                         .setParameter("day", (Object) subject.getDayOfWeek())
                         .list();
-                sameClass = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.clazz.classId = {0} and s.dayOfWeek = :day and s.beginTime = :time", subject.getClazzId(), subject.getDayOfWeek()))
+                sameClass = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.clazz.classId = {0} and s.dayOfWeek = :day and s.beginTime = :time", subject.getClazzId()))
                         .setParameter("time", (Object) subject.getBeginTime())
                         .setParameter("day", (Object) subject.getDayOfWeek())
                         .list();
@@ -99,9 +99,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
         return subject;
     }
@@ -130,7 +128,6 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         } finally {
             session.close();
         }
-
         return subject;
     }
 

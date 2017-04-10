@@ -97,7 +97,7 @@
           </div>
           <div class="form-group">
             <label>Время начала</label>
-            <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.beginTime" name="time">
+            <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.time" name="time">
               <option *ngFor="let time of times" value="{{time}}">{{time}}</option>
             </select>
           </div>

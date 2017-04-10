@@ -16,10 +16,6 @@ declare let moment: any;
 
 export class ScheduleComponent implements AfterViewInit{
 
-  items = [
-    'ggg', 'gg', 'f'
-  ];
-
   schedule: any;
   days: any;
 
@@ -51,7 +47,7 @@ export class ScheduleComponent implements AfterViewInit{
       case 'director':
         this.scheduleService.fetchTeacherSchedule()
           .then(schedule => {
-            debugger;
+
           });
         break;
       default:

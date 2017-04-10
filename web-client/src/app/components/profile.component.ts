@@ -2,7 +2,7 @@ import {Component, OnInit, AfterViewInit} from '@angular/core';
 import {AuthService} from "../services/auth.service";
 import {UsersService} from "../services/users.service";
 import {TeachersService} from "../services/teachers.service";
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute, Params} from "@angular/router";
 import {PupilsService} from "../services/pupils.service";
 
 @Component({
@@ -11,7 +11,7 @@ import {PupilsService} from "../services/pupils.service";
   templateUrl: './templates/profile.component.html',
   styleUrls: ['./styles/profile.component.css']
 })
-export class ProfileComponent implements AfterViewInit {
+export class ProfileComponent implements AfterViewInit, OnInit {
   private user: any;
   private teacher: any;
   private pupil: any;
@@ -28,7 +28,8 @@ export class ProfileComponent implements AfterViewInit {
               private teachersService: TeachersService,
               private pupilsService: PupilsService,
               private authService: AuthService,
-              private router: Router) {
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
     this.authService.userSubject.subscribe(user => {
       this.setUser(user);
     });
@@ -43,6 +44,12 @@ export class ProfileComponent implements AfterViewInit {
     if(!this.authService.isLogged()){
       return this.router.navigate(['/login']);
     }
+  }
+
+  ngOnInit() {
+    this.activatedRoute.params.subscribe((params: Params) => {
+      console.log('Profile ', params['id']);
+    });
   }
 
   fetchUser() {

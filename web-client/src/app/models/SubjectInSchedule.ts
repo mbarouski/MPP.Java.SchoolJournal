@@ -1,8 +1,9 @@
 
 
 export class SubjectInSchedule {
-  subectInSchedule: number;
+  subectInScheduleId: number;
   dayOfWeek: string;
+  time: string;
   beginTime: string;
   place: string;
   subjectId: number;
@@ -10,6 +11,6 @@ export class SubjectInSchedule {
   clazzId: number;
 
   constructor(id: number) {
-    this.subectInSchedule = id;
+    this.subectInScheduleId = id;
   }
 }

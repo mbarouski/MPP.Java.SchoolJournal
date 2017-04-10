@@ -29,4 +29,67 @@ export class PupilsService {
     });
   }
 
+  fetchPupilsByClass(classId) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      params.append('classId', classId);
+      this.http.get(`${this.config.apiEndpoint}/pupils`, {search: params})
+        .map(res => {
+          return res.json();
+        })
+        .subscribe((pupils) => {
+          resolve(pupils);
+        });
+    });
+  }
+
+  fetchPupilsWithoutClass() {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.get(`${this.config.apiEndpoint}/pupils/withoutClass`, {search: params})
+        .map(res => {
+          return res.json();
+        })
+        .subscribe((pupils) => {
+          resolve(pupils);
+        });
+    });
+  }
+
+  getPupilFullName(pupil) {
+    if (!pupil) return;
+    return `${pupil.firstName} ${pupil.pathronymic} ${pupil.lastName}`;
+  }
+
+  removeFromClass(id) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      params.append('pupilId', id);
+      this.http.put(`${this.config.apiEndpoint}/pupils/removeFromClass`, {}, {search: params})
+        .map(res => {
+          return res.json();
+        })
+        .subscribe((pupil) => {
+          resolve(pupil);
+        });
+    });
+  }
+
+  movePupilToAnotherClass(pupilId, classId) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      params.append('pupilId', pupilId);
+      params.append('classId', classId);
+      this.http.put(`${this.config.apiEndpoint}/pupils`, {}, {search: params})
+        .map(res => res.json())
+        .subscribe((data) => {
+          resolve({});
+        });
+    });
+  }
+
 }

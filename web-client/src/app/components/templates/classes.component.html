@@ -1,0 +1,120 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <h1>Классы</h1>
+        <table class="table">
+          <tbody>
+            <tr *ngFor="let clazz of classes" (click)="selectClass(clazz.classId)" [class.selected]="selectedClass && clazz.classId == selectedClass.classId">
+              <td>{{clazz.number}} {{clazz.letterMark}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="actions start">
+          <button href="#" class="btn btn-success" (click)="openModalForAddClass()">Создать класс</button>
+          <button href="#" class="btn btn-danger" (click)="deleteClass()">Удалить класс</button>
+          <button href="#" [disabled]="!selectedClass" class="btn btn-danger">Выпустить класс</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section *ngIf="selectedClass">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <h1>Ученики {{selectedClass.number}} {{selectedClass.letterMark}} класса</h1>
+        <table class="table">
+          <tbody>
+            <tr *ngFor="let pupil of pupils" (click)="selectPupil(pupil.userId)" [class.selected]="selectedPupil && selectedPupil.userId === pupil.userId">
+              <td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="actions start">
+          <button href="#" [disabled]="!selectedPupil" (click)="removeFromClass()" class="btn btn-danger ">Удалить из класса</button>
+        </div>
+        <div class="actions start">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section *ngIf="pupilsWithoutClass">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <h1>Ученики, не состоящие в классе</h1>
+        <table class="table">
+          <tbody>
+          <tr *ngFor="let pupil of pupilsWithoutClass" (click)="selectPupilWithoutClass(pupil.userId)" [class.selected]="selectedPupilWithoutClass && selectedPupilWithoutClass.userId === pupil.userId">
+            <td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a></td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="actions start">
+          <button href="#" [disabled]="!selectedPupilWithoutClass" (click)="openClassForPupilModal()" class="btn btn-success">Определить в класс</button>
+        </div>
+        <div class="actions start">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="modal fade" bsModal #classModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="classForm" aria-hidden="true">
+  <div *ngIf="currentClass" class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Класс</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeClassModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Номер</label>
+            <input type="text" class="form-control" [(ngModel)]="currentClass.number" name="number">
+          </div>
+          <div class="form-group">
+            <label>Обозначение</label>
+            <input type="text" class="form-control" [(ngModel)]="currentClass.letterMark" name="letterMark">
+          </div>
+
+          <button type="submit" class="btn btn-default" (click)="onFormSubmit()">Готово</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #classForPupilModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="classForPupilForm" aria-hidden="true">
+  <div *ngIf="classForPupil" class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Определить ученика в класс</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeClassForPupilModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Класс</label>
+            <select class="form-control" [(ngModel)]="classForPupil.classId" name="class">
+              <option *ngFor="let clazz of classes" value="{{clazz.classId}}">{{clazz.number}} {{clazz.letterMark}}</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-default" (click)="onClassForPupilFormSubmit()">Готово</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

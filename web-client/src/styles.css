@@ -173,3 +173,20 @@ html,
 body {
   overflow-x: hidden;
 }
+
+.selected {
+  background-color: lightgray;
+  color: white;
+}
+
+table tr:hover {
+  background-color: lightgrey;
+  color: white;
+}
+
+.selected a {
+  color: white;
+}
+.table .tr {
+  cursor: pointer;
+}

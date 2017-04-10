@@ -57,11 +57,11 @@ export class ScheduleService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/schedule/teacher`, {search: params})
         .map(res => {
-          debugger;
+
           return res.json();
         })
         .subscribe((schedule) => {
-          debugger;
+
           resolve(schedule);
         });
     });

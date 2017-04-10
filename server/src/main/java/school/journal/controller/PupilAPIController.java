@@ -85,9 +85,24 @@ public class PupilAPIController extends BaseController<Pupil> {
     @RequestMapping(method = PUT, params = {"pupilId", "classId"})
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId, @RequestParam(value = "classId") Integer classId)
+    public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") Integer pupilId, @RequestParam(value = "classId") Integer classId)
             throws ControllerException {
         return doResponse(pupilService::movePupilToAnotherClass, pupilId, classId, "Can't move pupil to another class", LOGGER, false);
     }
 
+    @RequestMapping(method = GET, value = "/withoutClass")
+    @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    public ResponseEntity getPupilsWithoutClass(HttpServletRequest request)
+            throws ControllerException {
+        return read(pupilService::getPupilsWithoutClass, "Can't get pupils without class", LOGGER);
+    }
+
+    @RequestMapping(method = PUT, params = {"pupilId"}, value = "/removeFromClass")
+    @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    public ResponseEntity removeFromClass(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId)
+            throws ControllerException {
+        return doResponse(pupilService::removeFromClass, pupilId, "Can't remove pupil from class", LOGGER);
+    }
 }

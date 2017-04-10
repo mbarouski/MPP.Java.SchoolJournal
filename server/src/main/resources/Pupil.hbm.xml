@@ -9,7 +9,7 @@
             <column name="pupil_id"  sql-type="int(10) unsigned"/>
         </id>
         <property name="classId" lazy="false">
-            <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
+            <column name="class_id" sql-type="int(10) unsigned" not-null="false"/>
         </property>
         <property name="firstName">
             <column name="first_name" sql-type="varchar(100)" length="100"/>
