@@ -30,6 +30,7 @@ import {GetPipe} from "../pipes/get.pipe";
 import {ContextMenuModule, ContextMenuService} from "angular2-contextmenu";
 import {ClassesService} from "../services/classes.service";
 import {SubjectsService} from "../services/subjects.service";
+import {DirectorOfStudiesPanelComponent} from "../components/director-of-studies-panel.component";
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import {SubjectsService} from "../services/subjects.service";
     KeysPipe,
     DayTimePipe,
     GetPipe,
+    DirectorOfStudiesPanelComponent,
   ],
   providers: [
     RolesService,

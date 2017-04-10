@@ -4,14 +4,16 @@ import {Router} from "@angular/router";
 import {MarksService} from "../services/marks.service";
 import {PupilsService} from "../services/pupils.service";
 import {TeachersService} from "../services/teachers.service";
+import {ClassesService} from "../services/classes.service";
+import {SubjectsService} from "../services/subjects.service";
 
 @Component({
   moduleId: module.id,
-  selector: 'schedule-component',
-  templateUrl: './templates/marks.component.html',
-  styleUrls: ['./styles/marks.component.css']
+  selector: 'director-of-studies-panel',
+  templateUrl: './templates/director-of-studies-panel.component.html',
+  // styleUrls: ['./styles/director-of-studies-panel.component.css']
 })
-export class MarksComponent implements AfterViewInit{
+export class DirectorOfStudiesPanelComponent implements AfterViewInit{
 
   classes = [];
   subjects = [];
@@ -20,9 +22,10 @@ export class MarksComponent implements AfterViewInit{
 
   constructor(private authService: AuthService,
               private router: Router,
-              private marksService: MarksService,
               private pupilsService: PupilsService,
-              private teacherService: TeachersService) {
+              private teachersService: TeachersService,
+              private classesService: ClassesService,
+              private subjectsService: SubjectsService) {
 
   }
 
@@ -34,20 +37,6 @@ export class MarksComponent implements AfterViewInit{
 
   loadData() {
 
-  }
-
-  fetchMarks() {
-    switch(this.authService.role) {
-      case 'pupil':
-        this.pupilsService.fetchPupil(this.authService.user.userId)
-          .then((pupil: any) => {
-            this.marksService.fetchMarksForSubjectInClass(1, pupil.classId)
-              .then(marks => {
-                debugger;
-              });
-          });
-        break;
-    }
   }
 
 }
