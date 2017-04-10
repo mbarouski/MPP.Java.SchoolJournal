@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum DayOfWeekEnum{
+    sun(0),
     mon(1),
     tue(2),
     wed(3),

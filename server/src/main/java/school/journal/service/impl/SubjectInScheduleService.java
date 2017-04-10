@@ -20,6 +20,7 @@ import school.journal.service.ISubjectInScheduleService;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
+import javax.persistence.TemporalType;
 import java.sql.Time;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -63,29 +64,44 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             validateString(subject.getPlace(),"Place");
             checkTime(subject.getBeginTime());
             checkDayOfWeek(subject.getDayOfWeek());
-            Clazz clazz = (Clazz)session.get(Clazz.class, subject.getClazzId());
-            if(clazz == null) {
-                throw new ServiceException("Class not found");
+            subject.setClazz((Clazz)session.get(Clazz.class,subject.getClazzId()));
+            subject.setSubject((Subject)session.get(Subject.class,subject.getSubjectId()));
+            subject.setTeacher((Teacher)session.get(Teacher.class,subject.getTeacherId()));
+            if(subject.getClazz().getClassId() == null || subject.getTeacher().getUserId() == null || subject.getSubject().getSubjectId() == null){
+                throw new ServiceException("No such class,teacher or subject");
             }
-            subject.setClazz(clazz);
-            Subject s = (Subject)session.get(Subject.class, subject.getSubjectId());
-            if(s == null) {
-                throw new ServiceException("Subject not found");
+            List<SubjectInSchedule> sameSubjects = Collections.EMPTY_LIST;
+            List<SubjectInSchedule> sameClass = Collections.EMPTY_LIST;
+            try {
+                sameSubjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0} and s.dayOfWeek = :day and s.beginTime = :time", subject.getTeacher().getUserId(), subject.getDayOfWeek()))
+                        .setParameter("time", (Object) subject.getBeginTime())
+                        .setParameter("day", (Object) subject.getDayOfWeek())
+                        .list();
+                sameClass = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.clazz.classId = {0} and s.dayOfWeek = :day and s.beginTime = :time", subject.getClazzId(), subject.getDayOfWeek()))
+                        .setParameter("time", (Object) subject.getBeginTime())
+                        .setParameter("day", (Object) subject.getDayOfWeek())
+                        .list();
             }
-            subject.setSubject(s);
-            Teacher teacher = (Teacher)session.get(Teacher.class, subject.getTeacherId());
-            if(teacher == null) {
-                throw new ServiceException("Teacher not found");
+            catch (Exception exc){
+                LOGGER.error(exc);
+                throw new ServiceException(exc);
             }
-            subject.setTeacher(teacher);
-            subject = repository.create(subject, session);
+            if (sameSubjects.size() != 0){
+                throw  new ServiceException("This teacher has lesson in this day and time");
+            }
+            if(sameClass.size() != 0){
+                throw  new ServiceException("This class has lesson in this day and time");
+            }
+            repository.create(subject, session);
             transaction.commit();
-        } catch (RepositoryException | ValidationException | ObjectNotFoundException exc) {
+        } catch (RepositoryException | ValidationException exc) {
             transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            session.close();
+            if(session != null) {
+                session.close();
+            }
         }
         return subject;
     }
@@ -97,15 +113,16 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         Transaction transaction = session.beginTransaction();
         try {
             subject =repository.get(newSubject.getSubectInScheduleId(),session);
-            subject.setClazz((Clazz)session.load(Clazz.class,newSubject.getClazz().getClassId()));
-            subject.setSubject((Subject)session.load(Subject.class,newSubject.getSubject().getSubjectId()));
-            subject.setTeacher((Teacher)session.load(Teacher.class,newSubject.getTeacher().getUserId()));
+            subject.setClazz((Clazz)session.load(Clazz.class,newSubject.getClazzId()));
+            subject.setSubject((Subject)session.load(Subject.class,newSubject.getSubjectId()));
+            subject.setTeacher((Teacher)session.load(Teacher.class,newSubject.getTeacherId()));
             checkPlace(newSubject,subject);
             checkTime(newSubject.getBeginTime());
             subject.setBeginTime(newSubject.getBeginTime());
             checkDayOfWeek(newSubject.getDayOfWeek());
             subject.setDayOfWeek(newSubject.getDayOfWeek());
             repository.update(subject,session);
+            transaction.commit();
         } catch (ValidationException | RepositoryException exc) {
             transaction.rollback();
             LOGGER.error(exc);
@@ -183,6 +200,4 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             throw new ValidationException("Wrong day of week parameter");
         }
     }
-    //SET('simple', 'apsent', 'control', 'self', 'term', 'year')
-
 }
