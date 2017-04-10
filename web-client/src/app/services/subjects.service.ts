@@ -31,4 +31,39 @@ export class SubjectsService {
     });
   }
 
+  addSubject(subject) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.post(`${this.config.apiEndpoint}/subjects`, subject, {search: params})
+        .map(res => res.json())
+        .subscribe((subject) => {
+          resolve(subject);
+        });
+    });
+  }
+
+  updateSubject(subject) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.put(`${this.config.apiEndpoint}/subjects`, subject, {search: params})
+        .map(res => res.json())
+        .subscribe((subject) => {
+          resolve(subject);
+        });
+    });
+  }
+
+  deleteSubject(subjectId) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.delete(`${this.config.apiEndpoint}/subjects/${subjectId}`, {search: params})
+        .subscribe((res) => {
+          resolve({});
+        });
+    });
+  }
+
 }

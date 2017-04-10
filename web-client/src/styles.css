@@ -179,7 +179,7 @@ body {
   color: white;
 }
 
-table tr:hover {
+table:not(.schedule-table) tr:hover {
   background-color: lightgrey;
   color: white;
 }

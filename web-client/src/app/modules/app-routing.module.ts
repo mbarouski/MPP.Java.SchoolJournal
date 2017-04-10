@@ -7,10 +7,10 @@ import {ScheduleComponent} from "../components/schedule.component";
 import {MarksComponent} from "../components/marks.component";
 import {FullScheduleComponent} from "../components/full-schedule.component";
 import {ClassesComponent} from "../components/classes.component";
+import {SubjectsComponent} from "../components/subjects.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'roles', component: RolesComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'profile/:id', component: ProfileComponent },
   { path: 'login', component: LoginComponent },
@@ -18,6 +18,7 @@ const routes: Routes = [
   { path: 'marks', component: MarksComponent },
   { path: 'fullSchedule', component: FullScheduleComponent },
   { path: 'classes', component: ClassesComponent },
+  { path: 'subjects', component: SubjectsComponent },
 ];
 
 @NgModule({
