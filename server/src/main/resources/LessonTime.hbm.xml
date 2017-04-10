@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="school.journal.entity.LessonTime" table="lesson_time" schema="school_journal_db">
+        <id name="lessonId">
+            <column name="lesson_id"  sql-type="int(10)"/>
+        </id>
+        <property name="number">
+            <column name="number" sql-type="int(10)"/>
+        </property>
+        <property name="startTime">
+            <column name="start_time" sql-type="time"/>
+        </property>
+        <property name="endTime">
+            <column name="end_time" sql-type="time"/>
+        </property>
+    </class>
+</hibernate-mapping>

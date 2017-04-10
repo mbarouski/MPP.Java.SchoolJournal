@@ -21,5 +21,6 @@
         <mapping resource="Token.hbm.xml"/>
         <mapping resource="User.hbm.xml"/>
         <mapping resource="Term.hbm.xml"/>
+        <mapping resource="LessonTime.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

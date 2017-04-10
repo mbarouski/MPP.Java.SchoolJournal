@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @CrossOrigin
-//@Scope("AuthInterceptor")
+@Scope("AuthInterceptor")
 public class AuthInterceptor extends HandlerInterceptorAdapter{
     @Autowired
     private IAuthService authService;
