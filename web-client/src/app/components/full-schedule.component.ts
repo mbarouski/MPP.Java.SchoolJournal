@@ -54,7 +54,10 @@ export class FullScheduleComponent implements AfterViewInit{
     });
     subjectsService.subjectsSubject.subscribe(subjects => {
       this.subjects = subjects;
-    })
+    });
+    scheduleService.scheduleSubject.subscribe(schedule => {
+      this.schedule = schedule;
+    });
   }
 
   ngAfterViewInit() {
@@ -63,10 +66,7 @@ export class FullScheduleComponent implements AfterViewInit{
   }
 
   loadSchedule() {
-    this.scheduleService.fetchFullSchedule()
-      .then((schedule: any) => {
-        this.schedule = schedule;
-      });
+    this.scheduleService.fetchFullSchedule();
   }
 
   decorateTime(strTime) {
@@ -108,17 +108,22 @@ export class FullScheduleComponent implements AfterViewInit{
       });
   }
 
-  addSubject(subject: SubjectInSchedule) {
+  addOrSaveSubject(subject: SubjectInSchedule, serviceMethod) {
     subject.beginTime = `${subject.beginTime}:00`;
-    this.scheduleService.addSubject(this.currentSubject)
+    serviceMethod(this.currentSubject)
       .then((data) => {
         debugger;
         this.closeSubjectModal();
+        this.loadSchedule();
       });
   }
 
-  saveSubject(subject: SubjectInSchedule) {
+  addSubject(subject: SubjectInSchedule) {
+    this.addOrSaveSubject(subject, this.scheduleService.addSubject.bind(this.scheduleService));
+  }
 
+  saveSubject(subject: SubjectInSchedule) {
+    this.addOrSaveSubject(subject, this.scheduleService.updateSubject.bind(this.scheduleService));
   }
 
   closeSubjectModal() {
@@ -141,12 +146,21 @@ export class FullScheduleComponent implements AfterViewInit{
   openModalForEditSubject(event) {
     event.event.preventDefault();
     this.isEdit = true;
+    let item = event.item;
+    let subject = new SubjectInSchedule(item.subectInScheduleId);
+    subject.dayOfWeek = item.dayOfWeek;
+    subject.beginTime = this.decorateTime(item.beginTime);
+    subject.place = item.place;
+    subject.teacherId = item.teacher.userId;
+    subject.subjectId = item.subject.subjectId;
+    subject.clazzId = item.clazz.classId;
+    this.currentSubject = subject;
     this.subjectModal.show();
   }
 
   onSubmit() {
     if (this.isEdit) {
-
+      this.saveSubject(this.currentSubject);
     } else {
       this.addSubject(this.currentSubject);
     }

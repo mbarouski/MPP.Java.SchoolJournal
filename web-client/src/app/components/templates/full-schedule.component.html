@@ -81,7 +81,7 @@
           </div>
           <div class="form-group">
             <label>Учитель</label>
-            <select class="form-control" disabled [(ngModel)]="currentSubject.teacherId" name="teacher">
+            <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.teacherId" name="teacher">
               <option *ngFor="let teacher of teachers" value="{{teacher.userId}}">{{teachersService.getTeacherFullName(teacher)}}</option>
             </select>
           </div>
@@ -91,13 +91,13 @@
           </div>
           <div class="form-group">
             <label>День</label>
-            <select class="form-control" disabled [(ngModel)]="currentSubject.dayOfWeek" name="day">
+            <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.dayOfWeek" name="day">
               <option *ngFor="let day of days" value="{{day.short}}">{{day.rus}}</option>
             </select>
           </div>
           <div class="form-group">
             <label>Время начала</label>
-            <select class="form-control" disabled [(ngModel)]="currentSubject.beginTime" name="time">
+            <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.beginTime" name="time">
               <option *ngFor="let time of times" value="{{time}}">{{time}}</option>
             </select>
           </div>

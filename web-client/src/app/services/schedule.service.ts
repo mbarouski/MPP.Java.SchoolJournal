@@ -11,6 +11,8 @@ import {SubjectInSchedule} from "../models/SubjectInSchedule";
 @Injectable()
 export class ScheduleService {
 
+  scheduleSubject: ReplaySubject<any> = new ReplaySubject(1);
+
   constructor(@Inject(APP_CONFIG) private config: any, private http: Http, private authService: AuthService){  }
 
   fetchPupilSchedule(classId: number) {
@@ -28,11 +30,21 @@ export class ScheduleService {
 
   addSubject(subject: SubjectInSchedule) {
     return new Promise((resolve, reject) => {
-      debugger;
       return this.http.post(`${this.config.apiEndpoint}/schedule?token=${this.authService.token}`, subject, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
         .map(res => {
           return res.json();
         })
+        .subscribe((data) => {
+          resolve(data);
+        });
+    });
+  }
+
+  updateSubject(subject: SubjectInSchedule) {
+    return new Promise((resolve, reject) => {
+      return this.http.put(`${this.config.apiEndpoint}/schedule?token=${this.authService.token}`, subject,
+                              HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
+        .map(response => response.json())
         .subscribe((data) => {
           resolve(data);
         });
@@ -62,6 +74,7 @@ export class ScheduleService {
       this.http.get(`${this.config.apiEndpoint}/schedule`, {search: params})
         .map(res => res.json())
         .subscribe((schedule) => {
+          this.scheduleSubject.next(schedule);
           resolve(schedule);
         });
     });
