@@ -122,6 +122,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
             checkDayOfWeek(newSubject.getDayOfWeek());
             subject.setDayOfWeek(newSubject.getDayOfWeek());
             repository.update(subject,session);
+            transaction.commit();
         } catch (ValidationException | RepositoryException exc) {
             transaction.rollback();
             LOGGER.error(exc);
