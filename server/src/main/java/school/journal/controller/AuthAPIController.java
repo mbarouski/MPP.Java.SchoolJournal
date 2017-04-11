@@ -13,13 +13,15 @@ import school.journal.entity.User;
 import school.journal.entity.util.TokenInfo;
 import school.journal.entity.util.UserAuthInfo;
 import school.journal.service.IAuthService;
+import school.journal.service.IUserService;
 import school.journal.service.exception.AuthException;
 import school.journal.service.exception.ServiceException;
+import school.journal.service.impl.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin
-@Controller
+@RestController
 @RequestMapping(value = "/api/auth")
 public class AuthAPIController {
     private final static Logger LOGGER = Logger.getLogger(AuthAPIController.class);
@@ -61,4 +63,5 @@ public class AuthAPIController {
         }
         return resultResponse;
     }
+
 }

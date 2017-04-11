@@ -34,9 +34,11 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
     @Autowired
     @Qualifier("UserRepository")
     private IRepository<User> userRepository;
+
     @Autowired
     @Qualifier("TokenRepository")
     private IRepository<Token> tokenRepository;
+
     @Autowired
     @Qualifier("RoleRepository")
     private IRepository<Role> roleRepository;

@@ -29,12 +29,12 @@ public class TeacherAPIController extends BaseController<Teacher> {
     private ITeacherService teacherService;
 
     @PostMapping
-    public ResponseEntity create(HttpServletRequest request, Teacher teacher) throws ControllerException {
+    public ResponseEntity create(HttpServletRequest request, @RequestBody Teacher teacher) throws ControllerException {
         return createOrUpdate((Teacher t) -> teacherService.create(t), teacher, "Can't create teacher", LOGGER);
     }
 
     @PutMapping
-    public ResponseEntity update(HttpServletRequest request, Teacher teacher) throws ControllerException {
+    public ResponseEntity update(HttpServletRequest request, @RequestBody Teacher teacher) throws ControllerException {
         return createOrUpdate((Teacher t) -> teacherService.update(t), teacher, "Can't update teacher", LOGGER);
     }
 

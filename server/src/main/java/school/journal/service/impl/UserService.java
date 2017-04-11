@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import school.journal.entity.Role;
-import school.journal.entity.Token;
-import school.journal.entity.User;
+import school.journal.entity.*;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.user.UserSpecificationByUserId;
@@ -20,13 +18,23 @@ import school.journal.service.exception.ServiceException;
 import school.journal.utils.MD5Generator;
 import school.journal.utils.exception.ValidationException;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import static school.journal.utils.ValidateServiceUtils.*;
 
 @Service("UserService")
 public class UserService extends CRUDService<User> implements IUserService {
-    private static final int USER_ROLE = 2;
+    private static final int USER_ROLE = 1;
+    private static final int PUPIL_ROLE = 2;
+    private static final int DIRECTOR_ROLE = 5;
+    private static final int TEACHER_ROLE = 3;
+    private static final int DIRECTOR_OF_STUDIES_ROLE = 4;
+    private static final int ADMIN_ROLE = 6;
+
+    @Autowired
+    @Qualifier("MailService")
+    private MailService mailService;
 
     @Autowired
     public UserService(@Qualifier("UserRepository") IRepository<User> repository, @Qualifier("TokenRepository") IRepository<Token> tokenRepository) {
@@ -51,19 +59,70 @@ public class UserService extends CRUDService<User> implements IUserService {
             validateString(user.getUsername(), "Username");
             validateEmail(user.getEmail());
             user.setLocked((byte) 0);
-            user.setRole((Role)session.load(Role.class, USER_ROLE));
-            user.setPassHash(MD5Generator.generate(generateNewPassword()));
+            user.setRole((Role)session.get(Role.class, USER_ROLE));
+            String password = generateNewPassword();
+            user.setPassHash(MD5Generator.generate(password));
             repository.create(user, session);
             transaction.commit();
+            LOGGER.info(MessageFormat.format("Password: {0}", password));
+            //mailService.sendMail(user.getEmail(), password);
         } catch (RepositoryException | ValidationException exc) {
             transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
+        return user;
+    }
+
+    @Override
+    public User changeRole(int userId, int roleId) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        User user = changeRole(userId, roleId, session);
+        try {
+            repository.update(user, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return user;
+    }
+
+    private void deleteTeacherIfExist(int teacherId, Session session) {
+        Teacher teacher = (Teacher) session.get(Teacher.class, teacherId);
+        if(teacher != null) {
+            session.delete(teacher);
+        }
+    }
+
+    private void deletePupilIfExist(int pupilId, Session session) {
+        Pupil pupil = (Pupil) session.get(Pupil.class, pupilId);
+        if(pupil != null) {
+            session.delete(pupil);
+        }
+    }
+
+    @Override
+    public User changeRole(int userId, int roleId, Session session) throws ServiceException {
+        User user = (User) session.get(User.class, userId);
+        if(user == null) throw new ServiceException("User not found");
+        Role role = (Role) session.get(Role.class, roleId);
+        if(role == null) throw new ServiceException("Role not found");
+        if(roleId == PUPIL_ROLE) {
+            deleteTeacherIfExist(userId, session);
+        } else if((roleId == TEACHER_ROLE) || (roleId == DIRECTOR_OF_STUDIES_ROLE) || (roleId == DIRECTOR_ROLE)) {
+            deletePupilIfExist(userId, session);
+        } else {
+            deleteTeacherIfExist(userId, session);
+            deletePupilIfExist(userId, session);
+        }
+        user.setRole(role);
         return user;
     }
 

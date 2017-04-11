@@ -9,6 +9,7 @@ public class Teacher {
     private String description;
     private User user;
     private Integer userId;
+    private Integer roleId;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -64,6 +65,14 @@ public class Teacher {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     @Override

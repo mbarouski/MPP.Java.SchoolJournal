@@ -1,6 +1,7 @@
 package school.journal.entity.enums;
 
 public enum RoleEnum {
+    USER(0),
     PUPIL(1),
     TEACHER(2),
     CLASS_TEACHER(3),

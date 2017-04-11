@@ -8,6 +8,7 @@ import {MarksComponent} from "../components/marks.component";
 import {FullScheduleComponent} from "../components/full-schedule.component";
 import {ClassesComponent} from "../components/classes.component";
 import {SubjectsComponent} from "../components/subjects.component";
+import {UsersComponent} from "../components/users.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'fullSchedule', component: FullScheduleComponent },
   { path: 'classes', component: ClassesComponent },
   { path: 'subjects', component: SubjectsComponent },
+  { path: 'users', component: UsersComponent },
 ];
 
 @NgModule({

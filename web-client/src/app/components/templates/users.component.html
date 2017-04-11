@@ -1,0 +1,116 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <h1>Пользователи</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Имя пользователя</th>
+              <th>Почта</th>
+              <th>Роль</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of usersOnPage" (click)="selectUser(user.userId)"
+              [class.selected]="selectedUser && user.userId == selectedUser.userId">
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{decorateRole(user.role.name)}}</td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="col-md-6 col-md-offset-3 pagination">
+          <nav>
+            <ul class="pagination">
+              <li *ngFor="let page of getPages()" [class.active]="currentPage == page"><a (click)="changePage(page)">{{page}}</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="actions start">
+          <button href="#" class="btn btn-success" (click)="openUserModal()">Добавить</button>
+          <button href="#" class="btn btn-danger" [disabled]="!selectedUser" (click)="deleteUser()">Удалить</button>
+          <button href="#" class="btn btn-success" [disabled]="!selectedUser"
+                  (click)="openModalForChangeUserRole()">Изменить роль</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="modal fade" bsModal #userModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="userForm" aria-hidden="true">
+  <div *ngIf="currentUser" class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Пользователь</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeUserModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Имя пользователя</label>
+            <input type="text" class="form-control" [(ngModel)]="currentUser.username" name="name">
+          </div>
+          <div class="form-group">
+            <label>Почта</label>
+            <input type="email" class="form-control" [(ngModel)]="currentUser.email" name="email">
+          </div>
+
+          <button type="submit" class="btn btn-default" (click)="onUserFormSubmit()">Готово</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #userRoleModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="userRoleForm" aria-hidden="true">
+  <div *ngIf="currentRole" class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Смена роли</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeUserRoleModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form *ngIf="roles">
+          <div class="form-group">
+            <label>Роль</label>
+            <select class="form-control" [(ngModel)]="currentRole" name="role" (change)="onChangeRole()">
+              <option *ngFor="let role of roles" value="{{role.roleId}}">{{decorateRole(role.name)}}</option>
+            </select>
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Имя</label>
+            <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.firstName" name="firstName">
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Отчество</label>
+            <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.pathronymic" name="pathronymic">
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Фамилия</label>
+            <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.lastName" name="lastName">
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Телефон</label>
+            <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.phoneNumber" name="phoneNumber">
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Описание</label>
+            <textarea class="form-control" rows="3"
+                      [(ngModel)]="currentRole === 'pupil' ? currentTeacherPupil.characteristic : currentTeacherPupil.description"
+                      name="description"></textarea>
+          </div>
+
+          <button type="submit" [disabled]="selectedUser.role.name == getRoleById(currentRole)" class="btn btn-default" (click)="onUserRoleFormSubmit()">Готово</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

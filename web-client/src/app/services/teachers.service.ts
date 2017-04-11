@@ -59,4 +59,39 @@ export class TeachersService {
       return this.getTeacherFullName(teacher);
     });
   }
+
+  addTeacher(teacher) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.post(`${this.config.apiEndpoint}/teachers`, teacher, {search: params})
+        .map(res => res.json())
+        .subscribe((teacher) => {
+          resolve(teacher);
+        });
+    });
+  }
+
+  updateTeacher(teacher) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.put(`${this.config.apiEndpoint}/teachers`, teacher, {search: params})
+        .map(res => res.json())
+        .subscribe((teacher) => {
+          resolve(teacher);
+        });
+    });
+  }
+
+  deleteTeacher(id) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.delete(`${this.config.apiEndpoint}/teachers/${id}`, {search: params})
+        .subscribe((data) => {
+          resolve({});
+        });
+    });
+  }
 }

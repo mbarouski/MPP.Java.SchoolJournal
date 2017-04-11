@@ -190,3 +190,7 @@ table:not(.schedule-table) tr:hover {
 .table .tr {
   cursor: pointer;
 }
+
+.pagination a {
+  cursor: pointer;
+}

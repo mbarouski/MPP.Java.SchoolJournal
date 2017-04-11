@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import school.journal.entity.Clazz;
 import school.journal.entity.Pupil;
 import school.journal.entity.SubjectInSchedule;
+import school.journal.entity.User;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.pupil.PupilSpecificationByClassId;
@@ -234,6 +235,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
 
     private void checkClassId(Pupil pupil, Integer classId,Session session) throws ServiceException, ValidationException {
         validateNullableId(classId, "Class");
+        if(classId == null) return;
         Clazz clazz = (Clazz) session.get(Clazz.class, classId);
         if (clazz != null) {
             pupil.setClassId(classId);

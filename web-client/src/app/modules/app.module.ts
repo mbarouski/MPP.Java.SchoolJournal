@@ -9,7 +9,7 @@ import { RolesService } from "../services/roles.service";
 import {APP_CONFIG, AppConfig} from "../configs/app.config";
 import {HttpModule} from "@angular/http";
 import {MenuComponent} from "../components/menu.component";
-import {Ng2BootstrapModule, CollapseModule, ModalModule} from "ng2-bootstrap";
+import {Ng2BootstrapModule, CollapseModule, ModalModule, PaginationModule} from "ng2-bootstrap";
 import {ProfileComponent} from "../components/profile.component";
 import {TeachersService} from "../services/teachers.service";
 import {LoginComponent} from "../components/login.component";
@@ -32,6 +32,7 @@ import {ClassesService} from "../services/classes.service";
 import {SubjectsService} from "../services/subjects.service";
 import {ClassesComponent} from "../components/classes.component";
 import {SubjectsComponent} from "../components/subjects.component";
+import {UsersComponent} from "../components/users.component";
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import {SubjectsComponent} from "../components/subjects.component";
     GetPipe,
     ClassesComponent,
     SubjectsComponent,
+    UsersComponent,
   ],
   providers: [
     RolesService,
