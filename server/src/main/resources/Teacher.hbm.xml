@@ -12,7 +12,7 @@
             <column name="phone_number" sql-type="varchar(45)" length="45" not-null="true"/>
         </property>
         <property name="classId">
-            <column name="class_id" sql-type="int(10) unsigned" not-null="true"/>
+            <column name="class_id" sql-type="int(10) unsigned" not-null="false"/>
         </property>
         <property name="firstName">
             <column name="first_name" sql-type="varchar(100)" length="100"/>

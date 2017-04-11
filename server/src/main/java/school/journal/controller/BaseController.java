@@ -110,6 +110,20 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
+    ResponseEntity doResponse(CallableWithParamsIntString<T> operation, int i, String s, String errorMessage, Logger logger) {
+        ResponseEntity resultResponse = null;
+        try {
+            resultResponse = createResponseEntity(operation.call(i, s), OK);
+        } catch (ServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
+        } catch (Exception exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
     private ResponseEntity createResponseEntity(Object data, HttpStatus status) {
         return new ResponseEntity(data, status);
     }

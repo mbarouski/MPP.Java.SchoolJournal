@@ -106,7 +106,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
     }
 
     private void checkPatronymic(Teacher newTeacher, Teacher teacher) throws ValidationException {
-        String patronymic = newTeacher.getFirstName();
+        String patronymic = newTeacher.getPathronymic();
         if(patronymic == null) return;
         validateString(patronymic, "Patronymic");
         teacher.setPathronymic(patronymic);
@@ -224,6 +224,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
             } else {
                 if(session.get(Clazz.class, classId) == null) throw new ServiceException("Class not found");
             }
+            teacher.setClassId(classId);
             repository.update(teacher, session);
             transaction.commit();
         } catch (RepositoryException exc) {

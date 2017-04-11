@@ -56,4 +56,19 @@ public class UsersAPIController extends BaseController<User> {
     public ResponseEntity delete(HttpServletRequest req, @PathVariable("userId") int userId) {
         return delete(userService::delete, userId, "Can't create user", LOGGER);
     }
+
+    @GetMapping(value = "/{userId}")
+    @ResponseBody
+    @Secured(RoleEnum.PUPIL)
+    public ResponseEntity getOne(HttpServletRequest req, @PathVariable("userId") int userId) {
+        return getOne(userService::getOne, userId, "Can't get user", LOGGER);
+    }
+
+    @PutMapping(value = "/{userId}", params = {"password"})
+    @ResponseBody
+    @Secured(RoleEnum.PUPIL)
+    public ResponseEntity changePassword(HttpServletRequest req, @PathVariable("userId") int userId,
+    @RequestParam("password") String password) {
+        return doResponse(userService::changePassword, userId, password, "Can't change password of user", LOGGER);
+    }
 }

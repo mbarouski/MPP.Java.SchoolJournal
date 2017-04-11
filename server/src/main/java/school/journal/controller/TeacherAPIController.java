@@ -60,8 +60,8 @@ public class TeacherAPIController extends BaseController<Teacher> {
         return read(() -> teacherService.read(), "Can't get teacher list", LOGGER);
     }
 
-    @PostMapping("/{teacherId}/{classId}")
-    public ResponseEntity changeClassOfTeacher(HttpServletRequest request, @PathVariable("teacherId") int teacherId, @PathVariable("classId") int classId)
+    @PostMapping(value = "/changeClassOfTeacher", params = {"teacherId", "classId"})
+    public ResponseEntity changeClassOfTeacher(HttpServletRequest request, @RequestParam("teacherId") int teacherId, @RequestParam("classId") int classId)
             throws ControllerException {
         return doResponse((int tId, int cId) -> teacherService.changeClassOfTeacher(tId, cId),
                 teacherId, classId, "Can't change class of teacher", LOGGER, false);

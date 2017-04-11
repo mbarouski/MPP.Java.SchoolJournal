@@ -2,8 +2,12 @@
   <div class="container" *ngIf="user">
     <div class="row">
       <div class="col-md-10 col-md-offset-1" *ngIf="user">
+        <div class="actions start">
+          <button *ngIf="user.userId == authService.user.userId" href="#" class="btn btn-success" (click)="openEditModal()">Редактировать</button>
+          <button *ngIf="user.userId == authService.user.userId" href="#" class="btn btn-success" (click)="openPasswordModal()">Изменить пароль</button>
+        </div>
         <h1>{{fullName || user.username}}</h1>
-        <p class="role">{{russianRoleName[user.role.name.toLowerCase()]()}}</p>
+        <p class="role">{{roles[user.role.name]}}</p>
         <hr>
         <div *ngIf="teacher && teacher.description || pupil && pupil.characteristic">
           <h3>Описание</h3>
@@ -20,3 +24,69 @@
     </div>
   </div>
 </section>
+
+<div class="modal fade" bsModal #passwordModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="passwordForm" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Новый пароль</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closePasswordModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Пароль</label>
+            <input type="password" class="form-control" [(ngModel)]="currentPassword" name="password">
+          </div>
+
+          <button type="submit" class="btn btn-default" (click)="onPasswordFormSubmit()">Готово</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #editModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="editForm" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Изменение профиля</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeEditModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Имя</label>
+            <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.firstName" name="firstName">
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Отчество</label>
+            <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.pathronymic" name="pathronymic">
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Фамилия</label>
+            <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.lastName" name="lastName">
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Телефон</label>
+            <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.phoneNumber" name="phoneNumber">
+          </div>
+          <div *ngIf="currentTeacherPupil" class="form-group">
+            <label>Описание</label>
+            <textarea class="form-control" rows="3"
+                      [(ngModel)]="currentRole === 'pupil' ? currentTeacherPupil.characteristic : currentTeacherPupil.description"
+                      name="description"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-default" (click)="onEditFormSubmit()">Готово</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

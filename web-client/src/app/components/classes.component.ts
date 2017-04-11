@@ -20,14 +20,17 @@ export class ClassesComponent implements AfterViewInit{
   selectedPupilWithoutClass: any;
   pupils = [];
   classes = [];
+  teachers = [];
   pupilsWithoutClass = [];
   currentClass: any;
   classForPupil = {
     classId: 0
   };
+  classTeacher: number;
 
   @ViewChild('classModal') public classModal: ModalDirective;
   @ViewChild('classForPupilModal') public classForPupilModal: ModalDirective;
+  @ViewChild('classTeacherModal') public classTeacherModal: ModalDirective;
 
   constructor(private router: Router,
               private authService: AuthService,
@@ -36,6 +39,9 @@ export class ClassesComponent implements AfterViewInit{
               private pupilsService: PupilsService){
     classesService.classesSubject.subscribe(classes => {
       this.classes = classes;
+    });
+    teachersService.teachersSubject.subscribe(teachers => {
+      this.teachers = teachers;
     });
   }
 
@@ -106,6 +112,7 @@ export class ClassesComponent implements AfterViewInit{
 
   restoreState() {
     this.classesService.fetchClasses();
+    this.teachersService.fetchTeachers();
     this.pupilsService.fetchPupilsWithoutClass()
       .then((pupils: any) => {
         this.pupilsWithoutClass = pupils;
@@ -114,6 +121,8 @@ export class ClassesComponent implements AfterViewInit{
     this.selectedPupil = null;
     this.selectedPupilWithoutClass = null;
     this.closeClassModal();
+    this.closeClassForPupilModal();
+    this.closeClassTeacherModal();
   }
 
   deleteClass() {
@@ -122,6 +131,11 @@ export class ClassesComponent implements AfterViewInit{
       .then(() => {
         this.restoreState();
       });
+  }
+
+  getClassTeacherOfSelectedClass() {
+    let teacher = this.teachers.find(teacher => teacher.classId == this.selectedClass.classId);
+    return teacher ? this.teachersService.getTeacherFullName(teacher) : 'Не назначен'
   }
 
   onClassForPupilFormSubmit() {
@@ -143,4 +157,22 @@ export class ClassesComponent implements AfterViewInit{
   closeClassForPupilModal() {
     this.classForPupilModal.hide();
   }
+
+  openClassTeacherModal() {
+    this.classTeacher = -1;
+    this.classTeacherModal.show();
+  }
+
+  onClassTeacherFormSubmit() {
+    this.teachersService.setAsClassTeacher(this.classTeacher, this.selectedClass.classId)
+      .then(() => {
+        this.restoreState();
+      });
+  }
+
+  closeClassTeacherModal() {
+    this.classTeacherModal.hide();
+    this.classTeacher = -1;
+  }
+
 }

@@ -76,4 +76,29 @@ export class UsersService {
         });
     });
   }
+
+  fetchUser(id) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.get(`${this.config.apiEndpoint}/users/${id}`, {search: params})
+        .map(res => res.json())
+        .subscribe((user) => {
+          resolve(user);
+        });
+    });
+  }
+
+  changePassword(userId, password) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      params.append('password', password);
+      this.http.put(`${this.config.apiEndpoint}/users/${userId}`, {}, {search: params})
+        .map(res => res.json())
+        .subscribe((user) => {
+          resolve(user);
+        });
+    });
+  }
 }

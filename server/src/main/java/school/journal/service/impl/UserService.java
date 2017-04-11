@@ -94,6 +94,27 @@ public class UserService extends CRUDService<User> implements IUserService {
         return user;
     }
 
+
+    @Override
+    public User changePassword(int userId, String password) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        User user = (User) session.get(User.class, userId);
+        if(user == null) throw new ServiceException("User not found");
+        user.setPassHash(MD5Generator.generate(password));
+        try {
+            repository.update(user, session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            session.close();
+        }
+        return user;
+    }
+
     private void deleteTeacherIfExist(int teacherId, Session session) {
         Teacher teacher = (Teacher) session.get(Teacher.class, teacherId);
         if(teacher != null) {

@@ -12,7 +12,8 @@
         </table>
         <div class="actions start">
           <button href="#" class="btn btn-success" (click)="openModalForAddClass()">Создать класс</button>
-          <button href="#" class="btn btn-danger" (click)="deleteClass()">Удалить класс</button>
+          <button href="#" class="btn btn-danger" [disabled]="!selectedClass" (click)="deleteClass()">Удалить класс</button>
+          <button href="#" class="btn btn-danger" [disabled]="!selectedClass" (click)="openClassTeacherModal()">Назначить классного руководителя</button>
           <!--<button href="#" [disabled]="!selectedClass" class="btn btn-danger">Выпустить класс</button>-->
         </div>
       </div>
@@ -25,6 +26,7 @@
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <h1>Ученики {{selectedClass.number}} {{selectedClass.letterMark}} класса</h1>
+        <p><strong>Классный руководитель: </strong>{{getClassTeacherOfSelectedClass()}}</p>
         <table class="table">
           <tbody>
             <tr *ngFor="let pupil of pupils" (click)="selectPupil(pupil.userId)" [class.selected]="selectedPupil && selectedPupil.userId === pupil.userId">
@@ -113,6 +115,32 @@
           </div>
 
           <button type="submit" class="btn btn-default" (click)="onClassForPupilFormSubmit()">Готово</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #classTeacherModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="classTeacherForm" aria-hidden="true">
+  <div *ngIf="classTeacher" class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Назначить классного руководителя</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeClassTeacherModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Учитель</label>
+            <select class="form-control" [(ngModel)]="classTeacher" name="classTeacher">
+              <option *ngFor="let teacher of teachers" value="{{teacher.userId}}">{{teachersService.getTeacherFullName(teacher)}}</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-default" (click)="onClassTeacherFormSubmit()">Готово</button>
         </form>
       </div>
     </div>

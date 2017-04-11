@@ -94,4 +94,18 @@ export class TeachersService {
         });
     });
   }
+
+  setAsClassTeacher(teacherId, classId) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      params.append('teacherId', teacherId);
+      params.append('classId', classId);
+      this.http.post(`${this.config.apiEndpoint}/teachers/changeClassOfTeacher`, {}, {search: params})
+        .map(res => res.json())
+        .subscribe((data) => {
+          resolve({});
+        });
+    });
+  }
 }
