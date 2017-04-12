@@ -10,7 +10,7 @@ import java.text.MessageFormat;
 @Service("MailService")
 public class MailService {
 
-//    @Autowired
+    @Autowired
     private MailSender mailSender;
 
     public void sendMail(String to, String password)

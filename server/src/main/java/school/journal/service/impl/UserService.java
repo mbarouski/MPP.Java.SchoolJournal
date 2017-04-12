@@ -65,7 +65,7 @@ public class UserService extends CRUDService<User> implements IUserService {
             repository.create(user, session);
             transaction.commit();
             LOGGER.info(MessageFormat.format("Password: {0}", password));
-            //mailService.sendMail(user.getEmail(), password);
+            mailService.sendMail(user.getEmail(), password);
         } catch (RepositoryException | ValidationException exc) {
             transaction.rollback();
             LOGGER.error(exc);
