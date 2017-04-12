@@ -7,7 +7,9 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 import school.journal.entity.*;
 import org.springframework.stereotype.Service;
 import school.journal.entity.enums.DayOfWeekEnum;
@@ -21,6 +23,7 @@ import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
 import javax.persistence.TemporalType;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Time;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -196,5 +199,19 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         if (day.getValue()<1 || day.getValue()>6){
             throw new ValidationException("Wrong day of week parameter");
         }
+    }
+
+    public List<SubjectInSchedule> getSubjectsWithTeacherClassSubject(int classId, int teacherId, int subjectId)
+            throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
+        try {
+            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0} and s.subject.subjectId = {1} and s.clazz.classId = {2}", teacherId, subjectId, classId)).list();
+        }catch (Exception exc){
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
+        return subjects;
     }
 }

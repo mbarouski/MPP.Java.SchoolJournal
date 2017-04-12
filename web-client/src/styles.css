@@ -194,3 +194,9 @@ table:not(.schedule-table) tr:hover {
 .pagination a {
   cursor: pointer;
 }
+
+.schedule-table a {
+  display: block;
+  padding: 0;
+  margin: 0;
+}

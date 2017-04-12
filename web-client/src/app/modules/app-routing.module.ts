@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'profile/:id', component: ProfileComponent },
   { path: 'login', component: LoginComponent },
   { path: 'schedule', component: ScheduleComponent },
-  { path: 'marks', component: MarksComponent },
+  { path: 'marks/:id', component: MarksComponent },
   { path: 'fullSchedule', component: FullScheduleComponent },
   { path: 'classes', component: ClassesComponent },
   { path: 'subjects', component: SubjectsComponent },

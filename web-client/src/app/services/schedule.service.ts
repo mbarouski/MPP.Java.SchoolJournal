@@ -28,6 +28,18 @@ export class ScheduleService {
     });
   }
 
+  fetchSubject(id) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.get(`${this.config.apiEndpoint}/schedule/${id}`, {search: params})
+        .map(res => res.json())
+        .subscribe((subject) => {
+          resolve(subject);
+        });
+    });
+  }
+
   addSubject(subject: SubjectInSchedule) {
     return new Promise((resolve, reject) => {
       return this.http.post(`${this.config.apiEndpoint}/schedule?token=${this.authService.token}`, subject, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
@@ -87,6 +99,21 @@ export class ScheduleService {
       this.http.delete(`${this.config.apiEndpoint}/schedule/${id}`, {search: params})
         .subscribe((response) => {
           resolve({});
+        });
+    });
+  }
+
+  getSubjectsForTeacherClassSubject(teacherId, classId, subjectId) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      params.append('teacherId', teacherId);
+      params.append('classId', classId);
+      params.append('subjectId', subjectId);
+      this.http.get(`${this.config.apiEndpoint}/schedule`, {search: params})
+        .map(res => res.json())
+        .subscribe((subjects) => {
+          resolve(subjects);
         });
     });
   }

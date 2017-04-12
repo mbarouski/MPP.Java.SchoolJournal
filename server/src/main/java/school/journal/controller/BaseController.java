@@ -96,6 +96,20 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
+    ResponseEntity doResponse(CallableWithoutParams<T> operation, String errorMessage, Logger logger) {
+        ResponseEntity resultResponse = null;
+        try {
+            resultResponse = createResponseEntity(operation.call(), OK);
+        } catch (ServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
+        } catch (Exception exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(CRITICAL_ERROR, INTERNAL_SERVER_ERROR);
+        }
+        return resultResponse;
+    }
+
     ResponseEntity doResponse(CallableWithParamsIntBoolean<T> operation, int i, boolean f, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {

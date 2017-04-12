@@ -13,6 +13,7 @@ import school.journal.controller.util.ErrorObject;
 import school.journal.entity.SubjectInSchedule;
 import school.journal.entity.User;
 import school.journal.entity.enums.RoleEnum;
+import school.journal.service.CRUDService;
 import school.journal.service.ISubjectInScheduleService;
 import school.journal.service.exception.ServiceException;
 
@@ -34,6 +35,14 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
     @Qualifier("SubjectInScheduleService")
     private ISubjectInScheduleService subjectInScheduleService;
 
+    @RequestMapping(method = RequestMethod.GET, value="/{id}")
+    @ResponseBody
+    @Secured(RoleEnum.PUPIL)
+    public ResponseEntity getOne(HttpServletRequest req, @PathVariable("id") int subjectId)
+            throws ControllerException {
+        return getOne(((CRUDService<SubjectInSchedule>)subjectInScheduleService)::getOne, subjectId, "Can't get subject in schedule", LOGGER);
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
@@ -48,6 +57,17 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
     public ResponseEntity getPupilSchedule(HttpServletRequest request, @PathVariable int classId)
             throws ControllerException {
         return read(() -> subjectInScheduleService.getPupilSchedule(classId), "Can't get pupil schedule", LOGGER);
+    }
+
+    @GetMapping(params={"classId", "teacherId", "subjectId"})
+    @ResponseBody
+    @Secured(RoleEnum.PUPIL)
+    public ResponseEntity getSubjectsWithTeacherClassSubject(HttpServletRequest request,
+                                                             @RequestParam("classId") int classId,
+                                                             @RequestParam("teacherId") int teacherId,
+                                                             @RequestParam("subjectId") int subjectId)
+            throws ControllerException {
+        return doResponse(subjectInScheduleService::getSubjectsWithTeacherClassSubject, classId, teacherId, subjectId, "Can't get subjects", LOGGER);
     }
 
     @GetMapping("/teacher")

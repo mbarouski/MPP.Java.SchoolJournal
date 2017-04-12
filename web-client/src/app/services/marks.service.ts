@@ -5,10 +5,13 @@ import {Http, URLSearchParams} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
 import {HttpUtil} from "./http.util";
+import {Mark} from "../models/Mark";
 
 
 @Injectable()
 export class MarksService {
+
+  marksSubject: ReplaySubject<any> = new ReplaySubject(1);
 
   constructor(@Inject(APP_CONFIG) private config: any,
               private http: Http,
@@ -24,9 +27,18 @@ export class MarksService {
       this.http.get(`${this.config.apiEndpoint}/marks`, {search: params})
         .map(res => res.json())
         .subscribe((marks) => {
+          this.marksSubject.next(marks);
           resolve(marks);
         });
     });
+  }
+
+  setMark(mark: Mark) {
+
+  }
+
+  deleteMark(markId) {
+
   }
 
 }

@@ -29,8 +29,10 @@
             <td>{{teachersService.getTeacherFullName(teacher)}}</td>
             <td *ngFor="let dayTime of null | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)"
                 (contextmenu)="openContextMenuForEdit($event, getSubjectForTeacherAndDayAndTime(teacher, dayTime), !!getSubjectForTeacherAndDayAndTime(teacher, dayTime) ? deleteMenu : addMenu)">
-              <i *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" class="glyphicon glyphicon-ok green"></i>
-              <span *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)">{{subjectForTeacherAndDayAndTime | get:'place'}}<br> {{subjectForTeacherAndDayAndTime | get:'subject.name'}} <br> {{subjectForTeacherAndDayAndTime | get:'clazz.number'}} {{subjectForTeacherAndDayAndTime | get:'clazz.letterMark'}}</span>
+              <a *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" routerLink="{{createLinkToMarks(getSubjectForTeacherAndDayAndTime(teacher, dayTime))}}">
+                <i class="glyphicon glyphicon-ok green"></i>
+                <span>{{subjectForTeacherAndDayAndTime | get:'place'}}<br> {{subjectForTeacherAndDayAndTime | get:'subject.name'}} <br> {{subjectForTeacherAndDayAndTime | get:'clazz.number'}} {{subjectForTeacherAndDayAndTime | get:'clazz.letterMark'}}</span>
+              </a>
             </td>
           </tr>
           </tbody>

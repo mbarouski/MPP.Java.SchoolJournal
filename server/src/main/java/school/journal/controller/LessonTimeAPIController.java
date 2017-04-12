@@ -12,6 +12,7 @@ import school.journal.entity.LessonTime;
 import school.journal.entity.enums.RoleEnum;
 import school.journal.service.IAuthService;
 import school.journal.service.ILessonTimeService;
+import school.journal.service.ITermService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,8 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/api/lessons")
 public class LessonTimeAPIController extends BaseController<LessonTime>{
 
-    private final ILessonTimeService lessonTimeService;
     private static Logger LOGGER = Logger.getLogger(LessonTimeAPIController.class);
+
+    private final ILessonTimeService lessonTimeService;
+
     @Autowired
     public LessonTimeAPIController(@Qualifier("LessonTimeService") ILessonTimeService lessonTimeService) {
         this.lessonTimeService = lessonTimeService;

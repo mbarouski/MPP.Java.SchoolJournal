@@ -165,4 +165,8 @@ export class FullScheduleComponent implements AfterViewInit{
     }
   }
 
+  createLinkToMarks(subject) {
+    return `/marks/${subject.subectInScheduleId}`;
+  }
+
 }
