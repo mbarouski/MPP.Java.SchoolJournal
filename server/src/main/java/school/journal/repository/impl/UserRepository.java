@@ -5,14 +5,14 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
 import school.journal.entity.User;
-import school.journal.repository.RepositoryAbstractClass;
+import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
 @Component("UserRepository")
-public class UserRepository extends RepositoryAbstractClass<User> {
+public class UserRepository implements IRepository<User> {
 
     @Override
     public User create(User user, Session session) throws RepositoryException {

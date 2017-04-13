@@ -33,6 +33,5 @@ public class AuthInterceptor extends HandlerInterceptorAdapter{
             return false;
         }
         return user != null;
-//        return true;
     }
 }

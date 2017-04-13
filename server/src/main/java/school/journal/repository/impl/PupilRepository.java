@@ -5,15 +5,14 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Pupil;
-import school.journal.entity.User;
-import school.journal.repository.RepositoryAbstractClass;
+import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
 @Component("PupilRepository")
-public class PupilRepository extends RepositoryAbstractClass<Pupil> {
+public class PupilRepository implements IRepository<Pupil> {
     @Override
     public Pupil create(Pupil pupil, Session session) throws RepositoryException {
         session.save(pupil);

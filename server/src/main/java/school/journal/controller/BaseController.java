@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.*;
 import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 public abstract class BaseController<T> {
-    ResponseEntity delete(CallableWithoutResultWithParamsInt operation, int i, String errorMessage, Logger logger) {
+    ResponseEntity delete(Callable_NoResult_ParamsInt operation, int i, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             operation.call(i);
@@ -26,7 +26,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity getOne(CallableWithParamsInt<T> operation, int i, String errorMessage, Logger logger) {
+    ResponseEntity getOne(Callable_ParamsInt<T> operation, int i, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i), OK);
@@ -40,7 +40,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity createOrUpdate(CallableWithTParam<T> operation, T obj, String errorMessage, Logger logger) {
+    ResponseEntity createOrUpdate(Callable_ParamsT<T> operation, T obj, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(obj), OK);
@@ -54,7 +54,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity read(CallableWithResultList<T> operation, String errorMessage, Logger logger) {
+    ResponseEntity read(Callable_ResultList<T> operation, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(), OK);
@@ -68,7 +68,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity doResponse(CallableWithResultListWithParamsInt<T> operation, int i, String errorMessage, Logger logger) {
+    ResponseEntity doResponse(Callable_ResultList_ParamsInt<T> operation, int i, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i), OK);
@@ -82,7 +82,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity doResponse(CallableWithParamsIntInt<T> operation, int a, int b, String errorMessage, Logger logger, boolean _) {
+    ResponseEntity doResponse(Callable_ParamsIntInt<T> operation, int a, int b, String errorMessage, Logger logger, boolean _) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(a, b), OK);
@@ -96,7 +96,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity doResponse(CallableWithoutParams<T> operation, String errorMessage, Logger logger) {
+    ResponseEntity doResponse(Callable_NoParams<T> operation, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(), OK);
@@ -110,7 +110,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity doResponse(CallableWithParamsIntBoolean<T> operation, int i, boolean f, String errorMessage, Logger logger) {
+    ResponseEntity doResponse(Callable_ParamsIntBoolean<T> operation, int i, boolean f, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i, f), OK);
@@ -124,7 +124,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity doResponse(CallableWithParamsIntString<T> operation, int i, String s, String errorMessage, Logger logger) {
+    ResponseEntity doResponse(Callable_ParamsIntString<T> operation, int i, String s, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i, s), OK);
@@ -146,9 +146,8 @@ public abstract class BaseController<T> {
         return new ResponseEntity(status);
     }
 
-    //##############################
 
-    ResponseEntity doResponse(CallableWithResultListWithParamsIntInt<T> operation, int a, int b,
+    ResponseEntity doResponse(Callable_ResultList_ParamsIntInt<T> operation, int a, int b,
                               String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
@@ -163,7 +162,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity doResponse(CallableWithResultListWithParamsIntIntInt<T> operation, int a, int b, int c,
+    ResponseEntity doResponse(Callable_ResultList_ParamsIntIntInt<T> operation, int a, int b, int c,
                               String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
@@ -178,7 +177,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity doResponse(CallableWithParamsInt<T> operation, int i, String errorMessage, Logger logger) {
+    ResponseEntity doResponse(Callable_ParamsInt<T> operation, int i, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i), OK);
@@ -192,7 +191,7 @@ public abstract class BaseController<T> {
         return resultResponse;
     }
 
-    ResponseEntity doResponse(CallableWithoutResultWithParamsInt operation, int i, String errorMessage, Logger logger) {
+    ResponseEntity doResponse(Callable_NoResult_ParamsInt operation, int i, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {
             operation.call(i);
