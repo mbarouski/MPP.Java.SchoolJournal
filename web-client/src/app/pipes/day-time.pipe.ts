@@ -16,4 +16,15 @@ export class DayTimePipe implements PipeTransform {
     });
     return keys;
   }
+
+  // transform(value, args:string[]) : any {
+  //   let keys = [];
+  //   if(!value) return keys;
+  //   DAYS.forEach(day => {
+  //     value.forEach(time => {
+  //       keys.push({ day, time });
+  //     });
+  //   });
+  //   return keys;
+  // }
 }

@@ -27,7 +27,7 @@
           <tbody>
           <tr *ngFor="let teacher of teachers">
             <td>{{teachersService.getTeacherFullName(teacher)}}</td>
-            <td *ngFor="let dayTime of null | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)"
+            <td *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)"
                 (contextmenu)="openContextMenuForEdit($event, getSubjectForTeacherAndDayAndTime(teacher, dayTime), !!getSubjectForTeacherAndDayAndTime(teacher, dayTime) ? deleteMenu : addMenu)">
               <a *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" routerLink="{{createLinkToMarks(getSubjectForTeacherAndDayAndTime(teacher, dayTime))}}">
                 <i class="glyphicon glyphicon-ok green"></i>
