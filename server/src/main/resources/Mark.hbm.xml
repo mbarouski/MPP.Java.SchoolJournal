@@ -12,8 +12,10 @@
         <property name="value">
             <column name="value" sql-type="int(11)" not-null="false"/>
         </property>
-        <property name="type">
-            <column name="type" sql-type="enum('simple', 'apsent', 'control', 'self', 'term', 'year')"/>
+        <property name="type" column="type">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">school.journal.entity.enums.MarkType</param>
+            </type>
         </property>
         <property name="date">
             <column name="date" sql-type="date"/>

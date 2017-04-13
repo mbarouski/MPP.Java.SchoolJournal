@@ -11,6 +11,7 @@
             <button type="button" class="btn btn-info">.CSV</button>
             <button type="button" class="btn btn-info">.XLSX</button>
           </div>
+
         </div>
       </div><br>
 
@@ -25,7 +26,7 @@
           <tbody>
           <tr *ngFor="let pupil of pupils">
             <td><a routerLink="/profile/{{pupil.userId}}" >{{pupilsService.getPupilFullName(pupil)}}</a></td>
-            <td *ngFor="let lesson of lessons" class="mark-td"><div class="mark-input" contenteditable>{{getMarkForLessonAndPupil(lesson, pupil.userId)}}</div></td>
+            <td *ngFor="let lesson of lessons" class="mark-td"><div (click)="setCurrentMark(getMarkForLessonAndPupil(lesson, pupil.userId), $event)" class="mark-input" contenteditable>{{getMarkForLessonAndPupil(lesson, pupil.userId)}}</div></td>
           </tr>
           </tbody>
         </table>
@@ -34,3 +35,42 @@
     </div>
   </div>
 </section>
+
+<div class="modal fade" bsModal #markModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="markForm" aria-hidden="true">
+  <div *ngIf="currentMark" class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Оценка</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeMarkModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form">
+          <div class="form-group">
+            <label>Тип</label>
+            <select class="form-control" [(ngModel)]="currentMark.type" name="type">
+              <option *ngFor="let type of markTypes" value="{{type.short}}">{{type.rus}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ученик</label>
+            <select class="form-control" [(ngModel)]="currentMark.pupilId" name="pupil">
+              <option *ngFor="let pupil of pupils" value="{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Значение</label>
+            <input class="form-control" type="text" [(ngModel)]="currentMark.value" name="value">
+          </div>
+          <div class="form-group">
+            <label>Дата</label>
+            <datepicker [(ngModel)]="selectedDate" name="date"></datepicker>
+          </div>
+          <button type="submit" (click)="submitMarkForm()" class="btn btn-default">Подтвердить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

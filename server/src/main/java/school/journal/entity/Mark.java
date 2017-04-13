@@ -1,13 +1,15 @@
 package school.journal.entity;
 
-import school.journal.entity.util.MarkType;
+import school.journal.entity.enums.MarkType;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.sql.Date;
 
 public class Mark {
     private Integer markId;
     private Integer value;
-    private String type;
+    private MarkType type;
     private Date date;
     private Pupil pupil;
     private Subject subject;
@@ -29,12 +31,13 @@ public class Mark {
         this.value = value;
     }
 
-    public String getType() {
+    public MarkType getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = MarkType.fromMeaning(type).toString();
+    @Enumerated(EnumType.STRING)
+    public void setType(MarkType type) {
+        this.type = type;
     }
 
     public Date getDate() {

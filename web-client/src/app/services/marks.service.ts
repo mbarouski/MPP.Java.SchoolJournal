@@ -34,7 +34,15 @@ export class MarksService {
   }
 
   setMark(mark: Mark) {
-
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.post(`${this.config.apiEndpoint}/marks`, mark, {search: params})
+        .map(res => res.json())
+        .subscribe((mark) => {
+          resolve(mark);
+        });
+    });
   }
 
   deleteMark(markId) {
