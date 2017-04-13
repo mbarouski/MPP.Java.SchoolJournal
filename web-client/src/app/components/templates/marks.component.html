@@ -26,7 +26,11 @@
           <tbody>
           <tr *ngFor="let pupil of pupils">
             <td><a routerLink="/profile/{{pupil.userId}}" >{{pupilsService.getPupilFullName(pupil)}}</a></td>
-            <td *ngFor="let lesson of lessons" class="mark-td"><div (click)="setCurrentMark(getMarkForLessonAndPupil(lesson, pupil.userId), $event)" class="mark-input" contenteditable>{{getMarkForLessonAndPupil(lesson, pupil.userId)}}</div></td>
+            <td *ngFor="let lesson of lessons"
+                class="mark-td {{generateClass(getMarkForLessonAndPupil(lesson, pupil.userId))}}">
+              <div (click)="setCurrentMark(getMarkForLessonAndPupil(lesson, pupil.userId), $event)"
+                   (contextmenu)="openContextMenu($event, getMarkForLessonAndPupil(lesson, pupil.userId).markId)"
+                   class="mark-input" contenteditable>{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
           </tr>
           </tbody>
         </table>
@@ -64,13 +68,18 @@
             <label>Значение</label>
             <input class="form-control" type="text" [(ngModel)]="currentMark.value" name="value">
           </div>
-          <div class="form-group">
-            <label>Дата</label>
-            <datepicker [(ngModel)]="selectedDate" name="date"></datepicker>
-          </div>
+
+          <datepicker [(ngModel)]="selectedDate" name="date"></datepicker>
+
           <button type="submit" (click)="submitMarkForm()" class="btn btn-default">Подтвердить</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<context-menu #deleteMenu style="pointer-events:all">
+  <template contextMenuItem (execute)="deleteMark($event)">
+    <p>Удалить</p>
+  </template>
+</context-menu>

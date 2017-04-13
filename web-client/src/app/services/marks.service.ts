@@ -34,6 +34,7 @@ export class MarksService {
   }
 
   setMark(mark: Mark) {
+    debugger;
     return new Promise((resolve, reject) => {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
@@ -46,7 +47,14 @@ export class MarksService {
   }
 
   deleteMark(markId) {
-
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.delete(`${this.config.apiEndpoint}/marks/${markId}`, {search: params})
+        .subscribe((data) => {
+          resolve({});
+        });
+    });
   }
 
 }

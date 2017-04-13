@@ -15,7 +15,7 @@ import java.util.List;
 public class MarkRepository extends RepositoryAbstractClass<Mark> {
     @Override
     public Mark create(Mark mark, Session session) throws RepositoryException {
-        return (Mark)session.save(mark);
+        return (Mark) session.get(Mark.class, session.save(mark));
     }
 
     @Override

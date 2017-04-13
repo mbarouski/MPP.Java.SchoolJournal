@@ -69,15 +69,21 @@ a:hover {
   height: 100%;
   margin: 0;
 }
-.mark-input.control-mark {
+.control-mark {
   background-color: red;
   color: #fff;
 }
-.mark-input.self-work-mark {
+.term-mark {
+  background-color: yellow;
+}
+.year-mark {
+  background-color: orange;
+}
+.self-mark {
   background-color: dodgerblue;
   color: #fff;
 }
-.mark-input.absent {
+.apsent-mark {
   background-color: lightgray;
   color: #fff;
 }
@@ -179,7 +185,7 @@ body {
   color: white;
 }
 
-table:not(.schedule-table) tr:hover {
+table:not(.schedule-table):not(.marks) tr:hover {
   background-color: lightgrey;
   color: white;
 }

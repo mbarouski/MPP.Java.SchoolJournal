@@ -12,8 +12,11 @@ public class Mark {
     private MarkType type;
     private Date date;
     private Pupil pupil;
+    private Integer pupilId;
     private Subject subject;
     private Teacher teacher;
+    private Integer subjectId;
+    private Integer teacherId;
 
     public Integer getMarkId() {
         return markId;
@@ -46,6 +49,30 @@ public class Mark {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getPupilId() {
+        return pupilId;
+    }
+
+    public void setPupilId(Integer pupilId) {
+        this.pupilId = pupilId;
+    }
+
+    public Integer getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Integer subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
     @Override

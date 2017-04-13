@@ -11,6 +11,7 @@ import {Mark} from "../models/Mark";
 import {SchoolInfoService} from "../services/school-info.service";
 import MARK_TYPES from "./constants/marks.constants";
 import {ModalDirective} from "ng2-bootstrap";
+import {ContextMenuComponent, ContextMenuService} from "angular2-contextmenu";
 
 declare let moment: any;
 
@@ -20,10 +21,9 @@ declare let moment: any;
   templateUrl: './templates/marks.component.html',
   styleUrls: ['./styles/marks.component.css']
 })
-export class MarksComponent implements OnInit{
-
+export class MarksComponent implements OnInit, AfterViewInit{
   marks = [];
-  subject: any;
+  subject: any = null;
   subjects = [];
   pupils = [];
   currentMark: Mark;
@@ -39,6 +39,7 @@ export class MarksComponent implements OnInit{
   };
 
   @ViewChild('markModal') public markModal: ModalDirective;
+  @ViewChild(ContextMenuComponent) public deleteMenu: ContextMenuComponent;
 
   constructor(private authService: AuthService,
               private router: Router,
@@ -46,9 +47,27 @@ export class MarksComponent implements OnInit{
               private pupilsService: PupilsService,
               private scheduleService: ScheduleService,
               private activatedRoute: ActivatedRoute,
-              private schoolInfoService: SchoolInfoService) {
+              private schoolInfoService: SchoolInfoService,
+              private contextMenuService: ContextMenuService) {
     marksService.marksSubject.subscribe(marks => {
       this.marks = marks;
+      if(!this.subject) {
+        this.activatedRoute.params.subscribe((params: Params) => {
+          if(params['id']) {
+            debugger;
+            this.scheduleService.fetchSubject(params['id'])
+              .then((subject: any) => {
+                this.subject = subject;
+                this.pupilsService.fetchPupilsByClass(subject.clazz.classId)
+                  .then((pupils: any) => {
+                    this.pupils = pupils;
+                  });
+                this.marksService.fetchMarksForSubjectInClass(subject.subject.subjectId, subject.clazz.classId);
+              });
+          }
+        });
+        return;
+      }
       scheduleService.getSubjectsForTeacherClassSubject(this.subject.teacher.userId,
         this.subject.clazz.classId,
         this.subject.subject.subjectId)
@@ -84,6 +103,7 @@ export class MarksComponent implements OnInit{
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
       if(params['id']) {
+        debugger;
         this.scheduleService.fetchSubject(params['id'])
           .then((subject: any) => {
             this.subject = subject;
@@ -97,12 +117,30 @@ export class MarksComponent implements OnInit{
     });
   }
 
+  ngAfterViewInit() {
+    // this.activatedRoute.params.subscribe((params: Params) => {
+    //   if(params['id']) {
+    //     debugger;
+    //     this.scheduleService.fetchSubject(params['id'])
+    //       .then((subject: any) => {
+    //         this.subject = subject;
+    //         this.pupilsService.fetchPupilsByClass(subject.clazz.classId)
+    //           .then((pupils: any) => {
+    //             this.pupils = pupils;
+    //           });
+    //         this.marksService.fetchMarksForSubjectInClass(subject.subject.subjectId, subject.clazz.classId);
+    //       });
+    //   }
+    // });
+  }
+
   getMarkForLessonAndPupil(date, pupilId) {
     let mark = this.marks.find(mark => {
       return mark.pupil.userId == pupilId &&
           moment(mark.date).format('DD.MM') === date;
     });
-    return mark ? mark.value : '';
+    mark = mark ? mark : '';
+    return mark;
   }
 
   openMarkModal() {
@@ -118,27 +156,63 @@ export class MarksComponent implements OnInit{
   cellForEdit: any;
 
   setCurrentMark(mark, event) {
+    if(mark) return;
     this.cellForEdit = $(event.currentTarget);
-    if(!mark) {
-      mark = new Mark(0);
-      mark.subjectId = this.subject.subject.subjectId;
-      mark.teacherId = this.subject.teacher.userId;
-      mark.pupilId = this.getPupilByFullName($(event.currentTarget.parentElement.parentElement).children()[0].innerText.trim()).userId;
-      debugger;
-    }
-    this.currentMark = mark;
-    this.openMarkModal();
-  }
+    let currentMark = new Mark(0);
+    currentMark.subjectId = this.subject.subject.subjectId;
+    currentMark.teacherId = this.subject.teacher.userId;
+    currentMark.pupilId = this.getPupilByFullName($(event.currentTarget.parentElement.parentElement).children()[0].innerText.trim()).userId;
 
-  clearCurrentMark() {
-    // this.currentMark = null;
+    this.currentMark = currentMark;
+    this.openMarkModal();
   }
 
   submitMarkForm() {
     this.currentMark.date = moment(this.selectedDate).format('YYYY-MM-DD');
     this.marksService.setMark(this.currentMark)
       .then((mark: any) => {
+        this.closeMarkModal();
+        this.currentMark = null;
         this.cellForEdit.text(mark.value);
+        this.cellForEdit.addClass(this.generateClass(mark));
+      });
+  }
+
+  generateClass(mark) {
+    if(!mark || mark.type === 'simple') return '';
+    return `${mark.type}-mark`;
+  }
+
+  decorateMark(mark) {
+    if(!mark) return '';
+    switch(mark.type) {
+      case 'apsent':
+        return 'Н';
+      default:
+        return mark.value;
+    }
+  }
+
+  closeMarkModal() {
+    this.markModal.hide();
+  }
+
+  openContextMenu(event, markId) {
+    if(!markId) return;
+    this.cellForEdit = $(event.currentTarget);
+    let mark = this.marks.find(mark => mark.markId == markId);
+    this.contextMenuService.show.next({
+      contextMenu: this.deleteMenu,
+      event,
+      item: mark ? mark : {}
+    });
+    event.preventDefault();
+  }
+
+  deleteMark(event) {
+    this.marksService.deleteMark(event.item.markId)
+      .then(() => {
+        this.cellForEdit.text('');
       });
   }
 

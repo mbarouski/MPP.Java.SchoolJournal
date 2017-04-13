@@ -4,7 +4,7 @@ const MARK_TYPES = [
     rus: 'Простая'
   },
   {
-    short: 'absent',
+    short: 'apsent',
     rus: 'Отсутствие'
   },
   {

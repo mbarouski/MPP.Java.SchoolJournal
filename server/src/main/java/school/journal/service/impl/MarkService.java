@@ -44,12 +44,23 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Transaction transaction = session.beginTransaction();
         try {
             checkMarkBeforeCreate(mark, session);
+            Pupil pupil = (Pupil) session.get(Pupil.class, mark.getPupilId());
+            if(pupil == null) throw new ServiceException("Pupil not found");
+            Subject subject = (Subject) session.get(Subject.class, mark.getSubjectId());
+            if(subject == null) throw new ServiceException("Subject not found");
+            Teacher teacher = (Teacher) session.get(Teacher.class, mark.getTeacherId());
+            if(teacher == null) throw new ServiceException("Teacher not found");
+            mark.setTeacher(teacher);
+            mark.setPupil(pupil);
+            mark.setSubject(subject);
             mark = repository.create(mark, session);
             transaction.commit();
-        } catch (RepositoryException exc) {
+        } catch (RepositoryException | ObjectNotFoundException exc) {
             transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
+        } finally {
+            session.close();
         }
         return mark;
     }
@@ -189,20 +200,9 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     }
 
     private void checkMarkBeforeCreate(Mark newMark, Session session) throws ServiceException {
-        try {
-            validateNullableId(newMark.getMarkId(), "Mark");
-            validateSubject(newMark.getSubject().getSubjectId(), session);
-            if (newMark.getTeacher() != null) {
-                validateTeacher(newMark.getTeacher().getUser().getUserId(), session);
-            }
+//            newMark.setMarkId(null);
             validateDate(newMark.getDate());
             validateValue(newMark.getValue());
-//            validateType(newMark.getType());
-            validatePupil(newMark.getPupil().getUser().getUserId(), session);
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        }
     }
 
     private Mark prepareMarkBeforeUpdate(Mark newMark, Session session) throws ServiceException {
