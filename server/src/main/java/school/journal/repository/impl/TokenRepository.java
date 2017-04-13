@@ -5,14 +5,14 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Token;
-import school.journal.repository.RepositoryAbstractClass;
+import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
 @Component("TokenRepository")
-public class TokenRepository extends RepositoryAbstractClass<Token> {
+public class TokenRepository implements IRepository<Token> {
     @Override
     public Token create(Token token, Session session) throws RepositoryException {
         session.save(token);

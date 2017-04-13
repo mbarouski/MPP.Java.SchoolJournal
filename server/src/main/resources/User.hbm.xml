@@ -14,9 +14,6 @@
         <property name="passHash">
             <column name="pass_hash" sql-type="varchar(40)" length="40"/>
         </property>
-        <property name="locked">
-            <column name="locked" sql-type="tinyint(1)"/>
-        </property>
         <property name="email">
             <column name="email" sql-type="varchar(200)" length="200"/>
         </property>

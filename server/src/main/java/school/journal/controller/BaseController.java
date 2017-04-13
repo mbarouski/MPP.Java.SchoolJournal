@@ -180,7 +180,6 @@ public abstract class BaseController<T> {
         return new ResponseEntity(status);
     }
 
-    //##############################
 
     ResponseEntity doResponse(CallableWithResultListWithParamsIntInt<T> operation, int a, int b,
                               String errorMessage, Logger logger) {

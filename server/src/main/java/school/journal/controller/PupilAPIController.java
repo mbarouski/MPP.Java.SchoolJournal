@@ -8,26 +8,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
-import school.journal.controller.util.ErrorObject;
 import school.journal.entity.Pupil;
 import school.journal.entity.User;
 import school.journal.entity.enums.RoleEnum;
 import school.journal.service.IPupilService;
-import school.journal.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
-import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 @CrossOrigin
 @Controller
 @RequestMapping(value = "/api/pupils")
 public class PupilAPIController extends BaseController<Pupil> {
-
-    private static Logger LOGGER = Logger.getLogger(PupilAPIController.class);
-
+    private static final Logger LOGGER = Logger.getLogger(PupilAPIController.class);
     private final IPupilService pupilService;
 
     @Autowired
@@ -45,7 +39,7 @@ public class PupilAPIController extends BaseController<Pupil> {
 
     @RequestMapping(method = POST)
     @ResponseBody
-    @Secured(RoleEnum.TEACHER)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity create(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
         return createOrUpdate(pupilService::create, pupil, "Can't create pupil", LOGGER);
@@ -92,17 +86,22 @@ public class PupilAPIController extends BaseController<Pupil> {
     @RequestMapping(method = GET, params = "classId")
     @ResponseBody
     @Secured(RoleEnum.PUPIL)
-    public ResponseEntity getListOfPupilsInClass(HttpServletRequest request, @RequestParam(value = "classId") int classId)
+    public ResponseEntity getListOfPupilsInClass(HttpServletRequest request,
+                                                 @RequestParam(value = "classId") int classId)
             throws ControllerException {
-        return doResponse(pupilService::getListOfPupils, classId, "Can't get list of pupils of class", LOGGER);
+        return doResponse(pupilService::getListOfPupils, classId,
+                "Can't get list of pupils of class", LOGGER);
     }
 
     @RequestMapping(method = PUT, params = {"pupilId", "classId"})
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity movePupilToAnotherClass(HttpServletRequest request, @RequestParam(value = "pupilId") Integer pupilId, @RequestParam(value = "classId") Integer classId)
+    public ResponseEntity movePupilToAnotherClass(HttpServletRequest request,
+                                                  @RequestParam(value = "pupilId") Integer pupilId,
+                                                  @RequestParam(value = "classId") Integer classId)
             throws ControllerException {
-        return doResponse(pupilService::movePupilToAnotherClass, pupilId, classId, "Can't move pupil to another class", LOGGER, false);
+        return doResponse(pupilService::movePupilToAnotherClass, pupilId, classId,
+                "Can't move pupil to another class", LOGGER, false);
     }
 
     @RequestMapping(method = GET, value = "/withoutClass")

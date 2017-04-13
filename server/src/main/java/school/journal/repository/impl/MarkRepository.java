@@ -6,13 +6,13 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Mark;
-import school.journal.repository.RepositoryAbstractClass;
+import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 @Component("MarkRepository")
-public class MarkRepository extends RepositoryAbstractClass<Mark> {
+public class MarkRepository implements IRepository<Mark> {
     @Override
     public Mark create(Mark mark, Session session) throws RepositoryException {
         return (Mark) session.get(Mark.class, session.save(mark));
