@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.entity.LessonTime;
+import school.journal.entity.Term;
 import school.journal.entity.enums.RoleEnum;
 import school.journal.service.IAuthService;
 import school.journal.service.ILessonTimeService;
@@ -35,5 +36,12 @@ public class LessonTimeAPIController extends BaseController<LessonTime>{
     public ResponseEntity getAll(HttpServletRequest request)
             throws ControllerException {
         return read(lessonTimeService::getLessonTimeList, "Can't get full lesson list", LOGGER);
+    }
+
+    @PutMapping
+    @ResponseBody
+    public ResponseEntity update(HttpServletRequest request, @RequestBody LessonTime lesson)
+            throws ControllerException {
+        return createOrUpdate(lessonTimeService::update, lesson, "Can't update lesson", LOGGER);
     }
 }

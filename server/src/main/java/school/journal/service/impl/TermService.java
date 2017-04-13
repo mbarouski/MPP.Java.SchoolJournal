@@ -23,4 +23,24 @@ public class TermService extends CRUDService<Term> implements ITermService {
                         Restrictions.le("start", Calendar.getInstance().getTime()))).list();
         return terms.size() > 0 ? terms.get(0) : null;
     }
+
+    @Override
+    public Term update(Term term) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Term t = (Term) session.get(Term.class, term.getTermId());
+        if(t == null) throw new ServiceException("Term not found");
+        t.setEnd(term.getEnd());
+        t.setStart(term.getStart());
+        session.update(t);
+        transaction.commit();
+        return term;
+    }
+
+    @Override
+    public List<Term> read() throws ServiceException {
+        Session session = sessionFactory.openSession();
+        List<Term> terms = session.createCriteria(Term.class).list();
+        return terms;
+    }
 }

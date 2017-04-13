@@ -103,7 +103,6 @@ export class MarksComponent implements OnInit, AfterViewInit{
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
       if(params['id']) {
-        debugger;
         this.scheduleService.fetchSubject(params['id'])
           .then((subject: any) => {
             this.subject = subject;

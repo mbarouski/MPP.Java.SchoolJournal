@@ -5,12 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import school.journal.controller.exception.ControllerException;
 import school.journal.entity.Term;
+import school.journal.service.CRUDService;
 import school.journal.service.ITermService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +24,24 @@ public class TermAPIController extends BaseController<Term> {
     @Qualifier("TermService")
     private ITermService termService;
 
-    @GetMapping
+    @GetMapping("/current")
     @ResponseBody
     public ResponseEntity getCurrentTerm(HttpServletRequest request)
             throws ControllerException {
         return doResponse(termService::getCurrentTerm, "Can't get current term", LOGGER);
+    }
+
+    @GetMapping
+    @ResponseBody
+    public ResponseEntity getTerms(HttpServletRequest request)
+            throws ControllerException {
+        return read(termService::read, "Can't get all terms", LOGGER);
+    }
+
+    @PutMapping
+    @ResponseBody
+    public ResponseEntity update(HttpServletRequest request, @RequestBody Term term)
+            throws ControllerException {
+        return createOrUpdate(termService::update, term, "Can't update term", LOGGER);
     }
 }

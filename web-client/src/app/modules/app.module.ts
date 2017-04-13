@@ -9,7 +9,10 @@ import { RolesService } from "../services/roles.service";
 import {APP_CONFIG, AppConfig} from "../configs/app.config";
 import {HttpModule} from "@angular/http";
 import {MenuComponent} from "../components/menu.component";
-import {Ng2BootstrapModule, CollapseModule, ModalModule, PaginationModule, DatepickerModule} from "ng2-bootstrap";
+import {
+  Ng2BootstrapModule, CollapseModule, ModalModule, PaginationModule, DatepickerModule,
+  TimepickerModule
+} from "ng2-bootstrap";
 import {ProfileComponent} from "../components/profile.component";
 import {TeachersService} from "../services/teachers.service";
 import {LoginComponent} from "../components/login.component";
@@ -33,6 +36,7 @@ import {SubjectsService} from "../services/subjects.service";
 import {ClassesComponent} from "../components/classes.component";
 import {SubjectsComponent} from "../components/subjects.component";
 import {UsersComponent} from "../components/users.component";
+import {SchoolInfoComponent} from "../components/school-info.component";
 
 @NgModule({
   imports: [
@@ -43,6 +47,7 @@ import {UsersComponent} from "../components/users.component";
     CollapseModule.forRoot(),
     ModalModule.forRoot(),
     DatepickerModule.forRoot(),
+    TimepickerModule.forRoot(),
     ContextMenuModule,
     FormsModule
   ],
@@ -61,6 +66,7 @@ import {UsersComponent} from "../components/users.component";
     ClassesComponent,
     SubjectsComponent,
     UsersComponent,
+    SchoolInfoComponent,
   ],
   providers: [
     RolesService,

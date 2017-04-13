@@ -140,10 +140,6 @@ export class UsersComponent implements AfterViewInit{
       });
   }
 
-  decorateRole(name: string) {
-    return ROLES[name];
-  }
-
   setPaginationState() {
     this.perPage = 15;
     this.currentPage = 1;

@@ -18,6 +18,7 @@
         <li><a routerLink="/classes">Классы</a></li>
         <li><a routerLink="/subjects">Предметы</a></li>
         <li><a routerLink="/users">Пользователи</a></li>
+        <li><a routerLink="/schoolInfo">ВременнАя информация</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li *ngIf="authService.isLogged()"><a (click)="onLogoutClick($event)">{{username}} (Выйти)</a></li>

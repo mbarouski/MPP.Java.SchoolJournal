@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import school.journal.entity.LessonTime;
+import school.journal.entity.Term;
 import school.journal.service.CRUDService;
 import school.journal.service.ILessonTimeService;
 import school.journal.service.exception.ServiceException;
@@ -25,5 +26,19 @@ public class LessonTimeService extends CRUDService<LessonTime> implements ILesso
         transaction.commit();
         session.close();
         return lessonTimes;
+    }
+
+    @Override
+    public LessonTime update(LessonTime lesson) throws ServiceException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        LessonTime l = (LessonTime) session.get(LessonTime.class, lesson.getLessonId());
+        if(l == null) throw new ServiceException("LessonTime not found");
+        l.setStartTime(lesson.getStartTime());
+        l.setEndTime(lesson.getEndTime());
+        session.update(l);
+        transaction.commit();
+        session.close();
+        return lesson;
     }
 }

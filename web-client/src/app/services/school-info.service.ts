@@ -5,16 +5,20 @@ import {Http, Headers, RequestOptions, URLSearchParams} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
 import {HttpUtil} from "./http.util";
+import {Term} from "../models/Term";
+import {Lesson} from "../models/Lesson";
 
 @Injectable()
 export class SchoolInfoService {
 
   timesSubject: ReplaySubject<any> = new ReplaySubject(1);
+  termsSubject: ReplaySubject<any> = new ReplaySubject(1);
   termSubject: ReplaySubject<any> = new ReplaySubject(1);
 
   constructor(@Inject(APP_CONFIG) private config: any, private http: Http, private authService: AuthService){
     this.fetchCurrentTerm();
     this.fetchLessonTimes();
+    this.fetchTerms();
   }
 
   timesForSubjects = [
@@ -49,11 +53,45 @@ export class SchoolInfoService {
     return new Promise((resolve, reject) => {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
-      this.http.get(`${this.config.apiEndpoint}/terms`, {search: params})
+      this.http.get(`${this.config.apiEndpoint}/terms/current`, {search: params})
         .map(res => res.json())
         .subscribe((term) => {
           this.termSubject.next(term);
           resolve(term);
+        });
+    });
+  }
+
+  fetchTerms() {
+    let params = new URLSearchParams();
+    params.append('token', this.authService.token);
+    this.http.get(`${this.config.apiEndpoint}/terms`, {search: params})
+      .map(res => res.json())
+      .subscribe((terms) => {
+        this.termsSubject.next(terms);
+      });
+  }
+
+  updateTerm(term: Term) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.put(`${this.config.apiEndpoint}/terms`, term, {search: params})
+        .map(res => res.json())
+        .subscribe((term) => {
+          resolve(term);
+        });
+    });
+  }
+
+  updateLesson(lesson: Lesson) {
+    return new Promise((resolve, reject) => {
+      let params = new URLSearchParams();
+      params.append('token', this.authService.token);
+      this.http.put(`${this.config.apiEndpoint}/lessons`, lesson, {search: params})
+        .map(res => res.json())
+        .subscribe((lesson) => {
+          resolve(lesson);
         });
     });
   }
