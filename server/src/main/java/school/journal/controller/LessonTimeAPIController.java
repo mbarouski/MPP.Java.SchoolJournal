@@ -40,6 +40,7 @@ public class LessonTimeAPIController extends BaseController<LessonTime>{
 
     @PutMapping
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody LessonTime lesson)
             throws ControllerException {
         return createOrUpdate(lessonTimeService::update, lesson, "Can't update lesson", LOGGER);

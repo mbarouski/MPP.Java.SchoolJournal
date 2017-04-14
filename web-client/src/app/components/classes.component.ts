@@ -139,7 +139,6 @@ export class ClassesComponent implements AfterViewInit{
   }
 
   onClassForPupilFormSubmit() {
-    debugger;
     if(!this.selectedPupilWithoutClass && !this.classForPupil.classId) return;
     this.pupilsService.movePupilToAnotherClass(this.selectedPupilWithoutClass.userId, +this.classForPupil.classId)
       .then(() => {

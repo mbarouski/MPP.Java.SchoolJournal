@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.entity.Term;
+import school.journal.entity.enums.RoleEnum;
 import school.journal.service.CRUDService;
 import school.journal.service.ITermService;
 
@@ -40,6 +42,7 @@ public class TermAPIController extends BaseController<Term> {
 
     @PutMapping
     @ResponseBody
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Term term)
             throws ControllerException {
         return createOrUpdate(termService::update, term, "Can't update term", LOGGER);

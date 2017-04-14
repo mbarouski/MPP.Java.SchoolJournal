@@ -94,6 +94,10 @@ public class UserService extends CRUDService<User> implements IUserService {
         return user;
     }
 
+    private void checkPassword(String password) throws ServiceException {
+        if(password == null) throw new ServiceException("Pass is null");
+        if(password.length() < 6) throw new ServiceException("Pass is short");
+    }
 
     @Override
     public User changePassword(int userId, String password) throws ServiceException {
@@ -101,6 +105,7 @@ public class UserService extends CRUDService<User> implements IUserService {
         Transaction transaction = session.beginTransaction();
         User user = (User) session.get(User.class, userId);
         if(user == null) throw new ServiceException("User not found");
+        checkPassword(password);
         user.setPassHash(MD5Generator.generate(password));
         try {
             repository.update(user, session);
@@ -207,6 +212,8 @@ public class UserService extends CRUDService<User> implements IUserService {
         Transaction transaction = session.beginTransaction();
         try {
             User user = (User)session.load(User.class, id);
+            deletePupilIfExist(user.getUserId(), session);
+            deleteTeacherIfExist(user.getUserId(), session);
             repository.delete(user, session);
             transaction.commit();
         } catch (ObjectNotFoundException | RepositoryException exc) {
@@ -214,9 +221,7 @@ public class UserService extends CRUDService<User> implements IUserService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
     }
 

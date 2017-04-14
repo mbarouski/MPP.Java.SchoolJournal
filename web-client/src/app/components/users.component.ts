@@ -54,6 +54,10 @@ export class UsersComponent implements AfterViewInit{
     this.usersService.fetchUsers();
   }
 
+  decorateRole(role) {
+    return ROLES[role];
+  }
+
   selectUser(id) {
     this.selectedUser = this.users.find(user => user.userId == id);
   }
