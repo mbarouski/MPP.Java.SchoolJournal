@@ -87,7 +87,6 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
         super.delete(clazz);
     }
 
-
     @Override
     public Clazz getOne(int id) throws ServiceException {
         try {
