@@ -2,6 +2,6 @@ package school.journal.controller.util.callable;
 
 import java.util.List;
 
-public interface CallableWithResultList<T> {
+public interface Callable_ResultList<T> {
     List<T> call() throws Exception;
 }

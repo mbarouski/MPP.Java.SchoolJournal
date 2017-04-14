@@ -1,5 +1,5 @@
 package school.journal.controller.util.callable;
 
-public interface CallableWithTParam<T> {
+public interface Callable_ParamsT<T> {
     abstract T call(T obj) throws Exception;
 }

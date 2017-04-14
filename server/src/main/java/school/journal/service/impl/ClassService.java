@@ -37,13 +37,6 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
 
     @Override
     public Clazz create(Clazz clazz) throws ServiceException {
-        validateClassNumber(clazz.getNumber());
-        try {
-            validateString(clazz.getLetterMark(), "Letter Mark");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ServiceException(exc);
-        }
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -90,7 +83,6 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
         clazz.setClassId(id);
         super.delete(clazz);
     }
-
 
     @Override
     public Clazz getOne(int id) throws ServiceException {
