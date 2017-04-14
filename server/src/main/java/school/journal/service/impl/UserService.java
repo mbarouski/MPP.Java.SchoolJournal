@@ -58,7 +58,6 @@ public class UserService extends CRUDService<User> implements IUserService {
         try {
             validateString(user.getUsername(), "Username");
             validateEmail(user.getEmail());
-            user.setLocked((byte) 0);
             user.setRole((Role)session.get(Role.class, USER_ROLE));
             String password = generateNewPassword();
             user.setPassHash(MD5Generator.generate(password));
@@ -93,7 +92,6 @@ public class UserService extends CRUDService<User> implements IUserService {
         }
         return user;
     }
-
 
     @Override
     public User changePassword(int userId, String password) throws ServiceException {
@@ -162,16 +160,6 @@ public class UserService extends CRUDService<User> implements IUserService {
         }
     }
 
-    private void checkLockedStatus(User newUser, User user) {
-        Byte lockedStatus = newUser.getLocked();
-        if(lockedStatus == null) return;
-        if(lockedStatus >= 0) {
-            user.setLocked((byte)1);
-        } else {
-            user.setLocked((byte)0);
-        }
-    }
-
     private int checkId(Integer id) throws ServiceException {
         if(id == null) throw new ServiceException("Incorrect user id");
         return id.intValue();
@@ -186,7 +174,6 @@ public class UserService extends CRUDService<User> implements IUserService {
             user = repository.get(checkId(newUser.getUserId()), session);
             checkPassword(newUser, user);
             checkNewRole(newUser, user, session);
-            checkLockedStatus(newUser, user);
             repository.update(user, session);
             transaction.commit();
         } catch (RepositoryException exc) {
@@ -194,9 +181,7 @@ public class UserService extends CRUDService<User> implements IUserService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
         return user;
     }
@@ -214,9 +199,7 @@ public class UserService extends CRUDService<User> implements IUserService {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
     }
 

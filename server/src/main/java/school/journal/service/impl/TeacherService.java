@@ -79,9 +79,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
         return teacher;
     }
@@ -174,9 +172,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if(session != null) {
-                session.close();
-            }
+            session.close();
         }
     }
 
@@ -207,7 +203,8 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
     public List<Teacher> getListOfTeachersForClass(int classId) throws ServiceException {
         Session session = sessionFactory.openSession();
         List<Teacher> teachers;
-        teachers = session.createSQLQuery(MessageFormat.format(SQL_QUERY_FOR_GET_TEACHERS_FOR_CLASS, classId)).addEntity(Teacher.class).list();
+        teachers = session.createSQLQuery(MessageFormat.format(SQL_QUERY_FOR_GET_TEACHERS_FOR_CLASS,
+                classId)).addEntity(Teacher.class).list();
         return teachers;
     }
 

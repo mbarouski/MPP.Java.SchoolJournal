@@ -136,7 +136,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         criteria.addOrder(Order.asc("pupil")).addOrder(Order.asc("date"));
         List<Mark> markList;
         try {
-            markList = (List<Mark>) criteria.list();
+            markList = criteria.list();
             transaction.commit();
         } finally {
             if (transaction.isActive()) {
@@ -155,7 +155,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Term term = (termId!=0)?(Term) session.get(Term.class, termId):termService.getCurrentTerm();
+            Term term = (termId != 0) ? (Term) session.get(Term.class, termId):termService.getCurrentTerm();
             Criteria criteria = session.createCriteria(Mark.class);
             criteria.add(new MarkSpecificationByTerm(term).toCriteria());
             criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByClassId(classId).toCriteria());
@@ -188,7 +188,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             criteria.add(new MarkSpecificationByTerm(term).toCriteria());
             criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByPupilId(pupilId).toCriteria());
             criteria.addOrder(Order.asc("pupil")).addOrder(Order.asc("date"));
-            markList = (List<Mark>) criteria.list();
+            markList = criteria.list();
             transaction.commit();
         } finally {
             if (transaction.isActive()) {
@@ -200,7 +200,6 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     }
 
     private void checkMarkBeforeCreate(Mark newMark, Session session) throws ServiceException {
-//            newMark.setMarkId(null);
             validateDate(newMark.getDate());
             validateValue(newMark.getValue());
     }

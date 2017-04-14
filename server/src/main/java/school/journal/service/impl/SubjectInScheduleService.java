@@ -35,7 +35,6 @@ import static school.journal.utils.ValidateServiceUtils.validateString;
 
 @Service("SubjectInScheduleService")
 public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> implements ISubjectInScheduleService {
-
     private static final String SQL_FOR_GET_CLASS_SCHEDULE = "SELECT * \n" +
             "FROM `subject_in_schedule`\n" +
             "WHERE `class_id` = {0}\n" +
@@ -47,6 +46,7 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
 
     private static final long START_WORK_DAY_TIME_MILLIS = 28799999 - 10800000;//7h*60m*60s*1000ms+59m*60s*1000ms+59s*1000ms+999ms
     private static final long END_WORK_DAY_TIME_MILLIS = 72_000_000-10800000;//20h*60m*60s*1000ms
+
     @Autowired
     public SubjectInScheduleService(@Qualifier("SubjectInScheduleRepository")IRepository<SubjectInSchedule> repository) {
         LOGGER = Logger.getLogger(SubjectInSchedule.class);
@@ -166,7 +166,9 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         Transaction transaction = session.beginTransaction();
         List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
         try {
-            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.clazz.classId = {0} order by s.dayOfWeek,s.beginTime ", id)).list();
+            subjects = session.createQuery(MessageFormat.format(
+                    "from SubjectInSchedule as s where s.clazz.classId = {0} " +
+                            "order by s.dayOfWeek,s.beginTime ", id)).list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -180,7 +182,9 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         Transaction transaction = session.beginTransaction();
         List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
         try {
-            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0} order by s.dayOfWeek,s.beginTime", teacherId)).list();
+            subjects = session.createQuery(MessageFormat.format(
+                    "from SubjectInSchedule as s where s.teacher.userId = {0} " +
+                            "order by s.dayOfWeek,s.beginTime", teacherId)).list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -207,7 +211,10 @@ public class SubjectInScheduleService extends CRUDService<SubjectInSchedule> imp
         Transaction transaction = session.beginTransaction();
         List<SubjectInSchedule> subjects = Collections.EMPTY_LIST;
         try {
-            subjects = session.createQuery(MessageFormat.format("from SubjectInSchedule as s where s.teacher.userId = {0} and s.subject.subjectId = {1} and s.clazz.classId = {2}", teacherId, subjectId, classId)).list();
+            subjects = session.createQuery(MessageFormat.format(
+                    "from SubjectInSchedule as s where s.teacher.userId = {0} " +
+                            "and s.subject.subjectId = {1} and s.clazz.classId = {2}",
+                    teacherId, subjectId, classId)).list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);

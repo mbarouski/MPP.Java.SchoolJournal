@@ -13,6 +13,7 @@ import school.journal.service.CRUDService;
 import school.journal.service.ILessonTimeService;
 import school.journal.service.exception.ServiceException;
 
+import java.sql.Time;
 import java.util.List;
 
 @Service("LessonTimeService")
@@ -34,8 +35,12 @@ public class LessonTimeService extends CRUDService<LessonTime> implements ILesso
         Transaction transaction = session.beginTransaction();
         LessonTime l = (LessonTime) session.get(LessonTime.class, lesson.getLessonId());
         if(l == null) throw new ServiceException("LessonTime not found");
-        l.setStartTime(lesson.getStartTime());
-        l.setEndTime(lesson.getEndTime());
+        Time startTime = lesson.getStartTime();
+        if(startTime == null) throw new ServiceException("Incorrect date");
+        Time endTime = lesson.getEndTime();
+        if(endTime == null) throw new ServiceException("Incorrect date");
+        l.setStartTime(startTime);
+        l.setEndTime(endTime);
         session.update(l);
         transaction.commit();
         session.close();
