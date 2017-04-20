@@ -28,6 +28,7 @@ public class TermAPIController extends BaseController<Term> {
 
     @GetMapping("/current")
     @ResponseBody
+    @Secured(RoleEnum.USER)
     public ResponseEntity getCurrentTerm(HttpServletRequest request)
             throws ControllerException {
         return doResponse(termService::getCurrentTerm, "Can't get current term", LOGGER);
@@ -35,6 +36,7 @@ public class TermAPIController extends BaseController<Term> {
 
     @GetMapping
     @ResponseBody
+    @Secured(RoleEnum.USER)
     public ResponseEntity getTerms(HttpServletRequest request)
             throws ControllerException {
         return read(termService::read, "Can't get all terms", LOGGER);

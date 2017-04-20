@@ -33,6 +33,7 @@ public class LessonTimeAPIController extends BaseController<LessonTime>{
 
     @GetMapping
     @ResponseBody
+    @Secured(RoleEnum.USER)
     public ResponseEntity getAll(HttpServletRequest request)
             throws ControllerException {
         return read(lessonTimeService::getLessonTimeList, "Can't get full lesson list", LOGGER);

@@ -45,7 +45,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getFullSchedule(HttpServletRequest req)
             throws ControllerException {
         return read(() -> subjectInScheduleService.read(), "Can't get full schedule of sujects", LOGGER);
@@ -72,7 +72,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
 
     @GetMapping("/teacher")
     @ResponseBody
-    @Secured(RoleEnum.TEACHER)
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getTeacherShedule(HttpServletRequest request)
             throws ControllerException {
         return read(() -> subjectInScheduleService.getTeacherSchedule(((User)request.getAttribute("user")).getUserId()), "Can't get teacher schedule", LOGGER);
