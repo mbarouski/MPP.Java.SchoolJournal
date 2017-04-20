@@ -20,14 +20,13 @@ public class MarkRepository extends RepositoryAbstractClass<Mark> {
 
     @Override
     public Mark update(Mark mark, Session session) throws RepositoryException {
-//        session.update(mark);
         return (Mark)session.merge(mark);
     }
 
     @Override
     public Mark delete(Mark mark, Session session) throws RepositoryException {
         session.delete(mark);
-        return null;
+        return mark;
     }
 
     @Override

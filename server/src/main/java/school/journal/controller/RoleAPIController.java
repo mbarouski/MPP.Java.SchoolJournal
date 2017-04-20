@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
 import school.journal.entity.Role;
+import school.journal.entity.enums.RoleEnum;
 import school.journal.service.IRoleService;
 import school.journal.service.exception.ServiceException;
 
@@ -30,13 +32,14 @@ public class RoleAPIController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
+    @Secured(RoleEnum.USER)
     public ResponseEntity get(HttpServletRequest req)
             throws ControllerException {
         ResponseEntity resultResponse;
-        try{
+        try {
             LOGGER.info("get role list controller method");
             resultResponse = new ResponseEntity(roleService.read(), HttpStatus.OK);
-        } catch (ServiceException exc){
+        } catch (ServiceException exc) {
             resultResponse = new ResponseEntity(new ArrayList<>(), HttpStatus.OK);
         } catch (Exception exc) {
             LOGGER.error(exc);
@@ -47,12 +50,13 @@ public class RoleAPIController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity create(@RequestBody Role role)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    public ResponseEntity create(HttpServletRequest request, @RequestBody Role role)
             throws ControllerException {
         ResponseEntity resultResponse;
-        try{
+        try {
             resultResponse = new ResponseEntity(roleService.create(role), HttpStatus.OK);
-        } catch (ServiceException exc){
+        } catch (ServiceException exc) {
             resultResponse = new ResponseEntity(new ErrorObject("Error in role creating"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
@@ -63,12 +67,13 @@ public class RoleAPIController {
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity update(@RequestBody Role role)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    public ResponseEntity update(HttpServletRequest request, @RequestBody Role role)
             throws ControllerException {
         ResponseEntity resultResponse;
-        try{
+        try {
             resultResponse = new ResponseEntity(roleService.update(role), HttpStatus.OK);
-        } catch (ServiceException exc){
+        } catch (ServiceException exc) {
             resultResponse = new ResponseEntity(new ErrorObject("Error in role updating"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);
@@ -79,13 +84,14 @@ public class RoleAPIController {
 
     @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity delete(@PathVariable("roleId") int roleId)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    public ResponseEntity delete(HttpServletRequest request, @PathVariable("roleId") int roleId)
             throws ControllerException {
         ResponseEntity resultResponse;
-        try{
+        try {
             roleService.delete(roleId);
             resultResponse = new ResponseEntity(HttpStatus.OK);
-        } catch (ServiceException exc){
+        } catch (ServiceException exc) {
             resultResponse = new ResponseEntity(new ErrorObject("Error in role deleting"), HttpStatus.BAD_REQUEST);
         } catch (Exception exc) {
             LOGGER.error(exc);

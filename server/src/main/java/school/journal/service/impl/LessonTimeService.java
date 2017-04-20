@@ -73,7 +73,7 @@ public class LessonTimeService extends CRUDService<LessonTime> implements ILesso
                 LessonTime beforeLesson = getLessonByNumber(lessons, lessonNumber - 1);
                 if (lesson.getEndTime().after(afterLesson.getStartTime()))
                     throw new ServiceException("Time is overlapped");
-                if (lesson.getStartTime().before(beforeLesson.getStartTime()))
+                if (lesson.getStartTime().before(beforeLesson.getEndTime()))
                     throw new ServiceException("Time is overlapped");
             }
         } catch (ServiceException exc) {

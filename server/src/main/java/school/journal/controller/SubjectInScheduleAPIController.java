@@ -28,24 +28,24 @@ import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 @CrossOrigin
 @Controller
 @RequestMapping(value = "/api/schedule")
-public class SubjectInScheduleAPIController extends BaseController<SubjectInSchedule>{
+public class SubjectInScheduleAPIController extends BaseController<SubjectInSchedule> {
     private Logger LOGGER = Logger.getLogger(SubjectInScheduleAPIController.class);
 
     @Autowired
     @Qualifier("SubjectInScheduleService")
     private ISubjectInScheduleService subjectInScheduleService;
 
-    @RequestMapping(method = RequestMethod.GET, value="/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
     @Secured(RoleEnum.PUPIL)
     public ResponseEntity getOne(HttpServletRequest req, @PathVariable("id") int subjectId)
             throws ControllerException {
-        return getOne(((CRUDService<SubjectInSchedule>)subjectInScheduleService)::getOne, subjectId, "Can't get subject in schedule", LOGGER);
+        return getOne(((CRUDService<SubjectInSchedule>) subjectInScheduleService)::getOne, subjectId, "Can't get subject in schedule", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getFullSchedule(HttpServletRequest req)
             throws ControllerException {
         return read(() -> subjectInScheduleService.read(), "Can't get full schedule of sujects", LOGGER);
@@ -59,7 +59,7 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
         return read(() -> subjectInScheduleService.getPupilSchedule(classId), "Can't get pupil schedule", LOGGER);
     }
 
-    @GetMapping(params={"classId", "teacherId", "subjectId"})
+    @GetMapping(params = {"classId", "teacherId", "subjectId"})
     @ResponseBody
     @Secured(RoleEnum.PUPIL)
     public ResponseEntity getSubjectsWithTeacherClassSubject(HttpServletRequest request,
@@ -72,10 +72,10 @@ public class SubjectInScheduleAPIController extends BaseController<SubjectInSche
 
     @GetMapping("/teacher")
     @ResponseBody
-    @Secured(RoleEnum.TEACHER)
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity getTeacherShedule(HttpServletRequest request)
             throws ControllerException {
-        return read(() -> subjectInScheduleService.getTeacherSchedule(((User)request.getAttribute("user")).getUserId()), "Can't get teacher schedule", LOGGER);
+        return read(() -> subjectInScheduleService.getTeacherSchedule(((User) request.getAttribute("user")).getUserId()), "Can't get teacher schedule", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.POST)
