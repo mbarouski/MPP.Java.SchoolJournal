@@ -22,10 +22,10 @@ public class UsersAPIController extends BaseController<User> {
     @Qualifier("UserService")
     private IUserService userService;
 
-    @PutMapping(value="/changeRole", params={"userId", "roleId"})
+    @PutMapping(value = "/changeRole", params = {"userId", "roleId"})
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity changeRole(HttpServletRequest req,  @RequestParam("userId") int userId,  @RequestParam("roleId") int roleId) {
+    public ResponseEntity changeRole(HttpServletRequest req, @RequestParam("userId") int userId, @RequestParam("roleId") int roleId) {
         return doResponse(userService::changeRole, userId, roleId, "Can't change role of user", LOGGER, false);
     }
 
@@ -68,7 +68,7 @@ public class UsersAPIController extends BaseController<User> {
     @ResponseBody
     @Secured(RoleEnum.PUPIL)
     public ResponseEntity changePassword(HttpServletRequest req, @PathVariable("userId") int userId,
-    @RequestParam("password") String password) {
+                                         @RequestParam("password") String password) {
         return doResponse(userService::changePassword, userId, password, "Can't change password of user", LOGGER);
     }
 }

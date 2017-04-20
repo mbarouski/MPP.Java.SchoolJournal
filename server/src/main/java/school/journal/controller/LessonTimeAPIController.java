@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin
 @Controller
 @RequestMapping(value = "/api/lessons")
-public class LessonTimeAPIController extends BaseController<LessonTime>{
+public class LessonTimeAPIController extends BaseController<LessonTime> {
 
     private static Logger LOGGER = Logger.getLogger(LessonTimeAPIController.class);
 
