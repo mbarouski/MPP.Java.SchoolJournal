@@ -115,6 +115,9 @@ public class TermService extends CRUDService<Term> implements ITermService {
     private void checkOverlapping(Term term, Session session) throws ServiceException {
         List<Term> terms = (List<Term>) session.createCriteria(Term.class).list();
         try {
+            if (getDayStartDate(term.getStart().getTime())>=getDayStartDate(term.getEnd().getTime())){
+                throw new ServiceException("Too little term");
+            }
             if (term.getNumber() == 1) {
                 Term afterTerm = getTermByNumber(terms, 2);
                 if (term.getEnd().after(afterTerm.getStart())) {

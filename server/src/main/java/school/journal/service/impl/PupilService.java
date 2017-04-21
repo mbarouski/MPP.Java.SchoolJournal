@@ -144,7 +144,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-git            pupil = repository.update(prepareEntityForUpdate(pupil, session), session);
+            pupil = repository.update(prepareEntityForUpdate(pupil, session), session);
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();
