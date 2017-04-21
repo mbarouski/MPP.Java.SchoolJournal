@@ -14,6 +14,7 @@ import school.journal.service.ILessonTimeService;
 import school.journal.service.exception.ServiceException;
 
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.List;
 
 @Service("LessonTimeService")
@@ -34,11 +35,13 @@ public class LessonTimeService extends CRUDService<LessonTime> implements ILesso
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         LessonTime l = (LessonTime) session.get(LessonTime.class, lesson.getLessonId());
-        if(l == null) throw new ServiceException("LessonTime not found");
+        if (l == null) throw new ServiceException("LessonTime not found");
         checkTimes(lesson.getStartTime(), lesson.getEndTime());
         checkOverlapping(lesson, session);
-        l.setStartTime(lesson.getStartTime());
-        l.setEndTime(lesson.getEndTime());
+        Time startTime = new Time(lesson.getStartTime().getTime() - lesson.getStartTime().getTime() % 60000);
+        Time endTime = new Time(lesson.getEndTime().getTime() - lesson.getEndTime().getTime() % 60000);
+        l.setStartTime(startTime);
+        l.setEndTime(endTime);
         session.update(l);
         transaction.commit();
         session.close();
@@ -55,17 +58,28 @@ public class LessonTimeService extends CRUDService<LessonTime> implements ILesso
     private void checkOverlapping(LessonTime lesson, Session session) throws ServiceException {
         List<LessonTime> lessons = (List<LessonTime>) session.createCriteria(LessonTime.class).list();
         try {
+            Calendar calendar = Calendar.getInstance();
             if (lesson.getNumber() == 1) {
                 LessonTime afterLesson = getLessonByNumber(lessons, 2);
-                if (lesson.getEndTime().after(afterLesson.getStartTime()))
+                if (lesson.getEndTime().after(afterLesson.getStartTime())) {
                     throw new ServiceException("Time is overlapped");
-                if (lesson.getStartTime().before(Time.valueOf("07:00:00")))
+                }
+                calendar.set(Calendar.MINUTE,0);
+                calendar.set(Calendar.HOUR_OF_DAY,7);
+                calendar.set(Calendar.SECOND,0);
+                calendar.set(Calendar.MILLISECOND,0);
+                if (lesson.getStartTime().before(calendar.getTime())) {
                     throw new ServiceException("Time is early");
+                }if (lesson.getEndTime().before(calendar.getTime())) {
+                    throw new ServiceException("Time is early");
+                }
             } else if (lesson.getNumber() == 10) {
                 LessonTime beforeLesson = getLessonByNumber(lessons, 9);
-                if (lesson.getEndTime().before(beforeLesson.getStartTime()))
+                if (lesson.getStartTime().before(beforeLesson.getEndTime()))
                     throw new ServiceException("Time is overlapped");
                 if (lesson.getStartTime().after(Time.valueOf("22:00:00")))
+                    throw new ServiceException("Time is early");
+                if (lesson.getEndTime().after(Time.valueOf("22:00:00")))
                     throw new ServiceException("Time is early");
             } else {
                 int lessonNumber = lesson.getNumber();

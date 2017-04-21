@@ -11,6 +11,9 @@ import static org.springframework.http.HttpStatus.*;
 import static school.journal.controller.util.ErrorObject.CRITICAL_ERROR;
 
 public abstract class BaseController<T> {
+
+    public static final ResponseEntity UNAUTHORIZED_RESPONSE = new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
     ResponseEntity delete(CallableWithoutResultWithParamsInt operation, int i, String errorMessage, Logger logger) {
         ResponseEntity resultResponse = null;
         try {

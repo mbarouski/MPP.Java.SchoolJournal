@@ -89,6 +89,7 @@ public class TermService extends CRUDService<Term> implements ITermService {
 
     private void checkVacationsDayLength(List<Term> terms) throws ServiceException {
         long dayCount = 0;
+        if (terms.get(0).getStart().getYear()-terms.get(3).getEnd().getYear()>1) throw new ServiceException("Too long year");
         final long MILLISECONDS_IN_DAY = 86_400_000;
         Date date = null;
         for (Term term : terms) {
@@ -115,6 +116,9 @@ public class TermService extends CRUDService<Term> implements ITermService {
     private void checkOverlapping(Term term, Session session) throws ServiceException {
         List<Term> terms = (List<Term>) session.createCriteria(Term.class).list();
         try {
+            if (getDayStartDate(term.getStart().getTime())>=getDayStartDate(term.getEnd().getTime())){
+                throw new ServiceException("Too little term");
+            }
             if (term.getNumber() == 1) {
                 Term afterTerm = getTermByNumber(terms, 2);
                 if (term.getEnd().after(afterTerm.getStart())) {

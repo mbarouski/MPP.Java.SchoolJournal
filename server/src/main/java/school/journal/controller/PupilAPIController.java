@@ -10,6 +10,7 @@ import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.controller.util.ErrorObject;
 import school.journal.entity.Pupil;
+import school.journal.entity.User;
 import school.journal.entity.enums.RoleEnum;
 import school.journal.service.IPupilService;
 import school.journal.service.exception.ServiceException;
@@ -52,10 +53,24 @@ public class PupilAPIController extends BaseController<Pupil> {
 
     @RequestMapping(method = PUT)
     @ResponseBody
-    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
+    @Secured(RoleEnum.PUPIL)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Pupil pupil)
             throws ControllerException {
-        return createOrUpdate(pupilService::update, pupil, "Can't update pupil", LOGGER);
+        User user = (User) request.getAttribute("user");
+        if (user != null) {
+            if (hasPermissionToUpdateHimSelf(user, pupil.getUserId())) {
+                return createOrUpdate(pupilService::update, pupil, "Can't update pupil", LOGGER);
+            }
+        }
+        return UNAUTHORIZED_RESPONSE;
+    }
+
+    private boolean hasPermissionToUpdateHimSelf(User user, Integer pupilId) {
+        if (user.getRole().getLevel() == RoleEnum.PUPIL.getValue()) {
+            return pupilId.compareTo(user.getUserId()) == 0;
+        } else {
+            return user.getRole().getLevel() >= RoleEnum.DIRECTOR_OF_STUDIES.getValue();
+        }
     }
 
     @RequestMapping(value = "/{pupilId}", method = DELETE)

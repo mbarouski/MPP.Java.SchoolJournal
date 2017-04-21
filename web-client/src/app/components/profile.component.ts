@@ -109,18 +109,18 @@ export class ProfileComponent implements AfterViewInit, OnInit {
   openEditModal() {
     let personInfo = this.user.role == 'pupil' ? this.pupil : this.teacher;
     this.currentTeacherPupil = new TeacherPupil(this.user.userId);
-    this.currentTeacherPupil.classId = personInfo.classId;
-    this.currentTeacherPupil.firstName = personInfo.firstName;
-    this.currentTeacherPupil.pathronymic = personInfo.pathronymic;
-    this.currentTeacherPupil.lastName = personInfo.lastName;
-    this.currentTeacherPupil.phoneNumber = personInfo.phoneNumber;
-    this.currentTeacherPupil.description = personInfo.description;
-    this.currentTeacherPupil.characteristic = personInfo.characteristic;
+    // // this.currentTeacherPupil.classId = personInfo.classId;
+    // this.currentTeacherPupil.firstName = personInfo.firstName;
+    // this.currentTeacherPupil.pathronymic = personInfo.pathronymic;
+    // this.currentTeacherPupil.lastName = personInfo.lastName;
+    // this.currentTeacherPupil.phoneNumber = personInfo.phoneNumber;
+    // this.currentTeacherPupil.description = personInfo.description;
+    // this.currentTeacherPupil.characteristic = personInfo.characteristic;
     this.editModal.show();
   }
 
   onEditFormSubmit() {
-    let serviceMethod = this.user.role === 'pupil'
+    let serviceMethod = this.user.role.name === 'pupil'
       ? this.pupilsService.updatePupil.bind(this.pupilsService)
       : this.teachersService.updateTeacher.bind(this.teachersService);
 
