@@ -89,6 +89,7 @@ public class TermService extends CRUDService<Term> implements ITermService {
 
     private void checkVacationsDayLength(List<Term> terms) throws ServiceException {
         long dayCount = 0;
+        if (terms.get(0).getStart().getYear()-terms.get(3).getEnd().getYear()>1) throw new ServiceException("Too long year");
         final long MILLISECONDS_IN_DAY = 86_400_000;
         Date date = null;
         for (Term term : terms) {
