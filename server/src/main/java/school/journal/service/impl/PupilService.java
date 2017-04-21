@@ -144,7 +144,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            pupil = repository.update(prepareEntityForUpdate(pupil, session), session);
+git            pupil = repository.update(prepareEntityForUpdate(pupil, session), session);
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();
@@ -184,7 +184,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Transaction transaction = session.beginTransaction();
         List<Pupil> pupils = Collections.EMPTY_LIST;
         try {
-            pupils = session.createQuery("from Pupil as p where p.classId = null").list();
+            pupils = session.createQuery(" from pupil as p where p.classId = null").list();
         }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -204,7 +204,13 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     private Pupil prepareEntityForUpdate(Pupil newEntity, Session session) throws ServiceException {
         Pupil pupil;
         try {
-            pupil = repository.get(newEntity.getUser().getUserId(), session);
+            int id;
+            if (newEntity.getUserId() == null && (newEntity.getUser() == null || newEntity.getUser().getUserId() == null)) {
+                throw new ServiceException("User for pupil is not specified");
+            } else {
+                id = newEntity.getUserId()!=null?newEntity.getUserId():newEntity.getUser().getUserId();
+            }
+            pupil = repository.get(id, session);
             checkClassId(pupil, newEntity.getClassId(),session);
             checkFirstName(pupil, newEntity.getFirstName());
             checkLastName(pupil, newEntity.getLastName());
