@@ -19,10 +19,19 @@ export class ProfileComponent implements AfterViewInit, OnInit {
   private user: any;
   private teacher: any;
   private pupil: any;
-  private fullName: string;
-  roles = ROLES;
-  currentTeacherPupil: TeacherPupil;
 
+  validationError = {
+    password: {
+      status: false,
+      message: '',
+    },
+  };
+
+  errorMessage = '';
+
+  roles = ROLES;
+
+  currentTeacherPupil: TeacherPupil;
   currentPassword: string;
 
   @ViewChild('passwordModal') public passwordModal: ModalDirective;
@@ -47,25 +56,22 @@ export class ProfileComponent implements AfterViewInit, OnInit {
     });
   }
 
+  fetchUser(id) {
+    if(id) return this.fetchUserById(id);
+
+    this.user = this.authService.user;
+    this.loadAdditionalUserInfo();
+  }
+
   fetchUserById(id) {
     this.usersService.fetchUser(id)
       .then(user => {
         this.user = user;
-        this.loadAdditionalInfo();
+        this.loadAdditionalUserInfo();
       });
   }
 
-  fetchUser(id) {
-    if(!this.authService.isLogged()) return;
-    if(id) {
-      return this.fetchUserById(id);
-    }
-
-    this.user = this.authService.user;
-    this.loadAdditionalInfo();
-  }
-
-  loadAdditionalInfo() {
+  loadAdditionalUserInfo() {
     switch (this.user.role.name) {
       case 'teacher':
       case 'director_of_studies':
@@ -73,19 +79,42 @@ export class ProfileComponent implements AfterViewInit, OnInit {
         this.teachersService.fetchTeacher(this.user.userId)
           .then(teacher => {
             this.teacher = teacher;
-            this.fullName = this.teachersService.getTeacherFullName(teacher);
           });
         break;
       case 'pupil':
         this.pupilsService.fetchPupil(this.user.userId)
           .then(pupil => {
             this.pupil = pupil;
-            this.fullName = this.pupilsService.getPupilFullName(pupil);
           });
         break;
       default:
         break;
     }
+  }
+
+  validatePassword() {
+    const password = this.currentPassword;
+    if(!password) {
+      this.validationError.password.status = true;
+      this.validationError.password.message = 'Введите пароль';
+    } else if(password.length < 6 || password.length > 24) {
+      this.validationError.password.status = true;
+      this.validationError.password.message = 'Пароль должен иметь не менее 6 и не более 24 символов';
+    } else {
+      this.validationError.password.status = false;
+    }
+  }
+
+  isPasswordValid() {
+    return !this.validationError.password.status;
+  }
+
+  validateProfileData() {
+
+  }
+
+  isProfileDataValid() {
+
   }
 
   openPasswordModal() {
@@ -94,9 +123,14 @@ export class ProfileComponent implements AfterViewInit, OnInit {
   }
 
   onPasswordFormSubmit() {
+    this.validatePassword();
+    if(!this.isPasswordValid()) return;
     this.usersService.changePassword(this.user.userId, this.currentPassword)
       .then(() => {
         this.closePasswordModal();
+      })
+      .catch((err) => {
+
       });
   }
 
@@ -104,7 +138,6 @@ export class ProfileComponent implements AfterViewInit, OnInit {
     this.currentPassword = '';
     this.passwordModal.hide();
   }
-
 
   openEditModal() {
     let personInfo = this.user.role == 'pupil' ? this.pupil : this.teacher;

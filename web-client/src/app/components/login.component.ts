@@ -35,6 +35,8 @@ export class LoginComponent implements AfterViewInit{
         .catch((err) => {
         if(err.status === 401) {
           this.errorMessage = 'Неправильный логин или пароль';
+        } else if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
         } else {
           this.errorMessage = err;
         }
