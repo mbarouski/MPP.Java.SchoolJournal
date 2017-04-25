@@ -1,8 +1,10 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -182,10 +184,13 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     public List<Pupil> getPupilsWithoutClass() throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        List<Pupil> pupils = Collections.EMPTY_LIST;
+        List<Pupil> pupils;
         try {
-            pupils = session.createQuery(" from pupil as p where p.classId = null").list();
-        }catch (Exception exc){
+            Criteria criteria = session.createCriteria(Pupil.class);
+            criteria.add(Restrictions.isNull("classId"));
+            pupils = criteria.list();
+            transaction.commit();
+        } catch (Exception exc) {
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }
