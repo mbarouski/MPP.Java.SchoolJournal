@@ -4,9 +4,11 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
+import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.Term;
 import school.journal.service.CRUDService;
 import school.journal.service.ITermService;
+import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 
 import java.sql.Date;
@@ -33,10 +35,9 @@ public class TermService extends CRUDService<Term> implements ITermService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Term t = (Term) session.get(Term.class, term.getTermId());
-        if(t == null) throw new ServiceException("Term not found");
+        checkTermExists(t);
         t.setEnd(term.getEnd());
         t.setStart(term.getStart());
-//        checkTerms(term.getStart(), term.getEnd());
         checkOverlapping(term, session);
         session.update(t);
         transaction.commit();
@@ -50,46 +51,64 @@ public class TermService extends CRUDService<Term> implements ITermService {
         return terms;
     }
 
-    private Term getTermByNumber(List<Term> terms, int number) {
+    private void checkTermExists(Term term) throws ServiceException {
+        if (term == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.term_not_found);
+        }
+    }
+
+    private Term getTermByNumber(List<Term> terms, int number) throws ServiceException{
         for(Term term : terms) {
             if(term.getNumber() == number) return term;
         }
-        return terms.get(0);
+        throw new ClassifiedServiceException(ExceptionEnum.term_not_found);
     }
 
     private void checkYearStart(Date date) throws ServiceException {
         Calendar calendar = Calendar.getInstance();
         Calendar firstSeptemberStart = Calendar.getInstance();
-        Calendar firstSeptemberEnd = Calendar.getInstance();
-        firstSeptemberStart.set(calendar.get(Calendar.YEAR),Calendar.SEPTEMBER,1,0,0,0);
-        firstSeptemberEnd.set(calendar.get(Calendar.YEAR),Calendar.SEPTEMBER,1,23,59,59);
-        if (calendar.get(Calendar.MONTH)<Calendar.SEPTEMBER){
-            firstSeptemberEnd.set(Calendar.YEAR,firstSeptemberEnd.get(Calendar.YEAR)-1);
-            firstSeptemberStart.set(Calendar.YEAR,firstSeptemberEnd.get(Calendar.YEAR));
+        firstSeptemberStart.set(calendar.get(Calendar.YEAR), Calendar.SEPTEMBER, 1, 0, 0, 0);
+        shiftYearForSeptember(calendar, firstSeptemberStart);
+        if (date.before(firstSeptemberStart.getTime())) {
+            throw new ClassifiedServiceException(ExceptionEnum.first_term_start_is_before_september_1st);
         }
-        if (date.before(firstSeptemberStart.getTime())||date.after(firstSeptemberEnd.getTime())) {
-            throw new ServiceException("First term start is not valid");
+        firstSeptemberStart.set(calendar.get(Calendar.YEAR), Calendar.SEPTEMBER, 1, 23, 59, 59);
+        if (date.after(firstSeptemberStart.getTime())) {
+            throw new ClassifiedServiceException(ExceptionEnum.first_term_start_is_after_september_1st);
+        }
+    }
+
+    private void shiftYearForSeptember(Calendar calendar,Calendar firstSeptember) {
+        if (calendar.get(Calendar.MONTH) < Calendar.SEPTEMBER) {
+            firstSeptember.set(Calendar.YEAR, firstSeptember.get(Calendar.YEAR) - 1);
         }
     }
 
     private void checkYearEnd(Date date) throws ServiceException {
         Calendar calendar = Calendar.getInstance();
         Calendar lastMayStart = Calendar.getInstance();
-        Calendar lastMayEnd = Calendar.getInstance();
         lastMayStart.set(calendar.get(Calendar.YEAR),Calendar.MAY,31,0,0,0);
-        lastMayEnd.set(calendar.get(Calendar.YEAR),Calendar.MAY,31,23,59,59);
-        if (calendar.get(Calendar.MONTH)>Calendar.SEPTEMBER){
-            lastMayEnd.set(Calendar.YEAR,lastMayEnd.get(Calendar.YEAR)+1);
-            lastMayStart.set(Calendar.YEAR,lastMayEnd.get(Calendar.YEAR));
+        shiftYearForMay(calendar,lastMayStart);
+        if (date.before(lastMayStart.getTime())){
+            throw new ClassifiedServiceException(ExceptionEnum.last_term_end_is_before_May_31st);
         }
-        if (date.before(lastMayStart.getTime())||date.after(lastMayEnd.getTime())) {
-            throw new ServiceException("First term start is not valid");
+        lastMayStart.set(calendar.get(Calendar.YEAR),Calendar.MAY,31,23,59,59);
+        if (date.after(lastMayStart.getTime())) {
+            throw new ClassifiedServiceException(ExceptionEnum.last_term_end_is_after_May_31st);
+        }
+    }
+
+    private void shiftYearForMay(Calendar calendar,Calendar lastMay) {
+        if (calendar.get(Calendar.MONTH) > Calendar.SEPTEMBER) {
+            lastMay.set(Calendar.YEAR, lastMay.get(Calendar.YEAR) + 1);
         }
     }
 
     private void checkVacationsDayLength(List<Term> terms) throws ServiceException {
         long dayCount = 0;
-        if (terms.get(0).getStart().getYear()-terms.get(3).getEnd().getYear()>1) throw new ServiceException("Too long year");
+        if (terms.get(0).getStart().getYear()-terms.get(3).getEnd().getYear()>1) {
+            throw new ClassifiedServiceException(ExceptionEnum.too_long_year);
+        }
         final long MILLISECONDS_IN_DAY = 86_400_000;
         Date date = null;
         for (Term term : terms) {
@@ -99,7 +118,7 @@ public class TermService extends CRUDService<Term> implements ITermService {
             date = term.getEnd();
         }
         if (dayCount < MIN_VACATION_DAY_COUNT) {
-            throw new ServiceException("Vacation count is not valid");
+            throw new ClassifiedServiceException(ExceptionEnum.vacations_are_too_small);
         }
     }
 
@@ -117,18 +136,18 @@ public class TermService extends CRUDService<Term> implements ITermService {
         List<Term> terms = (List<Term>) session.createCriteria(Term.class).list();
         try {
             if (getDayStartDate(term.getStart().getTime())>=getDayStartDate(term.getEnd().getTime())){
-                throw new ServiceException("Too little term");
+                throw new ClassifiedServiceException(ExceptionEnum.term_start_is_after_its_end);
             }
             if (term.getNumber() == 1) {
                 Term afterTerm = getTermByNumber(terms, 2);
                 if (term.getEnd().after(afterTerm.getStart())) {
-                    throw new ServiceException("Time is overlapped");
+                    throw new ClassifiedServiceException(ExceptionEnum.term_is_overlapped_by_next_term);
                 }
                 checkYearStart(term.getStart());
             } else if (term.getNumber() == 4) {
                 Term beforeTerm = getTermByNumber(terms, 3);
                 if (term.getEnd().before(beforeTerm.getStart())) {
-                    throw new ServiceException("Time is overlapped");
+                    throw new ClassifiedServiceException(ExceptionEnum.term_is_overlapped_by_previous_term);
                 }
                 checkYearEnd(term.getEnd());
             } else {
@@ -136,9 +155,9 @@ public class TermService extends CRUDService<Term> implements ITermService {
                 Term afterTerm = getTermByNumber(terms, termNumber + 1);
                 Term beforeTerm = getTermByNumber(terms, termNumber - 1);
                 if (term.getEnd().after(afterTerm.getStart()))
-                    throw new ServiceException("Time is overlapped");
+                    throw new ClassifiedServiceException(ExceptionEnum.term_is_overlapped_by_next_term);
                 if (term.getStart().before(beforeTerm.getEnd()))
-                    throw new ServiceException("Time is overlapped");
+                    throw new ClassifiedServiceException(ExceptionEnum.term_is_overlapped_by_previous_term);
             }
             terms.set(term.getNumber()-1,term);
             checkVacationsDayLength(terms);
@@ -149,10 +168,4 @@ public class TermService extends CRUDService<Term> implements ITermService {
         }
     }
 
-    /*private void checkTerms(Date start, Date end) throws ServiceException {
-        if(start.after(end)) throw new ServiceException("Start is after end");
-        long diff = end.getTime() - start.getTime();
-        if((new Date(diff)).before(Date.valueOf("1970-02-01"))) throw new ServiceException("Incorrect term duration");
-        if((new Date(diff)).after(Date.valueOf("1971-01-01"))) throw new ServiceException("Incorrect term duration");
-    }*/
 }

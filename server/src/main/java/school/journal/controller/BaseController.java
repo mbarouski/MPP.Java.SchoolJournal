@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import school.journal.controller.util.callable.*;
 import school.journal.controller.util.ErrorObject;
+import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 
 import static org.springframework.http.HttpStatus.*;
@@ -19,6 +20,9 @@ public abstract class BaseController<T> {
         try {
             operation.call(i);
             resultResponse = createResponseEntity(OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -33,6 +37,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -47,6 +54,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(obj), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -61,6 +71,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -75,6 +88,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -89,6 +105,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(a, b), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -103,6 +122,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -117,6 +139,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i, f), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -131,6 +156,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i, s), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -156,6 +184,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(a, b), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -171,6 +202,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(a, b, c), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -185,6 +219,9 @@ public abstract class BaseController<T> {
         ResponseEntity resultResponse = null;
         try {
             resultResponse = createResponseEntity(operation.call(i), OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);
@@ -200,6 +237,9 @@ public abstract class BaseController<T> {
         try {
             operation.call(i);
             resultResponse = createResponseEntity(OK);
+        } catch (ClassifiedServiceException exc) {
+            logger.error(exc);
+            resultResponse = createResponseEntity(exc.getExceptionType(), BAD_REQUEST);
         } catch (ServiceException exc) {
             logger.error(exc);
             resultResponse = createResponseEntity(new ErrorObject(errorMessage), BAD_REQUEST);

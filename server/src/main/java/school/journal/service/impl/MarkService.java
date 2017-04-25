@@ -6,6 +6,7 @@ import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.*;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
@@ -16,6 +17,7 @@ import school.journal.repository.specification.subject.SubjectSpecificationBySub
 import school.journal.service.IMarkService;
 import school.journal.service.CRUDService;
 import school.journal.service.ITermService;
+import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
@@ -24,7 +26,6 @@ import java.util.List;
 
 import static org.hibernate.criterion.CriteriaSpecification.INNER_JOIN;
 import static school.journal.utils.ValidateServiceUtils.validateId;
-import static school.journal.utils.ValidateServiceUtils.validateNullableId;
 
 @Service("MarkService")
 public class MarkService extends CRUDService<Mark> implements IMarkService {
@@ -32,7 +33,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     private ITermService termService;
 
     @Autowired
-    public MarkService(@Qualifier("MarkRepository") IRepository<Mark> repository,@Qualifier("TermService") ITermService termService) {
+    public MarkService(@Qualifier("MarkRepository") IRepository<Mark> repository, @Qualifier("TermService") ITermService termService) {
         LOGGER = Logger.getLogger(MarkService.class);
         this.repository = repository;
         this.termService = termService;
@@ -44,15 +45,6 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Transaction transaction = session.beginTransaction();
         try {
             checkMarkBeforeCreate(mark, session);
-            Pupil pupil = (Pupil) session.get(Pupil.class, mark.getPupilId());
-            if(pupil == null) throw new ServiceException("Pupil not found");
-            Subject subject = (Subject) session.get(Subject.class, mark.getSubjectId());
-            if(subject == null) throw new ServiceException("Subject not found");
-            Teacher teacher = (Teacher) session.get(Teacher.class, mark.getTeacherId());
-            if(teacher == null) throw new ServiceException("Teacher not found");
-            mark.setTeacher(teacher);
-            mark.setPupil(pupil);
-            mark.setSubject(subject);
             mark = repository.create(mark, session);
             transaction.commit();
         } catch (RepositoryException | ObjectNotFoundException exc) {
@@ -118,14 +110,14 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             validateId(id, "Mark");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.mark_not_found);
         }
         return super.getOne(id);
     }
 
     @Override
     public List<Mark> getMarksForSubjectInClass(int subjectId, int classId, int termId) throws ServiceException {
-        validateSubjectAndClassBeforeSelecting(subjectId, classId);
+        validateSubjectAndClassBeforeSelect(subjectId, classId);
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Term term = (termId != 0) ? (Term) session.get(Term.class, termId) : termService.getCurrentTerm();
@@ -155,7 +147,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Term term = (termId!=0)?(Term) session.get(Term.class, termId):termService.getCurrentTerm();
+            Term term = (termId != 0) ? (Term) session.get(Term.class, termId) : termService.getCurrentTerm();
             Criteria criteria = session.createCriteria(Mark.class);
             criteria.add(new MarkSpecificationByTerm(term).toCriteria());
             criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByClassId(classId).toCriteria());
@@ -183,7 +175,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Transaction transaction = session.beginTransaction();
         List<Mark> markList;
         try {
-            Term term = (termId!=0)?(Term) session.get(Term.class, termId):termService.getCurrentTerm();
+            Term term = (termId != 0) ? (Term) session.get(Term.class, termId) : termService.getCurrentTerm();
             Criteria criteria = session.createCriteria(Mark.class);
             criteria.add(new MarkSpecificationByTerm(term).toCriteria());
             criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByPupilId(pupilId).toCriteria());
@@ -200,9 +192,23 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     }
 
     private void checkMarkBeforeCreate(Mark newMark, Session session) throws ServiceException {
-//            newMark.setMarkId(null);
-            validateDate(newMark.getDate());
-            validateValue(newMark.getValue());
+        validateDate(newMark.getDate());
+        validateValue(newMark.getValue());
+        Pupil pupil = (Pupil) session.get(Pupil.class, newMark.getPupilId());
+        if (pupil == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_pupil);
+        }
+        newMark.setPupil(pupil);
+        Subject subject = (Subject) session.get(Subject.class, newMark.getSubjectId());
+        if (subject == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_subject);
+        }
+        newMark.setSubject(subject);
+        Teacher teacher = (Teacher) session.get(Teacher.class, newMark.getTeacherId());
+        if (teacher == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_teacher);
+        }
+        newMark.setTeacher(teacher);
     }
 
     private Mark prepareMarkBeforeUpdate(Mark newMark, Session session) throws ServiceException {
@@ -229,13 +235,18 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
     }
 
-    private void validateSubjectAndClassBeforeSelecting(int subjectId, int classId) throws ServiceException {
+    private void validateSubjectAndClassBeforeSelect(int subjectId, int classId) throws ServiceException {
         try {
             validateId(subjectId, "Subject");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_subject);
+        }
+        try {
             validateId(classId, "Class");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_pupil);
         }
     }
 
@@ -244,7 +255,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             validateId(classId, "Class");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_pupil);
         }
     }
 
@@ -253,7 +264,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             validateId(pupilId, "Pupil");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_pupil);
         }
     }
 
@@ -267,7 +278,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     private Teacher validateTeacher(int id, Session session) throws ServiceException {
         Teacher teacher = (Teacher) session.get(Teacher.class, id);
         if (teacher == null) {
-            throw new ServiceException("Error in Mark validation. Teacher is not exist");
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_teacher);
         }
         return teacher;
     }
@@ -284,7 +295,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     private Subject validateSubject(int id, Session session) throws ServiceException {
         Subject subject = (Subject) session.get(Subject.class, id);
         if (subject == null) {
-            throw new ServiceException("Error in Mark validation. Subject is not exist");
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_subject);
         }
         return subject;
     }
@@ -301,7 +312,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     private Pupil validatePupil(int id, Session session) throws ServiceException {
         Pupil pupil = (Pupil) session.get(Pupil.class, id);
         if (pupil == null) {
-            throw new ServiceException("Error in Mark validation. Pupil is not exist");
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_pupil);
         }
         return pupil;
     }
@@ -322,7 +333,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Term lastTerm = termService.getCurrentTerm();
         session.close();
         if (date.after(lastTerm.getEnd()) || date.before(firstTerm.getStart())) {
-            throw new ServiceException("Invalid date");
+            throw new ClassifiedServiceException(ExceptionEnum.mark_date_is_invalid);
         }
     }
 
@@ -339,13 +350,13 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     private void validateValue(Integer value) throws ServiceException {
         if (value == null) return;
         if (value <= 0 || value >= 11) {
-            throw new ServiceException("Invalid value");
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_value);
         }
     }
 
-    private void validateTermId(int termId) throws ServiceException{
-        if (termId<0||termId>4){
-            throw new ServiceException("Wrong term number");
+    private void validateTermId(int termId) throws ServiceException {
+        if (termId < 0 || termId > 4) {
+            throw new ClassifiedServiceException(ExceptionEnum.mark_date_is_invalid);
         }
     }
 }

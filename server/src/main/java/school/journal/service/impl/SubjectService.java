@@ -1,19 +1,15 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.Subject;
 import school.journal.repository.IRepository;
-import school.journal.repository.exception.RepositoryException;
-import school.journal.repository.impl.SubjectRepository;
-import school.journal.repository.specification.subject.SubjectSpecificationBySubjectId;
 import school.journal.service.CRUDService;
 import school.journal.service.ISubjectService;
+import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
@@ -34,10 +30,15 @@ public class SubjectService extends CRUDService<Subject> implements ISubjectServ
     public Subject create(Subject subject) throws ServiceException {
         try {
             validateString(subject.getName(), "Name");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.subject_has_wrong_name);
+        }
+        try {
             validateString(subject.getDescription(), "Description");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.subject_has_wrong_description);
         }
         return super.create(subject);
     }
@@ -61,7 +62,7 @@ public class SubjectService extends CRUDService<Subject> implements ISubjectServ
             validateId(subjectId, "Subject");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.subject_not_found);
         }
         Subject subject = new Subject();
         subject.setSubjectId(subjectId);
@@ -79,7 +80,7 @@ public class SubjectService extends CRUDService<Subject> implements ISubjectServ
             validateId(subjectId, "Subject");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.subject_not_found);
         }
         return super.getOne(subjectId);
     }
