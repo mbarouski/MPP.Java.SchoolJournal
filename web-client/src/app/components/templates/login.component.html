@@ -4,13 +4,23 @@
       <form class="form-signin" action="index.html">
         <h2 class="form-signin-heading">Вход</h2>
 
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          <div>{{errorMessage}}</div>
+        </div>
+
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Имя пользователя"
-                 [(ngModel)]="loginData.username" name="username" required autofocus>
+                 [(ngModel)]="loginData.username" (change)="validate()" name="username" autofocus>
+          <div *ngIf="validationError.username.status" class="alert alert-danger">
+            <div>{{validationError.username.message}}</div>
+          </div>
         </div>
         <div class="form-group">
           <input type="password" class="form-control" placeholder="Пароль"
-                 [(ngModel)]="loginData.password" name="password" required>
+                 [(ngModel)]="loginData.password" (change)="validate()" name="password">
+          <div *ngIf="validationError.password.status" class="alert alert-danger">
+            <div>{{validationError.password.message}}</div>
+          </div>
         </div>
         <button class="btn btn-lg btn-primary btn-block" (click)="onSubmit();" type="submit">Войти</button>
       </form>
