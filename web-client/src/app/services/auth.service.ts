@@ -41,10 +41,13 @@ export class AuthService {
 
   login(loginData: LoginData) {
     return new Promise((resolve, reject) => {
-
       return this.http.post(`${this.AUTH_ROUTE}/login`, loginData, HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
         .map(res => {
           return res.json();
+        })
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
         })
         .subscribe((user) => {
           this.userData = user;

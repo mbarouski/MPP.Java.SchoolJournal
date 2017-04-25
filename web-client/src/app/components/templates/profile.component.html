@@ -6,21 +6,18 @@
           <button *ngIf="user.userId == authService.user.userId" href="#" class="btn btn-success" (click)="openEditModal()">Редактировать</button>
           <button *ngIf="user.userId == authService.user.userId" href="#" class="btn btn-success" (click)="openPasswordModal()">Изменить пароль</button>
         </div>
-        <h1>{{fullName || user.username}}</h1>
+        <h2>{{user.username}}</h2>
         <p class="role">{{roles[user.role.name]}}</p>
-        <hr>
-        <div *ngIf="teacher && teacher.description || pupil && pupil.characteristic">
-          <h3>Описание</h3>
-          <p class="description">{{teacher && teacher.description || pupil && pupil.characteristic}}</p>
-          <hr>
-        </div>
-        <h3>Контакты</h3>
         <p *ngIf="user.email"><strong>Email:</strong> {{user.email}}</p>
-        <p *ngIf="teacher && teacher.phoneNumber || pupil && pupil.phoneNumber"><strong>Мобильный телефон:</strong> {{teacher && teacher.phoneNumber || pupil && pupil.phoneNumber}}</p>
-      </div>
-      <div class="col-md-10 col-md-offset-1" *ngIf="!user">
-        <h1>Нет информации</h1>
-      </div>
+        </div>
+      <hr>
+      <div class="col-md-10 col-md-offset-1" *ngIf="teacher || pupil">
+        <h3>{{teachersService.getTeacherFullName(teacher || pupil)}}</h3>
+        <p *ngIf="(teacher || pupil) && (pupil || teacher).phoneNumber"><strong>Мобильный телефон:</strong> {{(teacher || pupil) && (pupil || teacher).phoneNumber}}</p>
+        <div *ngIf="teacher && teacher.description || pupil && pupil.characteristic">
+          <p class="description">{{teacher && teacher.description || pupil && pupil.characteristic}}</p>
+        </div>
+         </div>
     </div>
   </div>
 </section>
@@ -37,9 +34,18 @@
       </div>
       <div class="modal-body">
         <form>
+
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <div>{{errorMessage}}</div>
+          </div>
+
           <div class="form-group">
             <label>Пароль</label>
             <input type="password" class="form-control" [(ngModel)]="currentPassword" name="password">
+          </div>
+
+          <div *ngIf="validationError.password.status" class="alert alert-danger">
+            <div>{{validationError.password.message}}</div>
           </div>
 
           <button type="submit" class="btn btn-default" (click)="onPasswordFormSubmit()">Готово</button>
@@ -61,6 +67,9 @@
       </div>
       <div class="modal-body">
         <form>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <div>{{errorMessage}}</div>
+          </div>
           <div *ngIf="currentTeacherPupil" class="form-group">
             <label>Имя</label>
             <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.firstName" name="firstName">
