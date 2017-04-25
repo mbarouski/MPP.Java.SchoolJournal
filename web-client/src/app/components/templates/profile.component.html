@@ -73,24 +73,39 @@
           <div *ngIf="currentTeacherPupil" class="form-group">
             <label>Имя</label>
             <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.firstName" name="firstName">
+            <div *ngIf="validationError.firstName.status" class="alert alert-danger">
+              <div>{{validationError.firstName.message}}</div>
+            </div>
           </div>
           <div *ngIf="currentTeacherPupil" class="form-group">
             <label>Отчество</label>
             <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.pathronymic" name="pathronymic">
+            <div *ngIf="validationError.pathronymic.status" class="alert alert-danger">
+              <div>{{validationError.pathronymic.message}}</div>
+            </div>
           </div>
           <div *ngIf="currentTeacherPupil" class="form-group">
             <label>Фамилия</label>
             <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.lastName" name="lastName">
+            <div *ngIf="validationError.lastName.status" class="alert alert-danger">
+              <div>{{validationError.lastName.message}}</div>
+            </div>
           </div>
           <div *ngIf="currentTeacherPupil" class="form-group">
             <label>Телефон</label>
             <input type="text" class="form-control" [(ngModel)]="currentTeacherPupil.phoneNumber" name="phoneNumber">
+            <div *ngIf="validationError.phoneNumber.status" class="alert alert-danger">
+              <div>{{validationError.phoneNumber.message}}</div>
+            </div>
           </div>
           <div *ngIf="currentTeacherPupil" class="form-group">
             <label>Описание</label>
             <textarea class="form-control" rows="3"
                       [(ngModel)]="currentRole === 'pupil' ? currentTeacherPupil.characteristic : currentTeacherPupil.description"
                       name="description"></textarea>
+            <div *ngIf="validationError.description.status" class="alert alert-danger">
+              <div>{{validationError.description.message}}</div>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-default" (click)="onEditFormSubmit()">Готово</button>
