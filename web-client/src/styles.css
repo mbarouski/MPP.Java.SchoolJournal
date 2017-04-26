@@ -2,24 +2,69 @@ html {
   position: relative;
   min-height: 100%;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Oswald', sans-serif;
+}
+
+p, a, td, div, span, blockquote, th, cite {
+  font-family: 'Open Sans', sans-serif;
+}
+
 body.login {
   padding-top: 40px;
   padding-bottom: 40px;
   background-color: #eee;
 }
+
 body:not(.login) {
+  margin-top: 0px;
   margin-bottom: 60px;
 }
-h1,
-h2,
-h3 {
+
+h1, h2, h3 {
   color: #1d71bb;
 }
+
 .navbar {
   border-radius: 0;
   border-left: none;
   border-right: none;
+  background: cornflowerblue;
 }
+
+.navbar-inverse .navbar-nav {
+  font-weight: bold;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: black;
+  cursor: pointer;
+}
+
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>.active>a:focus,
+.navbar-inverse .navbar-nav>.active>a:hover {
+  background: yellow;
+  color: black;
+}
+
+.navbar-inverse .navbar-nav>.active {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.navbar-inverse .navbar-brand {
+  color: yellow;
+  font-family: 'Oswald', sans-serif;
+}
+
+.btn {
+  border-radius: 0;
+  margin: 2px;
+  border: none;
+}
+
 footer {
   position: absolute;
   bottom: 0;
@@ -29,18 +74,23 @@ footer {
   background-color: #f5f5f5;
   text-transform: uppercase;
 }
+
 footer p {
   margin: 0;
 }
+
 section {
   margin-bottom: 20px;
 }
+
 .role {
   font-weight: bold;
 }
+
 .subject-in-schedule:hover {
   text-decoration: none;
 }
+
 .subject-in-schedule {
   display: block;
   width: 100%;
@@ -191,6 +241,11 @@ table:not(.schedule-table):not(.marks) tr:hover {
 .selected a {
   color: white;
 }
+
+td.selected a {
+  color: dodgerblue;
+}
+
 .table .tr {
   cursor: pointer;
 }
@@ -208,8 +263,16 @@ table:not(.schedule-table):not(.marks) tr:hover {
 .action-span {
   cursor: pointer;
   display: none;
+  margin: 0;
 }
 
 td:hover .action-span {
   display: inline;
+}
+
+@media(max-width: 768px) {
+
+  .navbar-inverse .navbar-nav>.active {
+    border: none;
+  }
 }

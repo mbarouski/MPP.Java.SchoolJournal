@@ -16,7 +16,7 @@
               <tr *ngFor="let clazz of classes" (click)="selectClass(clazz.classId)" [class.selected]="selectedClass && clazz.classId == selectedClass.classId">
                 <td>
                   {{clazz.number}} {{clazz.letterMark}}
-                  <span class=" action-span pull-right" (click)="selectClass(clazz.classId); deleteClass()"><i class="glyphicon glyphicon-remove"></i> Удалить класс</span>
+                  <button class="action-span btn btn-danger pull-right" (click)="selectClass(clazz.classId); deleteClass()"><i class="glyphicon glyphicon-remove"></i> Удалить класс</button>
                 </td>
               </tr>
               </tbody>
@@ -32,7 +32,7 @@
                 <tr *ngFor="let pupil of pupils" (click)="selectPupil(pupil.userId)" [class.selected]="selectedPupil && selectedPupil.userId === pupil.userId">
                   <td>
                     <a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a>
-                    <span class=" action-span pull-right" (click)="selectPupil(pupil.userId); removeFromClass()"><i class="glyphicon glyphicon-remove"></i> Удалить из класса</span>
+                    <button class="btn btn-danger action-span pull-right" (click)="selectPupil(pupil.userId); removeFromClass()"><i class="glyphicon glyphicon-remove"></i> Удалить из класса</button>
                   </td>
                 </tr>
                 </tbody>
@@ -48,7 +48,7 @@
               <tbody>
               <tr *ngFor="let pupil of pupilsWithoutClass" (click)="selectPupilWithoutClass(pupil.userId)" [class.selected]="selectedPupilWithoutClass && selectedPupilWithoutClass.userId === pupil.userId">
                 <td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a>
-                  <span class=" action-span pull-right" (click)="selectPupilWithoutClass(pupil.userId); openClassForPupilModal()"><i class="glyphicon glyphicon-education action-i"></i> Определить в класс</span></td>
+                  <button class="btn btn-success action-span pull-right" (click)="selectPupilWithoutClass(pupil.userId); openClassForPupilModal()"><i class="glyphicon glyphicon-education action-i"></i> Определить в класс</button></td>
               </tr>
               </tbody>
             </table>
@@ -136,13 +136,22 @@
       </div>
       <div class="modal-body">
         <form>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <div>{{errorMessage}}</div>
+          </div>
           <div class="form-group">
             <label>Номер</label>
             <input type="text" class="form-control" [(ngModel)]="currentClass.number" name="number">
+            <div *ngIf="validationError.number.status" class="alert alert-danger">
+              <div>{{validationError.number.message}}</div>
+            </div>
           </div>
           <div class="form-group">
             <label>Обозначение</label>
             <input type="text" class="form-control" [(ngModel)]="currentClass.letterMark" name="letterMark">
+            <div *ngIf="validationError.letterMark.status" class="alert alert-danger">
+              <div>{{validationError.letterMark.message}}</div>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-default" (click)="onFormSubmit()">Готово</button>
@@ -166,9 +175,15 @@
         <form>
           <div class="form-group">
             <label>Класс</label>
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              <div>{{errorMessage}}</div>
+            </div>
             <select class="form-control" [(ngModel)]="classForPupil.classId" name="class">
               <option *ngFor="let clazz of classes" value="{{clazz.classId}}">{{clazz.number}} {{clazz.letterMark}}</option>
             </select>
+            <div *ngIf="validationError.classId.status" class="alert alert-danger">
+              <div>{{validationError.classId.message}}</div>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-default" (click)="onClassForPupilFormSubmit()">Готово</button>
@@ -192,9 +207,15 @@
         <form>
           <div class="form-group">
             <label>Учитель</label>
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              <div>{{errorMessage}}</div>
+            </div>
             <select class="form-control" [(ngModel)]="classTeacher" name="classTeacher">
               <option *ngFor="let teacher of teachers" value="{{teacher.userId}}">{{teachersService.getTeacherFullName(teacher)}}</option>
             </select>
+            <div *ngIf="validationError.classTeacher.status" class="alert alert-danger">
+              <div>{{validationError.classTeacher.message}}</div>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-default" (click)="onClassTeacherFormSubmit()">Готово</button>
