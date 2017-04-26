@@ -2,69 +2,126 @@
   <div class="container">
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
-        <h1>Классы</h1>
-        <table class="table">
-          <tbody>
-            <tr *ngFor="let clazz of classes" (click)="selectClass(clazz.classId)" [class.selected]="selectedClass && clazz.classId == selectedClass.classId">
-              <td>{{clazz.number}} {{clazz.letterMark}}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="actions start">
-          <button href="#" class="btn btn-success" (click)="openModalForAddClass()">Создать класс</button>
-          <button href="#" class="btn btn-danger" [disabled]="!selectedClass" (click)="deleteClass()">Удалить класс</button>
-          <button href="#" class="btn btn-danger" [disabled]="!selectedClass" (click)="openClassTeacherModal()">Назначить классного руководителя</button>
-          <!--<button href="#" [disabled]="!selectedClass" class="btn btn-danger">Выпустить класс</button>-->
-        </div>
+        <tabset>
+          <tab heading="Управление классами">
+            <h1>Классы</h1>
+            <div class="actions start">
+              <button href="#" class="btn btn-success" (click)="openModalForAddClass()">Создать класс</button>
+              <!--<button href="#" class="btn btn-danger" [disabled]="!selectedClass" (click)="deleteClass()">Удалить класс</button>-->
+              <button href="#" class="btn btn-danger" [disabled]="!selectedClass" (click)="openClassTeacherModal()">Назначить классного руководителя</button>
+              <!--<button href="#" [disabled]="!selectedClass" class="btn btn-danger">Выпустить класс</button>-->
+            </div>
+            <table class="table">
+              <tbody>
+              <tr *ngFor="let clazz of classes" (click)="selectClass(clazz.classId)" [class.selected]="selectedClass && clazz.classId == selectedClass.classId">
+                <td>
+                  {{clazz.number}} {{clazz.letterMark}}
+                  <span class=" action-span pull-right" (click)="selectClass(clazz.classId); deleteClass()"><i class="glyphicon glyphicon-remove"></i> Удалить класс</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div *ngIf="selectedClass">
+              <h1>Ученики {{selectedClass.number}} {{selectedClass.letterMark}} класса</h1>
+              <!--<div class="actions start">-->
+                <!--<button href="#" [disabled]="!selectedPupil" (click)="removeFromClass()" class="btn btn-danger ">Удалить из класса</button>-->
+              <!--</div>-->
+              <p><strong>Классный руководитель: </strong>{{getClassTeacherOfSelectedClass()}}</p>
+              <table class="table">
+                <tbody>
+                <tr *ngFor="let pupil of pupils" (click)="selectPupil(pupil.userId)" [class.selected]="selectedPupil && selectedPupil.userId === pupil.userId">
+                  <td>
+                    <a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a>
+                    <span class=" action-span pull-right" (click)="selectPupil(pupil.userId); removeFromClass()"><i class="glyphicon glyphicon-remove"></i> Удалить из класса</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </tab>
+          <tab heading="Ученики, не состоящие в классе">
+            <h1>Ученики, не состоящие в классе</h1>
+            <!--<div class="actions start">-->
+              <!--<button href="#" [disabled]="!selectedPupilWithoutClass" (click)="openClassForPupilModal()" class="btn btn-success">Определить в класс</button>-->
+            <!--</div>-->
+            <table class="table">
+              <tbody>
+              <tr *ngFor="let pupil of pupilsWithoutClass" (click)="selectPupilWithoutClass(pupil.userId)" [class.selected]="selectedPupilWithoutClass && selectedPupilWithoutClass.userId === pupil.userId">
+                <td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a>
+                  <span class=" action-span pull-right" (click)="selectPupilWithoutClass(pupil.userId); openClassForPupilModal()"><i class="glyphicon glyphicon-education action-i"></i> Определить в класс</span></td>
+              </tr>
+              </tbody>
+            </table>
+          </tab>
+        </tabset>
       </div>
     </div>
   </div>
 </section>
 
-<section *ngIf="selectedClass">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1">
-        <h1>Ученики {{selectedClass.number}} {{selectedClass.letterMark}} класса</h1>
-        <p><strong>Классный руководитель: </strong>{{getClassTeacherOfSelectedClass()}}</p>
-        <table class="table">
-          <tbody>
-            <tr *ngFor="let pupil of pupils" (click)="selectPupil(pupil.userId)" [class.selected]="selectedPupil && selectedPupil.userId === pupil.userId">
-              <td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="actions start">
-          <button href="#" [disabled]="!selectedPupil" (click)="removeFromClass()" class="btn btn-danger ">Удалить из класса</button>
-        </div>
-        <div class="actions start">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!--<section>-->
+  <!--<div class="container">-->
+    <!--<div class="row">-->
+      <!--<div class="col-md-10 col-md-offset-1">-->
+        <!--<h1>Классы</h1>-->
+        <!--<table class="table">-->
+          <!--<tbody>-->
+            <!--<tr *ngFor="let clazz of classes" (click)="selectClass(clazz.classId)" [class.selected]="selectedClass && clazz.classId == selectedClass.classId">-->
+              <!--<td>{{clazz.number}} {{clazz.letterMark}}</td>-->
+            <!--</tr>-->
+          <!--</tbody>-->
+        <!--</table>-->
+        <!--<div class="actions start">-->
+          <!--<button href="#" class="btn btn-success" (click)="openModalForAddClass()">Создать класс</button>-->
+          <!--<button href="#" class="btn btn-danger" [disabled]="!selectedClass" (click)="deleteClass()">Удалить класс</button>-->
+          <!--<button href="#" class="btn btn-danger" [disabled]="!selectedClass" (click)="openClassTeacherModal()">Назначить классного руководителя</button>-->
+          <!--&lt;!&ndash;<button href="#" [disabled]="!selectedClass" class="btn btn-danger">Выпустить класс</button>&ndash;&gt;-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</section>-->
 
-<section *ngIf="pupilsWithoutClass">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1">
-        <h1>Ученики, не состоящие в классе</h1>
-        <table class="table">
-          <tbody>
-          <tr *ngFor="let pupil of pupilsWithoutClass" (click)="selectPupilWithoutClass(pupil.userId)" [class.selected]="selectedPupilWithoutClass && selectedPupilWithoutClass.userId === pupil.userId">
-            <td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a></td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="actions start">
-          <button href="#" [disabled]="!selectedPupilWithoutClass" (click)="openClassForPupilModal()" class="btn btn-success">Определить в класс</button>
-        </div>
-        <div class="actions start">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!--<section *ngIf="selectedClass">-->
+  <!--<div class="container">-->
+    <!--<div class="row">-->
+      <!--<div class="col-md-10 col-md-offset-1">-->
+        <!--<h1>Ученики {{selectedClass.number}} {{selectedClass.letterMark}} класса</h1>-->
+        <!--<p><strong>Классный руководитель: </strong>{{getClassTeacherOfSelectedClass()}}</p>-->
+        <!--<table class="table">-->
+          <!--<tbody>-->
+            <!--<tr *ngFor="let pupil of pupils" (click)="selectPupil(pupil.userId)" [class.selected]="selectedPupil && selectedPupil.userId === pupil.userId">-->
+              <!--<td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a></td>-->
+            <!--</tr>-->
+          <!--</tbody>-->
+        <!--</table>-->
+        <!--<div class="actions start">-->
+          <!--<button href="#" [disabled]="!selectedPupil" (click)="removeFromClass()" class="btn btn-danger ">Удалить из класса</button>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</section>-->
+
+<!--<section *ngIf="pupilsWithoutClass">-->
+  <!--<div class="container">-->
+    <!--<div class="row">-->
+      <!--<div class="col-md-10 col-md-offset-1">-->
+        <!--<h1>Ученики, не состоящие в классе</h1>-->
+        <!--<table class="table">-->
+          <!--<tbody>-->
+          <!--<tr *ngFor="let pupil of pupilsWithoutClass" (click)="selectPupilWithoutClass(pupil.userId)" [class.selected]="selectedPupilWithoutClass && selectedPupilWithoutClass.userId === pupil.userId">-->
+            <!--<td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a></td>-->
+          <!--</tr>-->
+          <!--</tbody>-->
+        <!--</table>-->
+        <!--<div class="actions start">-->
+          <!--<button href="#" [disabled]="!selectedPupilWithoutClass" (click)="openClassForPupilModal()" class="btn btn-success">Определить в класс</button>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</section>-->
 
 
 <div class="modal fade" bsModal #classModal="bs-modal" [config]="{backdrop: 'static'}"

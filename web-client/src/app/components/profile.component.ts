@@ -220,7 +220,7 @@ export class ProfileComponent implements AfterViewInit, OnInit {
         this.closePasswordModal();
       })
       .catch((err) => {
-
+        this.errorMessage = err.status;
       });
   }
 
@@ -252,6 +252,9 @@ export class ProfileComponent implements AfterViewInit, OnInit {
       .then(() => {
         this.closeEditModal();
         this.fetchUserById(this.user.userId);
+      })
+      .catch((err) => {
+        this.errorMessage = err.status;
       });
   }
 

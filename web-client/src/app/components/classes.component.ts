@@ -28,6 +28,24 @@ export class ClassesComponent implements AfterViewInit{
   };
   classTeacher: number;
 
+  validationError = {
+    number: {
+      status: false,
+      message: '',
+    },
+    letterMark: {
+      status: false,
+      message: '',
+    },
+  };
+
+  errorMessage = '';
+
+  tabs: any[] = [
+    {title: 'Классы'},
+    {title: 'Ученики, не состоящие в классе'}
+  ];
+
   @ViewChild('classModal') public classModal: ModalDirective;
   @ViewChild('classForPupilModal') public classForPupilModal: ModalDirective;
   @ViewChild('classTeacherModal') public classTeacherModal: ModalDirective;
@@ -103,7 +121,19 @@ export class ClassesComponent implements AfterViewInit{
     this.currentClass = null;
   }
 
+  validateNewClassInfo() {
+    const number = this.currentClass.number;
+    const letterMark = this.currentClass.letterMark;
+  }
+
+  isNewClassInfoValid() {
+    return !this.validationError.number.status &&
+        !this.validationError.letterMark.status;
+  }
+
   onFormSubmit() {
+    this.validateNewClassInfo();
+    if(!this.isNewClassInfoValid()) return;
     this.classesService.createClass(this.currentClass)
       .then(clazz => {
         this.restoreState();
@@ -172,6 +202,10 @@ export class ClassesComponent implements AfterViewInit{
   closeClassTeacherModal() {
     this.classTeacherModal.hide();
     this.classTeacher = -1;
+  }
+
+  setActiveTab(index: number): void {
+    this.tabs[index].active = true;
   }
 
 }

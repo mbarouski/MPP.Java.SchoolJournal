@@ -11,7 +11,7 @@ import {HttpModule} from "@angular/http";
 import {MenuComponent} from "../components/menu.component";
 import {
   Ng2BootstrapModule, CollapseModule, ModalModule, PaginationModule, DatepickerModule,
-  TimepickerModule
+  TimepickerModule, TabsModule
 } from "ng2-bootstrap";
 import {ProfileComponent} from "../components/profile.component";
 import {TeachersService} from "../services/teachers.service";
@@ -48,6 +48,7 @@ import {SchoolInfoComponent} from "../components/school-info.component";
     ModalModule.forRoot(),
     DatepickerModule.forRoot(),
     TimepickerModule.forRoot(),
+    TabsModule.forRoot(),
     ContextMenuModule,
     FormsModule
   ],
