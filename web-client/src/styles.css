@@ -179,13 +179,13 @@ body {
 }
 
 .selected {
-  background-color: lightgray;
-  color: white;
+  background-color: rgba(169, 169, 169, 0.12);
+  /*color: white;*/
 }
 
 table:not(.schedule-table):not(.marks) tr:hover {
-  background-color: lightgrey;
-  color: white;
+  background-color: rgba(169, 169, 169, 0.12);
+  /*color: white;*/
 }
 
 .selected a {
@@ -203,4 +203,13 @@ table:not(.schedule-table):not(.marks) tr:hover {
   display: block;
   padding: 0;
   margin: 0;
+}
+
+.action-span {
+  cursor: pointer;
+  display: none;
+}
+
+td:hover .action-span {
+  display: inline;
 }
