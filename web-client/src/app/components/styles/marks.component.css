@@ -29,3 +29,10 @@
   background-color: lightgray;
   color: #fff;
 }
+
+.date-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

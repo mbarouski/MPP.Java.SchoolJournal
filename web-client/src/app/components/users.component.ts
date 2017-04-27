@@ -140,6 +140,13 @@ export class UsersComponent implements AfterViewInit{
     this.usersService.addUser(this.currentUser)
       .then(user => {
         this.restoreState();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 
@@ -264,14 +271,35 @@ export class UsersComponent implements AfterViewInit{
           this.pupilsService.addPupil(this.currentTeacherPupil)
             .then(pupil => {
               this.restoreState();
+            })
+            .catch((err) => {
+              if(err.status === 500) {
+                this.errorMessage = 'Извините, ошибка на сервере';
+              } else {
+                this.errorMessage = err;
+              }
             });
         } else if(['teacher', 'director', 'director_of_studies'].includes(this.getRoleById(this.currentRole))) {
           this.teacherService.addTeacher(this.currentTeacherPupil)
             .then(teacher => {
               this.restoreState();
+            })
+            .catch((err) => {
+              if(err.status === 500) {
+                this.errorMessage = 'Извините, ошибка на сервере';
+              } else {
+                this.errorMessage = err;
+              }
             });
         } else {
           this.restoreState();
+        }
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
         }
       });
 
@@ -303,6 +331,13 @@ export class UsersComponent implements AfterViewInit{
     this.usersService.deleteUser(this.selectedUser.userId)
       .then(() => {
         this.restoreState();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 

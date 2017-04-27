@@ -21,6 +21,13 @@
           <tr>
             <th>Ученик</th>
             <th *ngFor="let lesson of lessons" class="lesson-date">{{lesson}}</th>
+
+            <th>1 четв.</th>
+            <th>2 четв.</th>
+            <th>3 четв.</th>
+            <th>4 четв.</th>
+            <th>Год</th>
+
           </tr>
           </thead>
           <tbody>
@@ -31,7 +38,39 @@
               <div (click)="setCurrentMark(getMarkForLessonAndPupil(lesson, pupil.userId), $event)"
                    (contextmenu)="openContextMenu($event, getMarkForLessonAndPupil(lesson, pupil.userId).markId)"
                    class="mark-input">{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
+
+            <td class="mark-td term">
+              <div (click)="setCurrentMark(getMarkForTermAndPupil(1, pupil.userId), $event)"
+                   (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(1, pupil.userId).markId)"
+                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
+              </div>
+            </td>
+            <td class="mark-td term">
+              <div (click)="setCurrentMark(getMarkForTermAndPupil(2, pupil.userId), $event)"
+                   (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(1, pupil.userId).markId)"
+                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
+              </div>
+            </td>
+            <td class="mark-td term">
+              <div (click)="setCurrentMark(getMarkForTermAndPupil(3, pupil.userId), $event)"
+                   (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(1, pupil.userId).markId)"
+                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
+              </div>
+            </td>
+            <td class="mark-td term">
+              <div (click)="setCurrentMark(getMarkForTermAndPupil(4, pupil.userId), $event)"
+                   (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(1, pupil.userId).markId)"
+                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
+              </div>
+            </td>
+            <td class="mark-td term">
+              <div (click)="setCurrentMark(getMarkForYearAndPupil(pupil.userId), $event)"
+                   (contextmenu)="openContextMenu($event, getMarkForYearAndPupil(pupil.userId).markId)"
+                   class="mark-input">{{decorateMark(getMarkForYearAndPupil(pupil.userId))}}
+              </div>
+            </td>
           </tr>
+
           </tbody>
         </table>
       </div>
@@ -42,7 +81,7 @@
 
 <div class="modal fade" bsModal #markModal="bs-modal" [config]="{backdrop: 'static'}"
      tabindex="-1" role="dialog" aria-labelledby="markForm" aria-hidden="true">
-  <div *ngIf="currentMark" class="modal-dialog modal-sm">
+  <div *ngIf="currentMark" class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Оценка</h4>
@@ -52,24 +91,38 @@
       </div>
       <div class="modal-body">
         <form class="form">
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <div>{{errorMessage}}</div>
+          </div>
           <div class="form-group">
             <label>Тип</label>
             <select class="form-control" [(ngModel)]="currentMark.type" name="type">
               <option *ngFor="let type of markTypes" value="{{type.short}}">{{type.rus}}</option>
             </select>
+            <div *ngIf="validationError.type.status" class="alert alert-danger">
+              <div>{{validationError.type.message}}</div>
+            </div>
           </div>
           <div class="form-group">
             <label>Ученик</label>
             <select class="form-control" [(ngModel)]="currentMark.pupilId" name="pupil">
               <option *ngFor="let pupil of pupils" value="{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</option>
             </select>
+            <div *ngIf="validationError.pupil.status" class="alert alert-danger">
+              <div>{{validationError.pupil.message}}</div>
+            </div>
           </div>
-          <div class="form-group">
+          <div class="form-group date-picker-wrapper">
             <label>Значение</label>
             <input class="form-control" type="number" max="10" min="2" [(ngModel)]="currentMark.value" name="value">
           </div>
+          <div *ngIf="validationError.value.status" class="alert alert-danger">
+            <div>{{validationError.value.message}}</div>
+          </div>
 
-          <datepicker [(ngModel)]="selectedDate" name="date"></datepicker>
+          <div class="form-group">
+            <datepicker [(ngModel)]="selectedDate" name="date"></datepicker>
+          </div>
 
           <button type="submit" (click)="submitMarkForm()" class="btn btn-default">Подтвердить</button>
         </form>

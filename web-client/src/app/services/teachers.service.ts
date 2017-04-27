@@ -24,6 +24,10 @@ export class TeachersService {
       .map(res => {
         return res.json();
       })
+      .catch((err) => {
+        this.teachersSubject.next([]);
+        return Observable.throw(err);
+      })
       .subscribe((teachers) => {
         this.teachers = teachers;
         this.teachersSubject.next(teachers);
@@ -37,6 +41,10 @@ export class TeachersService {
       return this.http.get(`${this.config.apiEndpoint}/teachers/${teacherId}`, {search: params})
         .map(res => {
           return res.json();
+        })
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
         })
         .subscribe((teacher) => {
           resolve(teacher);
@@ -66,6 +74,10 @@ export class TeachersService {
       params.append('token', this.authService.token);
       this.http.post(`${this.config.apiEndpoint}/teachers`, teacher, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((teacher) => {
           resolve(teacher);
         });
@@ -78,6 +90,10 @@ export class TeachersService {
       params.append('token', this.authService.token);
       this.http.put(`${this.config.apiEndpoint}/teachers`, teacher, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((teacher) => {
           resolve(teacher);
         });
@@ -89,6 +105,10 @@ export class TeachersService {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
       this.http.delete(`${this.config.apiEndpoint}/teachers/${id}`, {search: params})
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve({});
         });
@@ -103,6 +123,10 @@ export class TeachersService {
       params.append('classId', classId);
       this.http.post(`${this.config.apiEndpoint}/teachers/changeClassOfTeacher`, {}, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve({});
         });

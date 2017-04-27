@@ -10,12 +10,12 @@
           <thead>
           <tr>
             <th class="text-center"></th>
-            <th colspan="8" class="text-center">Пн</th>
-            <th colspan="8" class="text-center">Вт</th>
-            <th colspan="8" class="text-center">Ср</th>
-            <th colspan="8" class="text-center">Чт</th>
-            <th colspan="8" class="text-center">Пт</th>
-            <th colspan="8" class="text-center">Сб</th>
+            <th colspan="10" class="text-center">Пн</th>
+            <th colspan="10" class="text-center">Вт</th>
+            <th colspan="10" class="text-center">Ср</th>
+            <th colspan="10" class="text-center">Чт</th>
+            <th colspan="10" class="text-center">Пт</th>
+            <th colspan="10" class="text-center">Сб</th>
           </tr>
           <tr>
             <th class="text-center">Учитель</th>
@@ -30,9 +30,9 @@
           <tbody>
           <tr *ngFor="let teacher of teachers">
             <td>{{teachersService.getTeacherFullName(teacher)}}</td>
-            <td *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)"
+            <td class="td-subject-link" *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)"
                 (contextmenu)="openContextMenuForEdit($event, getSubjectForTeacherAndDayAndTime(teacher, dayTime), !!getSubjectForTeacherAndDayAndTime(teacher, dayTime) ? deleteMenu : addMenu)">
-              <a *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" routerLink="{{createLinkToMarks(getSubjectForTeacherAndDayAndTime(teacher, dayTime))}}">
+              <a class="subject-link" *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" routerLink="{{createLinkToMarks(getSubjectForTeacherAndDayAndTime(teacher, dayTime))}}">
                 <i class="glyphicon glyphicon-ok green"></i>
                 <span>{{subjectForTeacherAndDayAndTime | get:'place'}}<br> {{subjectForTeacherAndDayAndTime | get:'subject.name'}} <br> {{subjectForTeacherAndDayAndTime | get:'clazz.number'}} {{subjectForTeacherAndDayAndTime | get:'clazz.letterMark'}}</span>
               </a>

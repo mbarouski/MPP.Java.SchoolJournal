@@ -23,6 +23,11 @@ export class UsersService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/users`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          this.usersSubject.next([]);
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((users) => {
           this.usersSubject.next(users);
           resolve(users);
@@ -36,6 +41,10 @@ export class UsersService {
       params.append('token', this.authService.token);
       this.http.post(`${this.config.apiEndpoint}/users`, user, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((user) => {
           resolve(user);
         });
@@ -48,6 +57,10 @@ export class UsersService {
       params.append('token', this.authService.token);
       this.http.put(`${this.config.apiEndpoint}/users`, user, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((user) => {
           resolve(user);
         });
@@ -59,6 +72,10 @@ export class UsersService {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
       this.http.delete(`${this.config.apiEndpoint}/users/${id}`, {search: params})
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve({});
         });
@@ -71,6 +88,10 @@ export class UsersService {
       params.append('token', this.authService.token);
       this.http.put(`${this.config.apiEndpoint}/users/changeRole?userId=${userId}&roleId=${roleId}`, {}, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((user) => {
           resolve(user);
         });
@@ -83,6 +104,10 @@ export class UsersService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/users/${id}`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((user) => {
           resolve(user);
         });
@@ -96,6 +121,10 @@ export class UsersService {
       params.append('password', password);
       this.http.put(`${this.config.apiEndpoint}/users/${userId}`, {}, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((user) => {
           resolve(user);
         });

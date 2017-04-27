@@ -43,7 +43,21 @@ export class ScheduleComponent implements AfterViewInit{
             this.scheduleService.fetchPupilSchedule(pupil.classId)
               .then(schedule => {
                 this.schedule = this.divideScheduleOnDays(schedule);
+              })
+              .catch((err) => {
+                if(err.status === 500) {
+                  this.errorMessage = 'Извините, ошибка на сервере';
+                } else {
+                  this.errorMessage = err;
+                }
               });
+          })
+          .catch((err) => {
+            if(err.status === 500) {
+              this.errorMessage = 'Извините, ошибка на сервере';
+            } else {
+              this.errorMessage = err;
+            }
           });
         break;
       case 'teacher':
@@ -52,6 +66,13 @@ export class ScheduleComponent implements AfterViewInit{
         this.scheduleService.fetchTeacherSchedule()
           .then(schedule => {
             this.schedule = this.divideScheduleOnDays(schedule);
+          })
+          .catch((err) => {
+            if(err.status === 500) {
+              this.errorMessage = 'Извините, ошибка на сервере';
+            } else {
+              this.errorMessage = err;
+            }
           });
         break;
       default:

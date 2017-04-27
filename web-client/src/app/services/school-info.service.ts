@@ -42,6 +42,10 @@ export class SchoolInfoService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/lessons`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          this.timesSubject.next([]);
+          return Observable.throw(err);
+        })
         .subscribe((lessons) => {
           this.timesSubject.next(lessons);
           resolve(lessons);
@@ -55,6 +59,10 @@ export class SchoolInfoService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/terms/current`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          this.timesSubject.next(null);
+          return Observable.throw(err);
+        })
         .subscribe((term) => {
           this.termSubject.next(term);
           resolve(term);
@@ -67,6 +75,10 @@ export class SchoolInfoService {
     params.append('token', this.authService.token);
     this.http.get(`${this.config.apiEndpoint}/terms`, {search: params})
       .map(res => res.json())
+      .catch((err) => {
+        this.timesSubject.next([]);
+        return Observable.throw(err);
+      })
       .subscribe((terms) => {
         this.termsSubject.next(terms);
       });
@@ -78,6 +90,10 @@ export class SchoolInfoService {
       params.append('token', this.authService.token);
       this.http.put(`${this.config.apiEndpoint}/terms`, term, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((term) => {
           resolve(term);
         });
@@ -90,6 +106,10 @@ export class SchoolInfoService {
       params.append('token', this.authService.token);
       this.http.put(`${this.config.apiEndpoint}/lessons`, lesson, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((lesson) => {
           resolve(lesson);
         });

@@ -1,0 +1,13 @@
+.subject-link {
+  display: block;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  width: 60px;
+  height: 60px;
+}
+
+.td-subject-link {
+  padding: 0;
+  vertical-align: middle;
+}

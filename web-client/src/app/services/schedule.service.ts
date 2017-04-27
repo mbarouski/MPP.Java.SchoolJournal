@@ -22,6 +22,10 @@ export class ScheduleService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/schedule/class/${classId}`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((schedule) => {
           resolve(schedule);
         });
@@ -34,6 +38,10 @@ export class ScheduleService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/schedule/${id}`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((subject) => {
           resolve(subject);
         });
@@ -46,6 +54,10 @@ export class ScheduleService {
         .map(res => {
           return res.json();
         })
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve(data);
         });
@@ -57,6 +69,10 @@ export class ScheduleService {
       return this.http.put(`${this.config.apiEndpoint}/schedule?token=${this.authService.token}`, subject,
                               HttpUtil.REQUEST_OPTIONS_WITH_CONTENT_TYPE_JSON)
         .map(response => response.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve(data);
         });
@@ -69,11 +85,13 @@ export class ScheduleService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/schedule/teacher`, {search: params})
         .map(res => {
-
           return res.json();
         })
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((schedule) => {
-
           resolve(schedule);
         });
     });
@@ -85,6 +103,10 @@ export class ScheduleService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/schedule`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          this.scheduleSubject.next([]);
+          return Observable.throw(err);
+        })
         .subscribe((schedule) => {
           this.scheduleSubject.next(schedule);
           resolve(schedule);
@@ -97,6 +119,10 @@ export class ScheduleService {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
       this.http.delete(`${this.config.apiEndpoint}/schedule/${id}`, {search: params})
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((response) => {
           resolve({});
         });
@@ -112,6 +138,10 @@ export class ScheduleService {
       params.append('subjectId', subjectId);
       this.http.get(`${this.config.apiEndpoint}/schedule`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((subjects) => {
           resolve(subjects);
         });

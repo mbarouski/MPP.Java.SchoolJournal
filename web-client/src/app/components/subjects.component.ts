@@ -107,11 +107,25 @@ export class SubjectsComponent implements AfterViewInit{
       this.subjectsService.updateSubject(this.currentSubject)
         .then(subject => {
           this.restoreState();
+        })
+        .catch((err) => {
+          if(err.status === 500) {
+            this.errorMessage = 'Извините, ошибка на сервере';
+          } else {
+            this.errorMessage = err;
+          }
         });
     } else {
       this.subjectsService.addSubject(this.currentSubject)
         .then(subject => {
           this.restoreState();
+        })
+        .catch((err) => {
+          if(err.status === 500) {
+            this.errorMessage = 'Извините, ошибка на сервере';
+          } else {
+            this.errorMessage = err;
+          }
         });
     }
   }
@@ -120,6 +134,13 @@ export class SubjectsComponent implements AfterViewInit{
     this.subjectsService.deleteSubject(this.selectedSubject.subjectId)
       .then(() => {
         this.restoreState();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 

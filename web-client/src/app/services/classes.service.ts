@@ -24,6 +24,10 @@ export class ClassesService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/classes`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((classes) => {
           this.classes = classes;
           this.classesSubject.next(classes);
@@ -38,6 +42,10 @@ export class ClassesService {
       params.append('token', this.authService.token);
       this.http.post(`${this.config.apiEndpoint}/classes`, clazz, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((clazz) => {
           resolve(clazz);
         });
@@ -49,6 +57,10 @@ export class ClassesService {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
       this.http.delete(`${this.config.apiEndpoint}/classes/${classId}`, {search: params})
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve({});
         });

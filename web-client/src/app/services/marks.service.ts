@@ -26,6 +26,10 @@ export class MarksService {
       params.append('classId', classId);
       this.http.get(`${this.config.apiEndpoint}/marks`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((marks) => {
           this.marksSubject.next(marks);
           resolve(marks);
@@ -39,6 +43,10 @@ export class MarksService {
       params.append('token', this.authService.token);
       this.http.post(`${this.config.apiEndpoint}/marks`, mark, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((mark) => {
           resolve(mark);
         });
@@ -50,6 +58,10 @@ export class MarksService {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
       this.http.delete(`${this.config.apiEndpoint}/marks/${markId}`, {search: params})
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve({});
         });

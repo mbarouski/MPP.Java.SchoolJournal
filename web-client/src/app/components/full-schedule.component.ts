@@ -124,6 +124,13 @@ export class FullScheduleComponent implements AfterViewInit{
       .then(() => {
         this.cellForEdit.removeClass('htooltip');
         this.cellForEdit.empty();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 
@@ -133,6 +140,13 @@ export class FullScheduleComponent implements AfterViewInit{
       .then((data) => {
         this.closeSubjectModal();
         this.loadSchedule();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 

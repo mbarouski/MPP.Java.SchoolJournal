@@ -75,6 +75,7 @@ export class ClassesComponent implements AfterViewInit{
   ngAfterViewInit() {
     if(!this.authService.isLogged()) this.router.navigate(['/login']);
     this.restoreState();
+    this.errorMessage = '';
   }
 
   getClassById(id) {
@@ -88,7 +89,14 @@ export class ClassesComponent implements AfterViewInit{
     this.pupilsService.fetchPupilsByClass(classId)
       .then((pupils:any) => {
         this.pupils = pupils;
-      });
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
+      })
   }
 
   getPupilById(id) {
@@ -117,6 +125,13 @@ export class ClassesComponent implements AfterViewInit{
       .then((pupil) => {
         this.selectClass(this.selectedClass.classId);
         this.pupilsService.fetchPupilsWithoutClass();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 
@@ -165,6 +180,13 @@ export class ClassesComponent implements AfterViewInit{
     this.classesService.createClass(this.currentClass)
       .then(clazz => {
         this.restoreState();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 
@@ -188,6 +210,13 @@ export class ClassesComponent implements AfterViewInit{
     this.classesService.deleteClass(this.selectedClass.classId)
       .then(() => {
         this.restoreState();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 
@@ -222,6 +251,13 @@ export class ClassesComponent implements AfterViewInit{
         this.restoreState();
         this.closeClassForPupilModal();
         this.closeClassForPupilModal();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 
@@ -262,6 +298,13 @@ export class ClassesComponent implements AfterViewInit{
     this.teachersService.setAsClassTeacher(this.classTeacher, this.selectedClass.classId)
       .then(() => {
         this.restoreState();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 

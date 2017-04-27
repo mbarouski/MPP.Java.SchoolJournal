@@ -93,6 +93,13 @@ export class SchoolInfoComponent  {
       .then(term => {
         this.schoolInfoService.fetchTerms();
         this.closeModal(this.termModal);
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 
@@ -141,6 +148,13 @@ export class SchoolInfoComponent  {
       .then(lesson => {
         this.schoolInfoService.fetchLessonTimes();
         this.closeModal(this.lessonModal);
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 }

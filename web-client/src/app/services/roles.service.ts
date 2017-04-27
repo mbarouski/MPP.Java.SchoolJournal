@@ -23,6 +23,10 @@ export class RolesService {
       .map(res => {
         return res.json();
       })
+      .catch((err) => {
+        this.rolesSubject.next([]);
+        return Observable.throw(err);
+      })
       .subscribe((roles) => {
         this.rolesSubject.next(roles);
       });

@@ -88,6 +88,13 @@ export class ProfileComponent implements AfterViewInit, OnInit {
       .then(user => {
         this.user = user;
         this.loadAdditionalUserInfo();
+      })
+      .catch((err) => {
+        if(err.status === 500) {
+          this.errorMessage = 'Извините, ошибка на сервере';
+        } else {
+          this.errorMessage = err;
+        }
       });
   }
 
@@ -99,12 +106,26 @@ export class ProfileComponent implements AfterViewInit, OnInit {
         this.teachersService.fetchTeacher(this.user.userId)
           .then(teacher => {
             this.teacher = teacher;
+          })
+          .catch((err) => {
+            if(err.status === 500) {
+              this.errorMessage = 'Извините, ошибка на сервере';
+            } else {
+              this.errorMessage = err;
+            }
           });
         break;
       case 'pupil':
         this.pupilsService.fetchPupil(this.user.userId)
           .then(pupil => {
             this.pupil = pupil;
+          })
+          .catch((err) => {
+            if(err.status === 500) {
+              this.errorMessage = 'Извините, ошибка на сервере';
+            } else {
+              this.errorMessage = err;
+            }
           });
         break;
       default:

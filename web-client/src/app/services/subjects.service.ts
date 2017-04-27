@@ -1,5 +1,5 @@
 import {Injectable, Inject} from "@angular/core";
-import {ReplaySubject} from "rxjs";
+import {ReplaySubject, Observable} from "rxjs";
 import {Http, URLSearchParams} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
@@ -23,6 +23,11 @@ export class SubjectsService {
       params.append('token', this.authService.token);
       this.http.get(`${this.config.apiEndpoint}/subjects`, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          this.subjectsSubject.next([]);
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((subjects) => {
           this.subjects = subjects;
           this.subjectsSubject.next(subjects);
@@ -37,6 +42,10 @@ export class SubjectsService {
       params.append('token', this.authService.token);
       this.http.post(`${this.config.apiEndpoint}/subjects`, subject, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((subject) => {
           resolve(subject);
         });
@@ -49,6 +58,10 @@ export class SubjectsService {
       params.append('token', this.authService.token);
       this.http.put(`${this.config.apiEndpoint}/subjects`, subject, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((subject) => {
           resolve(subject);
         });
@@ -60,6 +73,10 @@ export class SubjectsService {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
       this.http.delete(`${this.config.apiEndpoint}/subjects/${subjectId}`, {search: params})
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((res) => {
           resolve({});
         });

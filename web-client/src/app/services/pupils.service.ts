@@ -23,6 +23,10 @@ export class PupilsService {
         .map(res => {
           return res.json();
         })
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((pupil) => {
           resolve(pupil);
         });
@@ -38,6 +42,10 @@ export class PupilsService {
         .map(res => {
           return res.json();
         })
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((pupils) => {
           resolve(pupils);
         });
@@ -51,6 +59,10 @@ export class PupilsService {
       this.http.get(`${this.config.apiEndpoint}/pupils/withoutClass`, {search: params})
         .map(res => {
           return res.json();
+        })
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
         })
         .subscribe((pupils) => {
           resolve(pupils);
@@ -72,6 +84,10 @@ export class PupilsService {
         .map(res => {
           return res.json();
         })
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((pupil) => {
           resolve(pupil);
         });
@@ -86,6 +102,10 @@ export class PupilsService {
       params.append('classId', classId);
       this.http.put(`${this.config.apiEndpoint}/pupils`, {}, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve({});
         });
@@ -98,6 +118,10 @@ export class PupilsService {
       params.append('token', this.authService.token);
       this.http.post(`${this.config.apiEndpoint}/pupils`, pupil, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((pupil) => {
           resolve(pupil);
         });
@@ -110,6 +134,10 @@ export class PupilsService {
       params.append('token', this.authService.token);
       this.http.put(`${this.config.apiEndpoint}/pupils`, pupil, {search: params})
         .map(res => res.json())
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((pupil) => {
           resolve(pupil);
         });
@@ -121,6 +149,10 @@ export class PupilsService {
       let params = new URLSearchParams();
       params.append('token', this.authService.token);
       this.http.delete(`${this.config.apiEndpoint}/pupils/${id}`, {search: params})
+        .catch((err) => {
+          reject(err);
+          return Observable.throw(err);
+        })
         .subscribe((data) => {
           resolve({});
         });
