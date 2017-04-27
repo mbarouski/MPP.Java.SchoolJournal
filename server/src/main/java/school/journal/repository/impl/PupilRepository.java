@@ -16,8 +16,7 @@ import java.util.List;
 public class PupilRepository extends RepositoryAbstractClass<Pupil> {
     @Override
     public Pupil create(Pupil pupil, Session session) throws RepositoryException {
-        session.save(pupil);
-        return pupil;
+        return (Pupil) session.get(Pupil.class,session.save(pupil));
     }
 
     @Override

@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.*;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.user.UserSpecificationByUserId;
 import school.journal.service.CRUDService;
 import school.journal.service.IUserService;
+import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.MD5Generator;
 import school.journal.utils.exception.ValidationException;
@@ -46,7 +48,7 @@ public class UserService extends CRUDService<User> implements IUserService {
         String password = newUser.getPassword();
         if(password == null) return;
         if (password.length() < 6) {
-            throw new ServiceException("Password is small.");
+            throw new ClassifiedServiceException(ExceptionEnum.password_is_small);
         }
         user.setPassHash(MD5Generator.generate(password));
     }
@@ -57,7 +59,17 @@ public class UserService extends CRUDService<User> implements IUserService {
         Transaction transaction = session.beginTransaction();
         try {
             validateString(user.getUsername(), "Username");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.username_not_valid);
+        }
+        try {
             validateEmail(user.getEmail());
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.email_not_valid);
+        }
+        try {
             user.setLocked((byte) 0);
             user.setRole((Role)session.get(Role.class, USER_ROLE));
             String password = generateNewPassword();
@@ -66,7 +78,7 @@ public class UserService extends CRUDService<User> implements IUserService {
             transaction.commit();
             LOGGER.info(MessageFormat.format("Password: {0}", password));
             mailService.sendMail(user.getEmail(), password);
-        } catch (RepositoryException | ValidationException exc) {
+        } catch (RepositoryException exc) {
             transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
@@ -95,8 +107,12 @@ public class UserService extends CRUDService<User> implements IUserService {
     }
 
     private void checkPassword(String password) throws ServiceException {
-        if(password == null) throw new ServiceException("Pass is null");
-        if(password.length() < 6) throw new ServiceException("Pass is short");
+        if (password == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.password_is_null);
+        }
+        if (password.length() < 6) {
+            throw new ClassifiedServiceException(ExceptionEnum.password_is_small);
+        }
     }
 
     @Override
@@ -104,7 +120,9 @@ public class UserService extends CRUDService<User> implements IUserService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         User user = (User) session.get(User.class, userId);
-        if(user == null) throw new ServiceException("User not found");
+        if (user == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.user_not_found);
+        }
         checkPassword(password);
         user.setPassHash(MD5Generator.generate(password));
         try {
@@ -137,9 +155,13 @@ public class UserService extends CRUDService<User> implements IUserService {
     @Override
     public User changeRole(int userId, int roleId, Session session) throws ServiceException {
         User user = (User) session.get(User.class, userId);
-        if(user == null) throw new ServiceException("User not found");
+        if(user == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.user_not_found);
+        }
         Role role = (Role) session.get(Role.class, roleId);
-        if(role == null) throw new ServiceException("Role not found");
+        if(role == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.role_not_found);
+        }
         if(roleId == PUPIL_ROLE) {
             deleteTeacherIfExist(userId, session);
         } else if((roleId == TEACHER_ROLE) || (roleId == DIRECTOR_OF_STUDIES_ROLE) || (roleId == DIRECTOR_ROLE)) {
@@ -163,7 +185,7 @@ public class UserService extends CRUDService<User> implements IUserService {
             Role role = (Role) session.load(Role.class, roleId);
             user.setRole(role);
         } catch (ObjectNotFoundException exc) {
-            throw new ServiceException("Role is not found");
+            throw new ClassifiedServiceException(ExceptionEnum.role_not_found);
         }
     }
 
@@ -178,7 +200,9 @@ public class UserService extends CRUDService<User> implements IUserService {
     }
 
     private int checkId(Integer id) throws ServiceException {
-        if(id == null) throw new ServiceException("Incorrect user id");
+        if(id == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.wrong_id_number);
+        }
         return id.intValue();
     }
 

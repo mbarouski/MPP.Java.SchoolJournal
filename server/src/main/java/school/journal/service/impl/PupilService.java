@@ -1,22 +1,27 @@
 package school.journal.service.impl;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.Clazz;
 import school.journal.entity.Pupil;
 import school.journal.entity.SubjectInSchedule;
 import school.journal.entity.User;
+import school.journal.entity.enums.RoleEnum;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.pupil.PupilSpecificationByClassId;
 import school.journal.repository.specification.pupil.PupilSpecificationByPupilId;
 import school.journal.service.CRUDService;
 import school.journal.service.IPupilService;
+import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
@@ -40,7 +45,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
             validateId(clazzId, "Class");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_has_wrong_class);
         }
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -64,9 +69,13 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Pupil pupil = (Pupil)session.get(Pupil.class, pupilId);
-        if(pupil == null) throw new ServiceException("Pupil not found");
+        if(pupil == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_not_found);
+        }
         Clazz clazz = (Clazz)session.get(Clazz.class, classId);
-        if(clazz == null) throw new ServiceException("Class not found");
+        if(clazz == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_has_wrong_class);
+        }
         pupil.setClassId(classId);
         try {
             repository.update(pupil, session);
@@ -86,7 +95,9 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Pupil pupil = (Pupil)session.get(Pupil.class, pupilId);
-        if(pupil == null) throw new ServiceException("Pupil not found");
+        if (pupil == null) {
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_not_found);
+        }
         pupil.setClassId(null);
         try {
             repository.update(pupil, session);
@@ -182,7 +193,7 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     public List<Pupil> getPupilsWithoutClass() throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        List<Pupil> pupils = Collections.EMPTY_LIST;
+        List<Pupil> pupils;
         try {
             pupils = session.createQuery(" from Pupil as p where p.classId = null").list();
         }catch (Exception exc){
@@ -227,15 +238,35 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     private void checkPupilBeforeCreate(Pupil pupil,Session session) throws ServiceException {
         try {
             checkClassId(pupil, pupil.getClassId(), session);
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_has_wrong_class);
+        }
+        try {
             validateString(pupil.getFirstName(), "First Name");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_has_wrong_first_name);
+        }
+        try {
             validateString(pupil.getLastName(), "Last Name");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_has_wrong_last_name);
+        }
+        try {
             validateNullableString(pupil.getPathronymic(), "Patronymic");
+        } catch (ValidationException exc) {
+            LOGGER.error(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_has_wrong_patronymic);
+        }
+        try {
             if (pupil.getPhoneNumber() != null) {
                 validatePhone(pupil.getPhoneNumber());
             }
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ServiceException(exc);
+            throw new ClassifiedServiceException(ExceptionEnum.pupil_has_wrong_phone);
         }
     }
 
