@@ -7,24 +7,24 @@ import {TeachersService} from "../services/teachers.service";
 export class DayTimePipe implements PipeTransform {
   constructor(private schoolInfoService: SchoolInfoService) {}
 
-  transform(value, args:string[]) : any {
-    let keys = [];
-    DAYS.forEach(day => {
-      this.schoolInfoService.timesForSubjects.forEach(time => {
-        keys.push({ day, time });
-      });
-    });
-    return keys;
-  }
-
   // transform(value, args:string[]) : any {
   //   let keys = [];
-  //   if(!value) return keys;
   //   DAYS.forEach(day => {
-  //     value.forEach(time => {
+  //     this.schoolInfoService.timesForSubjects.forEach(time => {
   //       keys.push({ day, time });
   //     });
   //   });
   //   return keys;
   // }
+
+  transform(value, args:string[]) : any {
+    let keys = [];
+    if(!value) return keys;
+    DAYS.forEach(day => {
+      value.forEach(time => {
+        keys.push({ day, time });
+      });
+    });
+    return keys;
+  }
 }

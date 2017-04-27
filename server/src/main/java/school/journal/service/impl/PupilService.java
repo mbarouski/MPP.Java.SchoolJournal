@@ -195,11 +195,8 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
         Transaction transaction = session.beginTransaction();
         List<Pupil> pupils;
         try {
-            Criteria criteria = session.createCriteria(Pupil.class);
-            criteria.add(Restrictions.isNull("classId"));
-            pupils = criteria.list();
-            transaction.commit();
-        } catch (Exception exc) {
+            pupils = session.createQuery(" from Pupil as p where p.classId = null").list();
+        }catch (Exception exc){
             LOGGER.error(exc);
             throw new ServiceException(exc);
         }

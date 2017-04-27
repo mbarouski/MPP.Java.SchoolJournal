@@ -1,0 +1,23 @@
+.time-form, .date-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.time-picker-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.date-picker-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+@media(max-width: 700px) {
+  .date-picker-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

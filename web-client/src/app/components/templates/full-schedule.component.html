@@ -2,6 +2,9 @@
   <div class="row">
     <div class="col-md-12 col-md-offset-0">
       <h1>Полное расписание</h1>
+      <div class="alert alert-success" role="alert">
+        <p>Для добавления, удаления, редактирования занятия нажмите правой кнопкой мыши по ячейке в таблице.</p>
+      </div>
       <div class="scroll-wrapper">
         <table class="table table-bordered schedule-table">
           <thead>
@@ -69,39 +72,60 @@
       </div>
       <div class="modal-body">
         <form>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <div>{{errorMessage}}</div>
+          </div>
           <div class="form-group">
             <label>Предмет</label>
             <select class="form-control" [(ngModel)]="currentSubject.subjectId" name="subject">
               <option *ngFor="let subject of subjects" value="{{subject.subjectId}}">{{subject.name}}</option>
             </select>
+            <div *ngIf="validationError.subject.status" class="alert alert-danger">
+              <div>{{validationError.subject.message}}</div>
+            </div>
           </div>
           <div class="form-group">
             <label>Класс</label>
             <select class="form-control" [(ngModel)]="currentSubject.clazzId" name="clazz">
               <option *ngFor="let clazz of classes" value="{{clazz.classId}}">{{clazz.number}} {{clazz.letterMark}}</option>
             </select>
+            <div *ngIf="validationError.class.status" class="alert alert-danger">
+              <div>{{validationError.class.message}}</div>
+            </div>
           </div>
           <div class="form-group">
             <label>Учитель</label>
             <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.teacherId" name="teacher">
               <option *ngFor="let teacher of teachers" value="{{teacher.userId}}">{{teachersService.getTeacherFullName(teacher)}}</option>
             </select>
+            <div *ngIf="validationError.teacher.status" class="alert alert-danger">
+              <div>{{validationError.teacher.message}}</div>
+            </div>
           </div>
           <div class="form-group">
             <label>Место проведения</label>
             <input type="text" class="form-control" [(ngModel)]="currentSubject.place" name="place">
+            <div *ngIf="validationError.place.status" class="alert alert-danger">
+              <div>{{validationError.place.message}}</div>
+            </div>
           </div>
           <div class="form-group">
             <label>День</label>
             <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.dayOfWeek" name="day">
               <option *ngFor="let day of days" value="{{day.short}}">{{day.rus}}</option>
             </select>
+            <div *ngIf="validationError.day.status" class="alert alert-danger">
+              <div>{{validationError.day.message}}</div>
+            </div>
           </div>
           <div class="form-group">
             <label>Время начала</label>
             <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.time" name="time">
               <option *ngFor="let time of times" value="{{time}}">{{time}}</option>
             </select>
+            <div *ngIf="validationError.time.status" class="alert alert-danger">
+              <div>{{validationError.time.message}}</div>
+            </div>
           </div>
           <button type="submit" class="btn btn-default" (click)="onSubmit()">Готово</button>
         </form>

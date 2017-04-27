@@ -17,6 +17,19 @@ export class SubjectsComponent implements AfterViewInit{
   currentSubject: Subject;
   isEdit: boolean;
 
+  validationError = {
+    name: {
+      status: false,
+      message: '',
+    },
+    description: {
+      status: false,
+      message: '',
+    },
+  };
+
+  errorMessage = '';
+
   @ViewChild('subjectModal') public subjectModal: ModalDirective;
 
   constructor(private authService: AuthService,
@@ -65,7 +78,31 @@ export class SubjectsComponent implements AfterViewInit{
     this.subjectsService.fetchSubjects();
   }
 
+  validateSubject() {
+    const name = this.currentSubject.name;
+    const description = this.currentSubject.description;
+    if(!name || (name && name.length < 2)) {
+      this.validationError.name.status = true;
+      this.validationError.name.message = 'Название предмета не менее двух символов';
+    } else {
+      this.validationError.name.status = false;
+    }
+    if(!description) {
+      this.validationError.description.status = true;
+      this.validationError.description.message = 'Введите описание';
+    } else {
+      this.validationError.description.status = false;
+    }
+  }
+
+  isSubjectValid() {
+    return !this.validationError.name.status &&
+        !this.validationError.description.status;
+  }
+
   onSubjectFormSubmit() {
+    this.validateSubject();
+    if(!this.isSubjectValid()) return;
     if(this.isEdit) {
       this.subjectsService.updateSubject(this.currentSubject)
         .then(subject => {

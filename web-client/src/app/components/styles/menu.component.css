@@ -1,0 +1,30 @@
+.quote {
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.2);
+  margin: 0;
+  padding: 10px;
+  display: inline-block;
+}
+
+.main-header {
+  background: fixed #6f412e url(../../../images/bg.jpg) no-repeat top;
+  background-size: 100%;
+  width: 100%;
+  min-height: 100px;
+  margin: 0;
+  color: #fff;
+}
+
+.header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-wrapper h1 {
+  color: white;
+}
+
+.active-link {
+  color: white !important;
+}

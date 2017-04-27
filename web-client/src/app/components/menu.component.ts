@@ -11,11 +11,16 @@ import {Router} from "@angular/router";
 export class MenuComponent {
   isCollapsed: Boolean = true;
   username: string;
+  roles = ['user', 'pupil', 'teacher', 'director_of_studies', 'director'];
 
   constructor(private authService: AuthService, private router: Router) {
     this.authService.userSubject.subscribe(user => {
       this.username = user ? user.username : null;
     });
+  }
+
+  hasNeedLevel(role) {
+    return this.roles.indexOf(role) <= this.roles.indexOf(this.authService.role);
   }
 
   onLogoutClick(e) {
