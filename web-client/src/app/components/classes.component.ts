@@ -14,6 +14,7 @@ import {Class} from "../models/Class";
   selector: 'classes-component',
   templateUrl: './templates/classes.component.html',
 })
+
 export class ClassesComponent implements AfterViewInit{
   selectedClass: any;
   selectedPupil: any;
@@ -34,6 +35,14 @@ export class ClassesComponent implements AfterViewInit{
       message: '',
     },
     letterMark: {
+      status: false,
+      message: '',
+    },
+    classId: {
+      status: false,
+      message: '',
+    },
+    classTeacher: {
       status: false,
       message: '',
     },
@@ -113,6 +122,7 @@ export class ClassesComponent implements AfterViewInit{
 
   openModalForAddClass() {
     this.currentClass = new Class(0);
+    this.currentClass.letterMark = '';
     this.classModal.show();
   }
 
@@ -124,6 +134,24 @@ export class ClassesComponent implements AfterViewInit{
   validateNewClassInfo() {
     const number = this.currentClass.number;
     const letterMark = this.currentClass.letterMark;
+    if(!number) {
+      this.validationError.number.status = true;
+      this.validationError.number.message = 'Введите номер класса';
+    } else if(!/[1-9]{1}|10|11/g.test(number)) {
+      this.validationError.number.status = true;
+      this.validationError.number.message = 'Классы с 1-го по 11-ый';
+    } else {
+      this.validationError.number.status = false;
+    }
+    if(letterMark && letterMark.length > 1) {
+      this.validationError.letterMark.status = true;
+      this.validationError.letterMark.message = 'Отметка класса состоит из одного знака';
+    } else if(!/^[А-Яа-я']{0,1}$/g.test(letterMark)) {
+      this.validationError.letterMark.status = true;
+      this.validationError.letterMark.message = 'Отметка класса - это одна большая кириллическая буква либо штрих "\'"';
+    } else {
+      this.validationError.letterMark.status = false;
+    }
   }
 
   isNewClassInfoValid() {
@@ -168,7 +196,26 @@ export class ClassesComponent implements AfterViewInit{
     return teacher ? this.teachersService.getTeacherFullName(teacher) : 'Не назначен'
   }
 
+  validateClassForPupil() {
+    const classForPupilId = this.classForPupil.classId;
+    if(!classForPupilId) {
+      this.validationError.classId.status = true;
+      this.validationError.classId.message = 'Выберите класс';
+    } else if(!this.classes.find(clazz => clazz.classId === +classForPupilId)) {
+      this.validationError.classId.status = true;
+      this.validationError.classId.message = 'Такого класса не существует';
+    } else{
+      this.validationError.classId.status = false;
+    }
+  }
+
+  isClassForPupilValid() {
+    return !this.validationError.classId.status;
+  }
+
   onClassForPupilFormSubmit() {
+    this.validateClassForPupil();
+    if(!this.isClassForPupilValid()) return;
     if(!this.selectedPupilWithoutClass && !this.classForPupil.classId) return;
     this.pupilsService.movePupilToAnotherClass(this.selectedPupilWithoutClass.userId, +this.classForPupil.classId)
       .then(() => {
@@ -192,7 +239,26 @@ export class ClassesComponent implements AfterViewInit{
     this.classTeacherModal.show();
   }
 
+  validateClassTeacher() {
+    const classTeacherId = this.classTeacher;
+    if(!classTeacherId || classTeacherId == -1) {
+      this.validationError.classTeacher.status = true;
+      this.validationError.classTeacher.message = 'Выберите классного руководителя';
+    } else if(!this.teachers.find(teacher => teacher.userId === +classTeacherId)) {
+      this.validationError.classTeacher.status = true;
+      this.validationError.classTeacher.message = 'Нет такого учителя';
+    } else{
+      this.validationError.classTeacher.status = false;
+    }
+  }
+
+  isClassTeacherValid() {
+    return !this.validationError.classTeacher.status;
+  }
+
   onClassTeacherFormSubmit() {
+    this.validateClassTeacher();
+    if(!this.isClassTeacherValid()) return;
     this.teachersService.setAsClassTeacher(this.classTeacher, this.selectedClass.classId)
       .then(() => {
         this.restoreState();

@@ -4,7 +4,6 @@ const ROLES = {
   'teacher': 'Учитель',
   'director_of_studies': 'Завуч',
   'director': 'Директор',
-  'admin': 'Администратор',
 };
 
 export default ROLES;

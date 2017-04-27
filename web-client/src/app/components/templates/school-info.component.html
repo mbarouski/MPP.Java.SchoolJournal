@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8 col-md-offset-2" *ngIf="terms">
-        <div class="actions start">
+        <div *ngIf="isAvailable()" class="actions start">
           <button [disabled]="!selectedTerm" class="btn btn-success" (click)="openTermModal()">Редактировать четверть</button>
           <button [disabled]="!selectedLesson" class="btn btn-success" (click)="openLessonModal()">Редактировать урок</button>
         </div>
@@ -48,9 +48,20 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
-          <timepicker [(ngModel)]="startTime" [showMeridian]="false" name="startTime" ></timepicker>
-          <timepicker [(ngModel)]="endTime" [showMeridian]="false" name="endTime"></timepicker>
+        <form class="time-form">
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <div>{{errorMessage}}</div>
+          </div>
+          <div class="time-picker-wrapper">
+            <div>
+              <label>Начало</label>
+              <timepicker [(ngModel)]="startTime" [showMeridian]="false" name="startTime" ></timepicker>
+            </div>
+            <div>
+              <label>Конец</label>
+              <timepicker [(ngModel)]="endTime" [showMeridian]="false" name="endTime"></timepicker>
+            </div>
+          </div>
           <button type="submit" class="btn btn-default" (click)="submitForLessonForm()">Готово</button>
         </form>
       </div>
@@ -60,7 +71,7 @@
 
 <div class="modal fade" bsModal #termModal="bs-modal" [config]="{backdrop: 'static'}"
      tabindex="-1" role="dialog" aria-labelledby="termForm" aria-hidden="true">
-  <div *ngIf="currentTerm" class="modal-dialog modal-sm">
+  <div *ngIf="currentTerm" class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Четверть</h4>
@@ -69,9 +80,21 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
-          <datepicker [(ngModel)]="startDate" name="start"></datepicker>
-          <datepicker [(ngModel)]="endDate" name="end"></datepicker>
+        <form class="date-form">
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <div>{{errorMessage}}</div>
+          </div>
+          <div class="date-picker-wrapper">
+            <div>
+              <label>Начало</label>
+              <datepicker [(ngModel)]="startDate" name="start"></datepicker>
+            </div>
+            <div>
+              <label>Начало</label>
+              <datepicker [(ngModel)]="endDate" name="end"></datepicker>
+            </div>
+          </div>
+
           <button type="submit" class="btn btn-default" (click)="submitForTermForm()">Готово</button>
         </form>
       </div>

@@ -33,6 +33,24 @@ export class FullScheduleComponent implements AfterViewInit{
   subjects = [];
   isEdit: boolean;
 
+  validationError = Object.assign({}, ...[
+    'subject',
+    'class',
+    'teacher',
+    'place',
+    'day',
+    'time'
+  ].map((field) => {
+    return {
+      [field]: {
+        status: false,
+        message: '',
+      },
+    };
+  }));
+
+  errorMessage = '';
+
   @ViewChild(ContextMenuComponent) public addMenu: ContextMenuComponent;
   @ViewChild(ContextMenuComponent) public deleteMenu: ContextMenuComponent;
   @ViewChild('subjectModal') public subjectModal: ModalDirective;
@@ -45,8 +63,8 @@ export class FullScheduleComponent implements AfterViewInit{
               private teachersService: TeachersService,
               private classesService: ClassesService,
               private subjectsService: SubjectsService) {
-    this.times = schoolInfoService.timesForSubjects;
-    // schoolInfoService.timesSubject.subscribe(times => this.times = times.map(time => time.startTime));
+    // this.times = schoolInfoService.timesForSubjects;
+    schoolInfoService.timesSubject.subscribe(times => this.times = times.map(time => this.decorateTime(time.startTime)));
     teachersService.teachersSubject.subscribe(teachers => {
       this.teachers = teachers;
     });
@@ -158,7 +176,103 @@ export class FullScheduleComponent implements AfterViewInit{
     this.subjectModal.show();
   }
 
+  validateSubject() {
+    this.validateTeacher();
+    this.validateSubjectItem();
+    this.validateClass();
+    this.validatePlace();
+    this.validateDay();
+    this.validateTime();
+  }
+
+  validatePlace() {
+    const place = this.currentSubject.place;
+    if(!place) {
+      this.validationError.place.status = true;
+      this.validationError.place.message = 'Укажите место проведения урока';
+    } else {
+      this.validationError.place.status = false;
+    }
+  }
+
+  validateTime() {
+    const time = this.currentSubject.time;
+    if(!time) {
+      this.validationError.time.status = true;
+      this.validationError.time.message = 'Укажите время начала занятия';
+    } else if(!this.times.includes(time)) {
+      this.validationError.time.status = true;
+      this.validationError.time.message = 'В данное время не начинается урок';
+    } else {
+      this.validationError.time.status = false;
+    }
+  }
+
+  validateDay() {
+    const day = this.currentSubject.dayOfWeek;
+    if(!day) {
+      this.validationError.day.status = true;
+      this.validationError.day.message = 'Укажите день недели';
+    } else if(!this.days.find(d => d.short === day)) {
+      this.validationError.day.status = true;
+      this.validationError.day.message = 'В данный день не проводятся уроки';
+    } else {
+      this.validationError.day.status = false;
+    }
+  }
+
+  validateTeacher() {
+    const teacherId = this.currentSubject.teacherId;
+    if(!teacherId) {
+      this.validationError.teacher.status = true;
+      this.validationError.teacher.message = 'Укажите учителя';
+    } else if(!this.teachers.find(t => t.userId === +teacherId)) {
+      this.validationError.teacher.status = true;
+      this.validationError.teacher.message = 'Учитель не найден';
+    } else {
+      this.validationError.teacher.status = false;
+    }
+  }
+
+  validateSubjectItem() {
+    const subjectId = this.currentSubject.subjectId;
+    if(!subjectId) {
+      this.validationError.subject.status = true;
+      this.validationError.subject.message = 'Укажите предмет';
+    } else if(!this.subjects.find(s => s.subjectId === +subjectId)) {
+      this.validationError.subject.status = true;
+      this.validationError.subject.message = 'Предмет не найден';
+    } else {
+      this.validationError.subject.status = false;
+    }
+  }
+
+  validateClass() {
+    const classId = this.currentSubject.clazzId;
+    if(!classId) {
+      this.validationError.class.status = true;
+      this.validationError.class.message = 'Укажите класс';
+    } else if(!this.classes.find(c => c.classId === +classId)) {
+      this.validationError.class.status = true;
+      this.validationError.class.message = 'Класс не найден';
+    } else {
+      this.validationError.class.status = false;
+    }
+  }
+
+  isSubjectValid() {
+    return !this.validationError.day.status &&
+      !this.validationError.subject.status &&
+      !this.validationError.class.status &&
+      !this.validationError.teacher.status &&
+      !this.validationError.place.status &&
+      !this.validationError.time.status;
+  }
+
   onSubmit() {
+    this.validateSubject();
+    if(!this.isSubjectValid()) return;
+
     if (this.isEdit) {
       this.saveSubject(this.currentSubject);
     } else {

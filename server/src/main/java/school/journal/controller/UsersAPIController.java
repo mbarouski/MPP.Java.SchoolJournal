@@ -59,14 +59,14 @@ public class UsersAPIController extends BaseController<User> {
 
     @GetMapping(value = "/{userId}")
     @ResponseBody
-    @Secured(RoleEnum.PUPIL)
+    @Secured(RoleEnum.USER)
     public ResponseEntity getOne(HttpServletRequest req, @PathVariable("userId") int userId) {
         return getOne(userService::getOne, userId, "Can't get user", LOGGER);
     }
 
     @PutMapping(value = "/{userId}", params = {"password"})
     @ResponseBody
-    @Secured(RoleEnum.PUPIL)
+    @Secured(RoleEnum.USER)
     public ResponseEntity changePassword(HttpServletRequest req, @PathVariable("userId") int userId,
                                          @RequestParam("password") String password) {
         return doResponse(userService::changePassword, userId, password, "Can't change password of user", LOGGER);

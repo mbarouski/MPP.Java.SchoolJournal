@@ -63,9 +63,9 @@ export class LoginComponent implements AfterViewInit{
     if(!password) {
       this.validationError.password.status = true;
       this.validationError.password.message = 'Введите пароль';
-    } else if(password.length < 6 || password.length > 24) {
+    } else if(password.length < 6 || password.length > 60) {
       this.validationError.password.status = true;
-      this.validationError.password.message = 'Пароль должен иметь не менее 6 и не более 24 символов';
+      this.validationError.password.message = 'Пароль должен иметь не менее 6 и не более 60 символов';
     } else {
       this.validationError.password.status = false;
     }

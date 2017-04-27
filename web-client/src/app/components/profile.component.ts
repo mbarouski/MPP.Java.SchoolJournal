@@ -229,8 +229,12 @@ export class ProfileComponent implements AfterViewInit, OnInit {
     this.passwordModal.hide();
   }
 
+  isEditableProfile() {
+    return ['pupil', 'teacher', 'director_of_studies', 'director'].includes(this.user.role.name);
+  }
+
   openEditModal() {
-    let personInfo = this.user.role == 'pupil' ? this.pupil : this.teacher;
+    let personInfo = this.user.role.name === 'pupil' && this.user.role.name !== 'user' ? this.pupil : this.teacher;
     this.currentTeacherPupil = new TeacherPupil(this.user.userId);
     this.currentTeacherPupil.firstName = personInfo.firstName;
     this.currentTeacherPupil.pathronymic = personInfo.pathronymic;
@@ -244,6 +248,9 @@ export class ProfileComponent implements AfterViewInit, OnInit {
   onEditFormSubmit() {
     this.validateProfileData();
     if(!this.isProfileDataValid()) return;
+    if(this.user.role.name === 'pupil') {
+      this.currentTeacherPupil.characteristic = this.currentTeacherPupil.description;
+    }
     let serviceMethod = this.user.role.name === 'pupil'
       ? this.pupilsService.updatePupil.bind(this.pupilsService)
       : this.teachersService.updateTeacher.bind(this.teachersService);

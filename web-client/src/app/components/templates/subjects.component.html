@@ -3,6 +3,11 @@
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <h1>Предметы</h1>
+        <div class="actions start">
+          <!--<button href="#" class="btn btn-success" [disabled]="!selectedSubject" (click)="openSubjectModalForEdit()">Редактировать</button>-->
+          <!--<button href="#" class="btn btn-danger" [disabled]="!selectedSubject" (click)="deleteSubject()">Удалить</button>-->
+          <button href="#" class="btn btn-success" (click)="openSubjectModalForAdd()">Добавить</button>
+        </div>
         <table class="table">
           <tbody>
           <tr *ngFor="let subject of subjects" (click)="selectSubject(subject.subjectId)" [class.selected]="selectedSubject && subject.subjectId == selectedSubject.subjectId">
@@ -12,14 +17,13 @@
                 <p class="small-text">{{subject.description}}</p>
               </div>
             </td>
+            <td>
+              <button href="#" class="btn btn-success action-span" (click)="selectSubject(subject.subjectId); openSubjectModalForEdit()"><i class="glyphicon glyphicon-pencil"></i> Редактировать</button>
+              <button href="#" class="btn btn-danger action-span" (click)="selectSubject(subject.subjectId); deleteSubject()"><i class="glyphicon glyphicon-remove"></i></button>
+            </td>
           </tr>
           </tbody>
         </table>
-        <div class="actions start">
-          <button href="#" class="btn btn-success" [disabled]="!selectedSubject" (click)="openSubjectModalForEdit()">Редактировать</button>
-          <button href="#" class="btn btn-danger" [disabled]="!selectedSubject" (click)="deleteSubject()">Удалить</button>
-          <button href="#" class="btn btn-success" (click)="openSubjectModalForAdd()">Добавить</button>
-        </div>
       </div>
     </div>
   </div>
@@ -39,15 +43,24 @@
       <div class="modal-body">
         <form>
 
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <div>{{errorMessage}}</div>
+          </div>
 
           <div class="form-group">
             <label>Название</label>
             <input type="text" class="form-control" [(ngModel)]="currentSubject.name" name="name">
+            <div *ngIf="validationError.name.status" class="alert alert-danger">
+              <div>{{validationError.name.message}}</div>
+            </div>
           </div>
 
           <div class="form-group">
             <label>Описание</label>
             <textarea class="form-control" rows="3" [(ngModel)]="currentSubject.description" name="description"></textarea>
+            <div *ngIf="validationError.description.status" class="alert alert-danger">
+              <div>{{validationError.description.message}}</div>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-default" (click)="onSubjectFormSubmit()">Готово</button>
