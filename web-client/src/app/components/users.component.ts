@@ -130,8 +130,8 @@ export class UsersComponent implements AfterViewInit{
    }
 
   isUserValid() {
-    return !this.validationError.username &&
-        !this.validationError.password;
+    return !this.validationError.username.status &&
+        !this.validationError.email.status;
   }
 
   onUserFormSubmit() {

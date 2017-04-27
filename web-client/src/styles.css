@@ -70,13 +70,13 @@ h1, h2, h3 {
   margin-top: 2px;
 }
 
-input[type='text']:focus, input[type='email']:focus  {
+input[type='text']:focus, input[type='email']:focus, input[type='password']  {
   border-color: white;
   box-shadow: none;
   border-bottom: 1px solid dodgerblue;
 }
 
-input[type='text'], input[type='email'] {
+input[type='text'], input[type='email'], input[type='password'] {
   border-radius: 0;
   border: none;
   box-shadow: none;
@@ -247,7 +247,7 @@ body {
 }
 
 table:not(.schedule-table):not(.marks) tr:hover {
-  background-color: rgba(169, 169, 169, 0.12);
+  /*background-color: rgba(169, 169, 169, 0.12);*/
   /*color: white;*/
 }
 
