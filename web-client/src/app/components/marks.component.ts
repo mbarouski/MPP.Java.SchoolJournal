@@ -154,6 +154,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
   cellForEdit: any;
 
   setCurrentMark(mark, event) {
+    if(!['director', 'director_of_studies', 'teacher'].includes(this.authService.role)) return;
     if(mark) return;
     this.cellForEdit = $(event.currentTarget);
     let currentMark = new Mark(0);

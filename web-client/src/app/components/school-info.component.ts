@@ -6,6 +6,7 @@ import {SchoolInfoService} from "../services/school-info.service";
 import {Term} from "../models/Term";
 import {Lesson} from "../models/Lesson";
 import {ModalDirective} from "ng2-bootstrap";
+import {AuthService} from "../services/auth.service";
 
 declare let moment: any;
 
@@ -46,7 +47,7 @@ export class SchoolInfoComponent  {
   @ViewChild('termModal') public termModal: ModalDirective;
   @ViewChild('lessonModal') public lessonModal: ModalDirective;
 
-  constructor(private schoolInfoService: SchoolInfoService){
+  constructor(private schoolInfoService: SchoolInfoService, private authService: AuthService){
     schoolInfoService.timesSubject.subscribe((times) => {
       this.lessons = times;
     });
@@ -93,6 +94,10 @@ export class SchoolInfoComponent  {
         this.schoolInfoService.fetchTerms();
         this.closeModal(this.termModal);
       });
+  }
+
+  isAvailable() {
+    return ['director', 'director_of_studies'].includes(this.authService.role);
   }
 
   validateTerm() {

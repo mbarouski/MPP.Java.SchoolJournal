@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-10 col-md-offset-1" *ngIf="user">
         <div class="actions start">
-          <button *ngIf="user.userId == authService.user.userId" href="#" class="btn btn-success" (click)="openEditModal()">Редактировать</button>
+          <button *ngIf="user.userId == authService.user.userId && isEditableProfile()" href="#" class="btn btn-success" (click)="openEditModal()">Редактировать</button>
           <button *ngIf="user.userId == authService.user.userId" href="#" class="btn btn-success" (click)="openPasswordModal()">Изменить пароль</button>
         </div>
         <h2>{{user.username}}</h2>

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8 col-md-offset-2" *ngIf="terms">
-        <div class="actions start">
+        <div *ngIf="isAvailable()" class="actions start">
           <button [disabled]="!selectedTerm" class="btn btn-success" (click)="openTermModal()">Редактировать четверть</button>
           <button [disabled]="!selectedLesson" class="btn btn-success" (click)="openLessonModal()">Редактировать урок</button>
         </div>

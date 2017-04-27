@@ -83,6 +83,10 @@ input[type='text'], input[type='email'], input[type='password'] {
   border-bottom: 1px solid lightgrey;
 }
 
+.form-control:focus {
+  box-shadow: none;
+}
+
 footer {
   position: absolute;
   bottom: 0;

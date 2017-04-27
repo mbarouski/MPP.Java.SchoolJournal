@@ -19,6 +19,8 @@ export class ScheduleComponent implements AfterViewInit{
   schedule: any;
   days: any;
 
+  errorMessage = '';
+
   constructor(private authService: AuthService,
               private router: Router,
               private scheduleService: ScheduleService,
@@ -29,6 +31,7 @@ export class ScheduleComponent implements AfterViewInit{
   ngAfterViewInit() {
     if(!this.authService.isLogged()) this.router.navigate(['/login']);
     this.loadSchedule();
+    this.errorMessage = '';
   }
 
   loadSchedule() {
@@ -36,6 +39,7 @@ export class ScheduleComponent implements AfterViewInit{
       case 'pupil':
         this.pupilsService.fetchPupil(this.authService.user.userId)
           .then((pupil: any) => {
+            if(!pupil.classId) return this.errorMessage = 'Вы не состоите в классе';
             this.scheduleService.fetchPupilSchedule(pupil.classId)
               .then(schedule => {
                 this.schedule = this.divideScheduleOnDays(schedule);
@@ -47,7 +51,7 @@ export class ScheduleComponent implements AfterViewInit{
       case 'director':
         this.scheduleService.fetchTeacherSchedule()
           .then(schedule => {
-
+            this.schedule = this.divideScheduleOnDays(schedule);
           });
         break;
       default:

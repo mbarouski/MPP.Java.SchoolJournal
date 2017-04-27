@@ -1,3 +1,9 @@
+<div class="container">
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <div>{{errorMessage}}</div>
+  </div>
+</div>
+
 <section *ngIf="schedule">
   <div class="container">
     <div class="row">
@@ -7,11 +13,11 @@
           <tbody>
           <tr *ngFor="let subject of schedule[day.short]">
             <td>
-              <a routerLink="/marks" class="subject-in-schedule">
+              <a routerLink="/marks/{{subject.subectInScheduleId}}" class="subject-in-schedule">
                 <strong>{{subject.subject.name}}</strong>
                 <div class="add-info-subject-in-schedule">
                   <p class="small-text">{{decorateTime(subject.beginTime)}}</p>
-                  <p class="small-text">{{subject.teacher.firstName}} {{subject.teacher.pathronymic}} {{subject.teacher.lastName}}</p>
+                  <p class="small-text">{{pupilsService.getPupilFullName(subject.teacher)}}</p>
                 </div>
                 <p class="small-text">{{subject.place}}</p>
               </a>
