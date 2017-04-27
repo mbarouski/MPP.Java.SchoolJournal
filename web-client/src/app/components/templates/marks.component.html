@@ -30,7 +30,7 @@
                 class="mark-td {{generateClass(getMarkForLessonAndPupil(lesson, pupil.userId))}}">
               <div (click)="setCurrentMark(getMarkForLessonAndPupil(lesson, pupil.userId), $event)"
                    (contextmenu)="openContextMenu($event, getMarkForLessonAndPupil(lesson, pupil.userId).markId)"
-                   class="mark-input" contenteditable>{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
+                   class="mark-input">{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
           </tr>
           </tbody>
         </table>

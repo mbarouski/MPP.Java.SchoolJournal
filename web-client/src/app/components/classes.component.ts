@@ -143,7 +143,6 @@ export class ClassesComponent implements AfterViewInit{
     } else {
       this.validationError.number.status = false;
     }
-    debugger;
     if(letterMark && letterMark.length > 1) {
       this.validationError.letterMark.status = true;
       this.validationError.letterMark.message = 'Отметка класса состоит из одного знака';
