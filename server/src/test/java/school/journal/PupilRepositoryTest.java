@@ -133,7 +133,7 @@ public class PupilRepositoryTest
         }
 
         @Test
-        public void delete_validId_deleteObject() throws Exception{
+        public void delete_validObject_deleteObject() throws Exception{
             Pupil deletedObject = new Pupil();
             PupilRepository testedRepository = factory.createPupilRepository();
             Session mockSession = factory.createMockSessionWithGet(deletedObject);

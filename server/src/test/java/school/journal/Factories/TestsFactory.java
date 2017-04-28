@@ -6,7 +6,6 @@ import org.hibernate.criterion.Restrictions;
 import org.mockito.Mockito;
 import school.journal.repository.IRepository;
 
-import java.io.Serializable;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -35,7 +34,7 @@ public class TestsFactory<T> extends BaseFactory {
     @Override
     public Session createMockSessionWithException() {
         Session session = createMockSession();
-        doThrow(HibernateException.class).when(session).get(any(Class.class),anyInt());
+        doThrow(HibernateException.class).when(session).get(any(Class.class),  anyInt());
         doThrow(HibernateException.class).when(session).save(any(Object.class));
         doThrow(HibernateException.class).when(session).update(any(Object.class));
         doThrow(HibernateException.class).when(session).delete(any(Object.class));
@@ -58,7 +57,7 @@ public class TestsFactory<T> extends BaseFactory {
     @Override
     public Session createMockSessionWithGet(Object returnedObject) {
         Session session = createMockSession();
-        when(session.get(any(Class.class),anyInt())).thenReturn(returnedObject);
+        when(session.get(any(Class.class),  anyInt())).thenReturn(returnedObject);
         return session;
     }
 

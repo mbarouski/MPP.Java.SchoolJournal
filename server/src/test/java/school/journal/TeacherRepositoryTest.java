@@ -132,7 +132,7 @@ public class TeacherRepositoryTest {
     }
 
     @Test
-    public void delete_validId_deleteObject() throws Exception{
+    public void delete_validObject_deleteObject() throws Exception{
         Teacher deletedObject = new Teacher();
         TeacherRepository testedRepository = factory.createTeacherRepository();
         Session mockSession = factory.createMockSessionWithGet(deletedObject);
