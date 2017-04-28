@@ -28,3 +28,12 @@
 .active-link {
   color: white !important;
 }
+
+
+@media(max-width: 700px) {
+  .quote {
+    /*width: 0;*/
+    /*height: 0;*/
+    display: none;
+  }
+}
