@@ -132,7 +132,7 @@ public class SubjectRepositoryTest {
     }
 
     @Test
-    public void delete_validId_deleteObject() throws Exception{
+    public void delete_validObject_deleteObject() throws Exception{
         Subject deletedObject = new Subject();
         SubjectRepository testedRepository = factory.createSubjectRepository();
         Session mockSession = factory.createMockSessionWithGet(deletedObject);

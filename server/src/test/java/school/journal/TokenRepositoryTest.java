@@ -110,7 +110,7 @@ public class TokenRepositoryTest {
     }
 
     @Test
-    public void delete_validId_deleteObject() throws Exception{
+    public void delete_validObject_deleteObject() throws Exception{
         Token deletedObject = new Token();
         TokenRepository testedRepository = factory.createTokenRepository();
         Session mockSession = factory.createMockSessionWithGet(deletedObject);

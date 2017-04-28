@@ -132,7 +132,7 @@ public class MarkRepositoryTest {
     }
 
     @Test
-    public void delete_validId_deleteObject() throws Exception {
+    public void delete_validObject_deleteObject() throws Exception {
         Mark deletedObject = new Mark();
         MarkRepository testedRepository = factory.createMarkRepository();
         Session mockSession = factory.createMockSessionWithGet(deletedObject);
