@@ -133,7 +133,7 @@ public class ClazzRepositoryTest {
     }
 
     @Test
-    public void delete_validId_deleteObject() throws Exception{
+    public void delete_validObject_deleteObject() throws Exception{
         Clazz deletedObject = new Clazz();
         ClazzRepository testedRepository = factory.createClazzRepository();
         Session mockSession = factory.createMockSessionWithGet(deletedObject);

@@ -61,7 +61,7 @@ public class ValidateServiceUtilsTest {
 
     @Test
     public void testValidateEmail_WithCorrectValue() throws Exception{
-        validateEmail("abc@g");
+        validateEmail("abc@g.com");
     }
 
     @Test(expected = ValidationException.class)
