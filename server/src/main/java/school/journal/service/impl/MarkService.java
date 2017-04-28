@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.*;
+import school.journal.entity.enums.MarkType;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.mark.MarkSpecificationByTerm;
@@ -209,6 +210,9 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_teacher);
         }
         newMark.setTeacher(teacher);
+        if(newMark.getType() == MarkType.term || newMark.getType() == MarkType.year) {
+            newMark.setDate(null);
+        }
     }
 
     private Mark prepareMarkBeforeUpdate(Mark newMark, Session session) throws ServiceException {

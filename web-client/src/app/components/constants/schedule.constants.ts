@@ -1,6 +1,6 @@
 const DAYS = [{
     short: 'mon',
-    rus: 'Понедельик'
+    rus: 'Понедельник'
   }, {
     short: 'tue',
     rus: 'Вторник'

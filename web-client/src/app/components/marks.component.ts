@@ -26,6 +26,8 @@ export class MarksComponent implements OnInit, AfterViewInit{
   subject: any = null;
   subjects = [];
   pupils = [];
+
+  currentMarkType = '';
   currentMark: Mark;
   times = [];
   lessons = [];
@@ -219,7 +221,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
     return this.marks.find(m => m.pupilId == +pupilId && m.type === 'year');
   }
 
-  setCurrentMark(mark, event) {
+  setCurrentMark(mark, event, initType) {
     if(!['director', 'director_of_studies', 'teacher'].includes(this.authService.role)) return;
     if(mark) return;
     this.cellForEdit = $(event.currentTarget);
@@ -227,7 +229,10 @@ export class MarksComponent implements OnInit, AfterViewInit{
     currentMark.subjectId = this.subject.subject.subjectId;
     currentMark.teacherId = this.subject.teacher.userId;
     currentMark.pupilId = this.getPupilByFullName($(event.currentTarget.parentElement.parentElement).children()[0].innerText.trim()).userId;
-
+    if(initType) {
+      currentMark.type = initType;
+      this.currentMarkType = initType;
+    }
     this.currentMark = currentMark;
     this.openMarkModal();
   }
@@ -258,7 +263,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
     if(type === 'absent' && value) {
       this.validationError.value.status = true;
       this.validationError.value.message = 'При данном типе оценки значение не требуется';
-    } else if(type && type !== 'absent') {
+    } else if(!type && type ! == 'absent') {
       this.validationError.value.status = true;
       this.validationError.value.message = 'Установите значение оценки';
     } else {
@@ -276,11 +281,11 @@ export class MarksComponent implements OnInit, AfterViewInit{
   submitMarkForm() {
     this.validateMarkInfo();
     if(!this.isMarkInfoValid()) return;
-
     this.currentMark.date = moment(this.selectedDate).format('YYYY-MM-DD');
     this.marksService.setMark(this.currentMark)
       .then((mark: any) => {
         this.closeMarkModal();
+        this.currentMarkType = '';
         this.currentMark = null;
         this.cellForEdit.text(mark.value);
         this.cellForEdit.addClass(this.generateClass(mark));
@@ -311,6 +316,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
 
   closeMarkModal() {
     this.markModal.hide();
+    this.currentMarkType = '';
   }
 
   openContextMenu(event, markId) {

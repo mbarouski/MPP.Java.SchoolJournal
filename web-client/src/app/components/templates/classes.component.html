@@ -48,7 +48,7 @@
               <tbody>
               <tr *ngFor="let pupil of pupilsWithoutClass" (click)="selectPupilWithoutClass(pupil.userId)" [class.selected]="selectedPupilWithoutClass && selectedPupilWithoutClass.userId === pupil.userId">
                 <td><a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a>
-                  <button class="btn btn-success action-span pull-right" (click)="selectPupilWithoutClass(pupil.userId); openClassForPupilModal()"><i class="glyphicon glyphicon-education action-i"></i> Определить в класс</button></td>
+                  <button class="btn btn-success pull-right" (click)="selectPupilWithoutClass(pupil.userId); openClassForPupilModal()"><i class="glyphicon glyphicon-education action-i"></i> Определить в класс</button></td>
               </tr>
               </tbody>
             </table>
