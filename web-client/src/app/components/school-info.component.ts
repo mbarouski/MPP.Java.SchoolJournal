@@ -69,6 +69,9 @@ export class SchoolInfoComponent  {
   }
 
   openTermModal() {
+    debugger
+    this.startDate = moment(this.selectedTerm.start, 'YYYY:MM:DD');
+    this.endDate = moment(this.selectedTerm.end, 'YYYY:MM:DD');
     this.currentTerm = new Term(this.selectedTerm.termId);
     this.currentTerm.number = this.selectedTerm.number;
     this.currentTerm.start = this.selectedTerm.start;
@@ -77,6 +80,8 @@ export class SchoolInfoComponent  {
   }
 
   openLessonModal() {
+    this.startTime = moment(this.selectedLesson.startTime, 'HH:mm:ss');
+    this.endTime = moment(this.selectedLesson.endTime, 'HH:mm:ss');
     this.currentLesson = new Lesson(this.selectedLesson.lessonId);
     this.currentLesson.number = this.selectedLesson.number;
     this.currentLesson.start = this.selectedLesson.startTime;
@@ -98,7 +103,7 @@ export class SchoolInfoComponent  {
         if(err.status === 500) {
           this.errorMessage = 'Извините, ошибка на сервере';
         } else {
-          this.errorMessage = err;
+          this.errorMessage = err._body;
         }
       });
   }
@@ -140,6 +145,7 @@ export class SchoolInfoComponent  {
   }
 
   submitForLessonForm() {
+    debugger
     this.currentLesson.startTime = moment(this.startTime).format('HH:mm:ss');
     this.currentLesson.endTime = moment(this.endTime).format('HH:mm:ss');
     this.validateLesson();
@@ -153,7 +159,7 @@ export class SchoolInfoComponent  {
         if(err.status === 500) {
           this.errorMessage = 'Извините, ошибка на сервере';
         } else {
-          this.errorMessage = err;
+          this.errorMessage = err._body;
         }
       });
   }

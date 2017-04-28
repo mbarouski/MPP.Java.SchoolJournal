@@ -112,7 +112,7 @@ export class SubjectsComponent implements AfterViewInit{
           if(err.status === 500) {
             this.errorMessage = 'Извините, ошибка на сервере';
           } else {
-            this.errorMessage = err;
+            this.errorMessage = err._body;
           }
         });
     } else {
@@ -124,7 +124,7 @@ export class SubjectsComponent implements AfterViewInit{
           if(err.status === 500) {
             this.errorMessage = 'Извините, ошибка на сервере';
           } else {
-            this.errorMessage = err;
+            this.errorMessage = err._body;
           }
         });
     }
@@ -139,7 +139,7 @@ export class SubjectsComponent implements AfterViewInit{
         if(err.status === 500) {
           this.errorMessage = 'Извините, ошибка на сервере';
         } else {
-          this.errorMessage = err;
+          this.errorMessage = err._body;
         }
       });
   }

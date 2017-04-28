@@ -145,7 +145,7 @@ export class UsersComponent implements AfterViewInit{
         if(err.status === 500) {
           this.errorMessage = 'Извините, ошибка на сервере';
         } else {
-          this.errorMessage = err;
+          this.errorMessage = err._body;
         }
       });
   }
@@ -276,7 +276,7 @@ export class UsersComponent implements AfterViewInit{
               if(err.status === 500) {
                 this.errorMessage = 'Извините, ошибка на сервере';
               } else {
-                this.errorMessage = err;
+                this.errorMessage = err._body;
               }
             });
         } else if(['teacher', 'director', 'director_of_studies'].includes(this.getRoleById(this.currentRole))) {
@@ -288,7 +288,7 @@ export class UsersComponent implements AfterViewInit{
               if(err.status === 500) {
                 this.errorMessage = 'Извините, ошибка на сервере';
               } else {
-                this.errorMessage = err;
+                this.errorMessage = err._body;
               }
             });
         } else {
@@ -299,7 +299,7 @@ export class UsersComponent implements AfterViewInit{
         if(err.status === 500) {
           this.errorMessage = 'Извините, ошибка на сервере';
         } else {
-          this.errorMessage = err;
+          this.errorMessage = err._body;
         }
       });
 
@@ -336,7 +336,7 @@ export class UsersComponent implements AfterViewInit{
         if(err.status === 500) {
           this.errorMessage = 'Извините, ошибка на сервере';
         } else {
-          this.errorMessage = err;
+          this.errorMessage = err._body;
         }
       });
   }

@@ -84,7 +84,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
                     if(err.status === 500) {
                       this.errorMessage = 'Извините, ошибка на сервере';
                     } else {
-                      this.errorMessage = err;
+                      this.errorMessage = err._body;
                     }
                   });
                 this.marksService.fetchMarksForSubjectInClass(subject.subject.subjectId, subject.clazz.classId);
@@ -93,7 +93,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
                 if(err.status === 500) {
                   this.errorMessage = 'Извините, ошибка на сервере';
                 } else {
-                  this.errorMessage = err;
+                  this.errorMessage = err._body;
                 }
               });
           }
@@ -111,7 +111,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
           if(err.status === 500) {
             this.errorMessage = 'Извините, ошибка на сервере';
           } else {
-            this.errorMessage = err;
+            this.errorMessage = err._body;
           }
         });
     });
@@ -158,7 +158,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
                 if(err.status === 500) {
                   this.errorMessage = 'Извините, ошибка на сервере';
                 } else {
-                  this.errorMessage = err;
+                  this.errorMessage = err._body;
                 }
               });
             this.marksService.fetchMarksForSubjectInClass(subject.subject.subjectId, subject.clazz.classId);
@@ -167,7 +167,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
             if(err.status === 500) {
               this.errorMessage = 'Извините, ошибка на сервере';
             } else {
-              this.errorMessage = err;
+              this.errorMessage = err._body;
             }
           });
       }
@@ -213,12 +213,20 @@ export class MarksComponent implements OnInit, AfterViewInit{
   cellForEdit: any;
 
   getMarkForTermAndPupil(term, pupilId) {
-    return this.marks.find(m => m.pupilId == +pupilId && m.type === 'term'
-      && moment(m.date).isBetween(moment(this.terms[term].start), moment(this.terms[term].end)));
+    if(!this.marks.length) return;
+    if(!this.terms.length) return;
+    return this.marks.find(m => m.pupil.userId == +pupilId && m.type === 'term'
+      && moment(m.date).isBetween(moment(this.terms[term-1].start), moment(this.terms[term-1].end)));
   }
 
   getMarkForYearAndPupil(pupilId) {
     return this.marks.find(m => m.pupilId == +pupilId && m.type === 'year');
+  }
+
+  getDate(td) {
+    const index = td.parent().index();
+    const date = this.lessons[index - 1];
+    return date;
   }
 
   setCurrentMark(mark, event, initType) {
@@ -228,6 +236,8 @@ export class MarksComponent implements OnInit, AfterViewInit{
     let currentMark = new Mark(0);
     currentMark.subjectId = this.subject.subject.subjectId;
     currentMark.teacherId = this.subject.teacher.userId;
+    const date = this.getDate(this.cellForEdit);
+    currentMark.date = date;
     currentMark.pupilId = this.getPupilByFullName($(event.currentTarget.parentElement.parentElement).children()[0].innerText.trim()).userId;
     if(initType) {
       currentMark.type = initType;
@@ -260,10 +270,10 @@ export class MarksComponent implements OnInit, AfterViewInit{
     } else {
       this.validationError.pupil.status = false;
     }
-    if(type === 'absent' && value) {
+    if(type === 'apsent' && value) {
       this.validationError.value.status = true;
       this.validationError.value.message = 'При данном типе оценки значение не требуется';
-    } else if(!type && type ! == 'absent') {
+    } else if(!type && type ! == 'apsent') {
       this.validationError.value.status = true;
       this.validationError.value.message = 'Установите значение оценки';
     } else {
@@ -281,20 +291,21 @@ export class MarksComponent implements OnInit, AfterViewInit{
   submitMarkForm() {
     this.validateMarkInfo();
     if(!this.isMarkInfoValid()) return;
-    this.currentMark.date = moment(this.selectedDate).format('YYYY-MM-DD');
+    this.currentMark.date = moment(`${this.currentMark.date}.2017`, 'DD-MM-YYYY').format('YYYY-MM-DD');
     this.marksService.setMark(this.currentMark)
       .then((mark: any) => {
         this.closeMarkModal();
         this.currentMarkType = '';
         this.currentMark = null;
-        this.cellForEdit.text(mark.value);
-        this.cellForEdit.addClass(this.generateClass(mark));
+        this.marks.push(mark);
+        // this.cellForEdit.text(mark.value);
+        // this.cellForEdit.addClass(this.generateClass(mark));
       })
       .catch((err) => {
         if(err.status === 500) {
           this.errorMessage = 'Извините, ошибка на сервере';
         } else {
-          this.errorMessage = err;
+          this.errorMessage = err._body;
         }
       });
   }
@@ -307,7 +318,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
   decorateMark(mark) {
     if(!mark) return '';
     switch(mark.type) {
-      case 'absent':
+      case 'apsent':
         return 'Н';
       default:
         return mark.value;
@@ -335,12 +346,14 @@ export class MarksComponent implements OnInit, AfterViewInit{
     this.marksService.deleteMark(event.item.markId)
       .then(() => {
         this.cellForEdit.text('');
+        const index = this.marks.indexOf(this.marks.find(mark => mark.markId == event.item.markId));
+        this.marks.splice(index, 1);
       })
       .catch((err) => {
         if(err.status === 500) {
           this.errorMessage = 'Извините, ошибка на сервере';
         } else {
-          this.errorMessage = err;
+          this.errorMessage = err._body;
         }
       });
   }
