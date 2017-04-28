@@ -17,9 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin
 @Controller
 @RequestMapping(value = "/api/classes")
-public class ClassAPIController extends BaseController<Clazz> {
-    private static Logger LOGGER = Logger.getLogger(ClassAPIController.class);
-
+public class ClassAPIController extends BaseController<Clazz>{
+    private static final Logger LOGGER = Logger.getLogger(ClassAPIController.class);
     private final ClassService classService;
 
     @Autowired

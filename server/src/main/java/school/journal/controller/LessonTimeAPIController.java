@@ -9,21 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.entity.LessonTime;
-import school.journal.entity.Term;
 import school.journal.entity.enums.RoleEnum;
-import school.journal.service.IAuthService;
 import school.journal.service.ILessonTimeService;
-import school.journal.service.ITermService;
 
 import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin
 @Controller
 @RequestMapping(value = "/api/lessons")
-public class LessonTimeAPIController extends BaseController<LessonTime> {
-
-    private static Logger LOGGER = Logger.getLogger(LessonTimeAPIController.class);
-
+public class LessonTimeAPIController extends BaseController<LessonTime>{
+    private static final Logger LOGGER = Logger.getLogger(LessonTimeAPIController.class);
     private final ILessonTimeService lessonTimeService;
 
     @Autowired

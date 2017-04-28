@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.Clazz;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.service.IClassService;
 import school.journal.service.CRUDService;
-import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
@@ -39,7 +37,6 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
 
     @Override
     public Clazz create(Clazz clazz) throws ServiceException {
-        validateClassNumber(clazz.getNumber());
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -80,7 +77,7 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
             validateId(id, "Class");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.class_not_found);
+            throw new ServiceException(exc);
         }
         Clazz clazz = new Clazz();
         clazz.setClassId(id);
@@ -93,19 +90,19 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
             validateId(id, "Class");
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.class_not_found);
+            throw new ServiceException(exc);
         }
         return super.getOne(id);
     }
 
     private void checkClassBeforeCreate(Clazz clazz) throws ServiceException {
         try {
-            validateString(clazz.getLetterMark(), "Letter Mark");
+            validateLetterMark(clazz.getLetterMark());
+            validateClassNumber(clazz.getNumber());
         } catch (ValidationException exc) {
             LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.invalid_class_letter);
+            throw new ServiceException(exc);
         }
-        validateClassNumber(clazz.getNumber());
     }
 
     private Clazz prepareClassBeforeUpdate(Clazz newClazz, Session session) throws ServiceException {
@@ -148,12 +145,12 @@ public class ClassService extends CRUDService<Clazz> implements IClassService {
 
     private void validateClassNumber(int number) throws ServiceException {
         if (number <= 0 || number >= 12)
-            throw new ClassifiedServiceException(ExceptionEnum.invalid_class_number);
+            throw new ServiceException("Invalid class number");
     }
 
     private void validateClass(Clazz clazz) throws ServiceException {
         if (clazz == null) {
-            throw new ClassifiedServiceException(ExceptionEnum.invalid_class_letter);
+            throw new ServiceException("Class is not exists");
         }
     }
 }

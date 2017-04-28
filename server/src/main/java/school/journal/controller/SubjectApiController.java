@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = "/api/subjects")
-public class SubjectAPIController extends BaseController<Subject> {
-    private Logger LOGGER = Logger.getLogger(SubjectAPIController.class);
+public class SubjectAPIController extends BaseController<Subject>{
+    private static final Logger LOGGER = Logger.getLogger(SubjectAPIController.class);
 
     @Autowired
     @Qualifier("SubjectService")
@@ -25,8 +25,7 @@ public class SubjectAPIController extends BaseController<Subject> {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    @Secured(RoleEnum.USER)
-    public ResponseEntity get(HttpServletRequest request, HttpServletRequest req)
+    public ResponseEntity get(HttpServletRequest req)
             throws ControllerException {
         return read(() -> subjectService.read(), "Can't get full subjects list", LOGGER);
     }
@@ -34,32 +33,35 @@ public class SubjectAPIController extends BaseController<Subject> {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity create(HttpServletRequest request, @RequestBody Subject subject)
+    public ResponseEntity create(@RequestBody Subject subject)
             throws ControllerException {
-        return createOrUpdate((Subject s) -> subjectService.create(s), subject, "Can't create subject", LOGGER);
+        return createOrUpdate((Subject s) -> subjectService.create(s), subject,
+                "Can't create subject", LOGGER);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity update(HttpServletRequest request, @RequestBody Subject subject)
+    public ResponseEntity update(@RequestBody Subject subject)
             throws ControllerException {
-        return createOrUpdate((Subject s) -> subjectService.update(s), subject, "Can't update subject", LOGGER);
+        return createOrUpdate((Subject s) -> subjectService.update(s), subject,
+                "Can't update subject", LOGGER);
     }
 
     @RequestMapping(value = "/{subjectId}", method = RequestMethod.DELETE)
     @ResponseBody
     @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
-    public ResponseEntity delete(HttpServletRequest request, @PathVariable("subjectId") int subjectId)
+    public ResponseEntity delete(@PathVariable("subjectId") int subjectId)
             throws ControllerException {
-        return delete((int id) -> subjectService.delete(id), subjectId, "Can't delete subject by id", LOGGER);
+        return delete((int id) -> subjectService.delete(id), subjectId,
+                "Can't delete subject by id", LOGGER);
     }
 
     @RequestMapping(value = "/{subjectId}")
     @ResponseBody
-    @Secured(RoleEnum.USER)
-    public ResponseEntity getOne(HttpServletRequest request, @PathVariable("subjectId") int subjectId)
+    public ResponseEntity getOne(@PathVariable("subjectId") int subjectId)
             throws ControllerException {
-        return getOne((int id) -> subjectService.getOne(subjectId), subjectId, "Can't get subject by id", LOGGER);
+        return getOne((int id) -> subjectService.getOne(subjectId), subjectId,
+                "Can't get subject by id", LOGGER);
     }
 }
