@@ -4,6 +4,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import school.journal.entity.Mark;
 import school.journal.entity.Term;
+import school.journal.entity.enums.MarkType;
 
 import java.sql.Date;
 
@@ -19,7 +20,11 @@ public class MarkSpecificationByTerm extends MarkSpecification {
 
     @Override
     public Criterion toCriteria() {
-        return Restrictions.between("date",dateFrom,dateTo);
+        return Restrictions.or(
+                Restrictions.between("date", dateFrom, dateTo),
+                Restrictions.or(
+                        Restrictions.eq("type", MarkType.term),
+                        Restrictions.eq("type", MarkType.year)));
     }
 
     @Override

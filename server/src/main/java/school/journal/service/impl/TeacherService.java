@@ -36,6 +36,10 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
             "ON `teacher`.`teacher_id` = `subject_in_schedule`.`teacher_id` " +
             "WHERE `subject_in_schedule`.`class_id` = {0};";
 
+    private static final String SQL_QUERY_FOR_GET_HEAD_CLASS_TEACHER = "SELECT `teacher`.`teacher_id`, `teacher`.`phone_number`, " +
+            "`teacher`.`class_id`, `teacher`.`first_name`, `teacher`.`last_name`, `teacher`.`pathronymic`, `teacher`.`description` " +
+            "FROM `teacher` " +
+            "WHERE `teacher`.`class_id` = {0}";
 
     private IRepository<User> userRepository;
     private IRepository<Clazz> classRepository;
@@ -260,6 +264,12 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
                 }
             }
             teacher.setClassId(classId);
+            List l = session.createSQLQuery(MessageFormat.format(SQL_QUERY_FOR_GET_HEAD_CLASS_TEACHER, classId)).addEntity(Teacher.class).list();
+            if (l != null && l.size() != 0) {
+                Teacher oldClassTeacher = (Teacher)l.get(0);
+                oldClassTeacher.setClassId(null);
+                repository.update(oldClassTeacher,session);
+            }
             repository.update(teacher, session);
             transaction.commit();
         } catch (RepositoryException exc) {
