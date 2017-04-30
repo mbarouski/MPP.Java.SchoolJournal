@@ -6,17 +6,18 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.Clazz;
 import school.journal.entity.Role;
 import school.journal.entity.Teacher;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.teacher.TeacherSpecificationByClassId;
+import school.journal.repository.specification.teacher.TeacherSpecificationByTeacherId;
 import school.journal.service.CRUDService;
 import school.journal.service.ITeacherService;
-import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
@@ -36,10 +37,6 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
             "ON `teacher`.`teacher_id` = `subject_in_schedule`.`teacher_id` " +
             "WHERE `subject_in_schedule`.`class_id` = {0};";
 
-    private static final String SQL_QUERY_FOR_GET_HEAD_CLASS_TEACHER = "SELECT `teacher`.`teacher_id`, `teacher`.`phone_number`, " +
-            "`teacher`.`class_id`, `teacher`.`first_name`, `teacher`.`last_name`, `teacher`.`pathronymic`, `teacher`.`description` " +
-            "FROM `teacher` " +
-            "WHERE `teacher`.`class_id` = {0}";
 
     private IRepository<User> userRepository;
     private IRepository<Clazz> classRepository;
@@ -54,12 +51,12 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
         this.classRepository = classRepository;
     }
 
-    private User checkUser(Integer id, Session session) throws ServiceException {
-        if (id == null) throw new ServiceException("User id is incorrect");
+    private User checkUser(Integer id, Session session) throws ServiceException{
+        if(id == null) throw new ServiceException("User id is incorrect");
         try {
             return userRepository.get(id, session);
-        } catch (RepositoryException exc) {
-            throw new ClassifiedServiceException(ExceptionEnum.teacher_not_found);
+        } catch (RepositoryException exc ) {
+            throw new ServiceException("User is not found");
         }
     }
 
@@ -67,95 +64,61 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
     public Teacher create(Teacher teacher) throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        teacher.setUser(checkUser(teacher.getUserId(), session));
         try {
+            teacher.setUser(checkUser(teacher.getUserId(), session));
             validateString(teacher.getLastName(), "Last Name");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.teacher_has_wrong_last_name);
-        }
-        try {
             validateString(teacher.getFirstName(), "First Name");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.teacher_has_wrong_first_name);
-        }
-        try {
             validateNullableString(teacher.getPathronymic(), "Patronymic");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.teacher_has_wrong_patronymic);
-        }
-        try {
             validateNullableId(teacher.getClassId(), "Class");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.teacher_has_wrong_class);
-        }
-        try {
             validateNullableString(teacher.getDescription(), "Description");
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.teacher_has_wrong_characteristic);
-        }
-        try {
             validatePhone(teacher.getPhoneNumber());
-        } catch (ValidationException exc) {
-            LOGGER.error(exc);
-            throw new ClassifiedServiceException(ExceptionEnum.teacher_has_wrong_phone);
-        }
-        try {
             repository.create(teacher, session);
             transaction.commit();
-        } catch (ObjectNotFoundException | RepositoryException exc) {
+        } catch (ValidationException | ObjectNotFoundException | RepositoryException exc) {
             transaction.rollback();
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if (session != null) {
-                session.close();
-            }
+            session.close();
         }
         return teacher;
     }
 
     private int checkId(Integer id) throws ServiceException {
-        if (id == null) {
-            throw new ClassifiedServiceException(ExceptionEnum.wrong_id_number);
-        }
+        if(id == null) throw new ServiceException("Incorrect user id");
         return id.intValue();
     }
 
     private void checkLastName(Teacher newTeacher, Teacher teacher) throws ValidationException {
         String lastName = newTeacher.getLastName();
-        if (lastName == null) return;
+        if(lastName == null) return;
         validateString(lastName, "Last Name");
         teacher.setLastName(lastName);
     }
 
     private void checkFirstName(Teacher newTeacher, Teacher teacher) throws ValidationException {
         String firstName = newTeacher.getFirstName();
-        if (firstName == null) return;
+        if(firstName == null) return;
         validateString(firstName, "First Name");
         teacher.setFirstName(firstName);
     }
 
     private void checkPatronymic(Teacher newTeacher, Teacher teacher) throws ValidationException {
         String patronymic = newTeacher.getPathronymic();
-        if (patronymic == null) return;
+        if(patronymic == null) return;
         validateString(patronymic, "Patronymic");
         teacher.setPathronymic(patronymic);
     }
 
     private void checkDescription(Teacher newTeacher, Teacher teacher) {
         String description = newTeacher.getDescription();
-        if (description == null) return;
+        if(description == null) return;
         teacher.setDescription(description);
     }
 
     private void checkClassId(Teacher newTeacher, Teacher teacher, Session session) throws ValidationException {
         Integer classId = newTeacher.getClassId();
-        if (classId == null) return;
+        if(classId == null) return;
         try {
             classRepository.get(classId, session);
             teacher.setClassId(classId);
@@ -166,7 +129,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
 
     private void checkPhone(Teacher newTeacher, Teacher teacher) throws ValidationException {
         String phone = newTeacher.getPhoneNumber();
-        if (phone == null) return;
+        if(phone == null) return;
         validatePhone(phone);
         teacher.setPhoneNumber(phone);
     }
@@ -201,7 +164,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Teacher teacher = (Teacher) session.load(Teacher.class, id);
+            Teacher teacher = (Teacher)session.load(Teacher.class, id);
             repository.delete(teacher, session);
             transaction.commit();
         } catch (ObjectNotFoundException | RepositoryException exc) {
@@ -209,9 +172,7 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
             LOGGER.error(exc);
             throw new ServiceException(exc);
         } finally {
-            if (session != null) {
-                session.close();
-            }
+            session.close();
         }
     }
 
@@ -242,7 +203,8 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
     public List<Teacher> getListOfTeachersForClass(int classId) throws ServiceException {
         Session session = sessionFactory.openSession();
         List<Teacher> teachers;
-        teachers = session.createSQLQuery(MessageFormat.format(SQL_QUERY_FOR_GET_TEACHERS_FOR_CLASS, classId)).addEntity(Teacher.class).list();
+        teachers = session.createSQLQuery(MessageFormat.format(SQL_QUERY_FOR_GET_TEACHERS_FOR_CLASS,
+                classId)).addEntity(Teacher.class).list();
         return teachers;
     }
 
@@ -252,24 +214,14 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
         Transaction transaction = session.beginTransaction();
         Teacher teacher;
         try {
-            teacher = (Teacher) session.get(Teacher.class, teacherId);
-            if (teacher == null) {
-                throw new ClassifiedServiceException(ExceptionEnum.teacher_not_found);
-            }
-            if (classId == 0) {
+            teacher = (Teacher)session.get(Teacher.class, teacherId);
+            if(teacher == null) throw new ServiceException("Teacher not found");
+            if(classId == 0) {
                 teacher.setClassId(null);
             } else {
-                if (session.get(Clazz.class, classId) == null) {
-                    throw new ClassifiedServiceException(ExceptionEnum.teacher_has_wrong_class);
-                }
+                if(session.get(Clazz.class, classId) == null) throw new ServiceException("Class not found");
             }
             teacher.setClassId(classId);
-            List l = session.createSQLQuery(MessageFormat.format(SQL_QUERY_FOR_GET_HEAD_CLASS_TEACHER, classId)).addEntity(Teacher.class).list();
-            if (l != null && l.size() != 0) {
-                Teacher oldClassTeacher = (Teacher)l.get(0);
-                oldClassTeacher.setClassId(null);
-                repository.update(oldClassTeacher,session);
-            }
             repository.update(teacher, session);
             transaction.commit();
         } catch (RepositoryException exc) {
@@ -288,14 +240,10 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
         Transaction transaction = session.beginTransaction();
         Teacher teacher;
         try {
-            teacher = (Teacher) session.get(Teacher.class, teacherId);
-            if (teacher == null) {
-                throw new ClassifiedServiceException(ExceptionEnum.teacher_not_found);
-            }
+            teacher = (Teacher)session.get(Teacher.class, teacherId);
+            if(teacher == null) throw new ServiceException("Teacher not found");
             Role role = (Role) session.get(Role.class, (isDirector ? DIRECTOR_OF_STUDIES : TEACHER).getValue());
-            if (role == null) {
-                throw new ClassifiedServiceException(ExceptionEnum.role_not_found);
-            }
+            if(role == null) throw new ServiceException("Role not found");
             teacher.getUser().setRole(role);
             repository.update(teacher, session);
             transaction.commit();

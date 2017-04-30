@@ -5,15 +5,14 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Clazz;
-import school.journal.entity.User;
-import school.journal.repository.RepositoryAbstractClass;
+import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
 import school.journal.repository.specification.HibernateSpecification;
 
 import java.util.List;
 
 @Component("ClassRepository")
-public class ClazzRepository extends RepositoryAbstractClass<Clazz> {
+public class ClazzRepository implements IRepository<Clazz> {
 
     @Override
     public Clazz create(Clazz clazz, Session session) throws RepositoryException {
@@ -23,7 +22,6 @@ public class ClazzRepository extends RepositoryAbstractClass<Clazz> {
 
     @Override
     public Clazz update(Clazz clazz, Session session) throws RepositoryException {
-//        session.update(clazz);
         return (Clazz) session.merge(clazz);
     }
 
