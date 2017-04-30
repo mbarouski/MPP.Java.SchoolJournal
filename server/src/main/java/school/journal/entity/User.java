@@ -4,6 +4,7 @@ public class User {
     private Integer userId;
     private String username;
     private String passHash;
+    private Byte locked;
     private String email;
     private Role role;
     private String password;
@@ -31,6 +32,14 @@ public class User {
 
     public void setPassHash(String passHash) {
         this.passHash = passHash;
+    }
+
+    public Byte getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Byte locked) {
+        this.locked = locked;
     }
 
     public String getEmail() {
@@ -69,6 +78,7 @@ public class User {
         if (userId != null ? !userId.equals(user.userId) : user.userId != null) return false;
         if (username != null ? !username.equals(user.username) : user.username != null) return false;
         if (passHash != null ? !passHash.equals(user.passHash) : user.passHash != null) return false;
+        if (locked != null ? !locked.equals(user.locked) : user.locked != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
 
         return true;
@@ -79,6 +89,7 @@ public class User {
         int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (passHash != null ? passHash.hashCode() : 0);
+        result = 31 * result + (locked != null ? locked.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
     }

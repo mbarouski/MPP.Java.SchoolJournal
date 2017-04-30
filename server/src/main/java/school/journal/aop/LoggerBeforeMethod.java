@@ -17,6 +17,6 @@ public class LoggerBeforeMethod {
 
     @Before("execution(* school.journal..*(..))")
     public void logBeforeMethod(JoinPoint joinPoint) {
-        //  LOGGER.info(fmt.format("%s: %s", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName()));
+        LOGGER.info(fmt.format("%s: %s", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName()));
     }
 }

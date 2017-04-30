@@ -17,13 +17,13 @@ public class Initializer implements WebApplicationInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.register(WebAppConfig.class);
-        ctx.register(MailConfig.class);
+//        ctx.register(MailConfig.class);
         servletContext.addListener(new ContextLoaderListener(ctx));
         ctx.setServletContext(servletContext);
 
         ServletRegistration.Dynamic servlet =
                 servletContext.addServlet(DISPATCHER_SERVLET_NAME, new DispatcherServlet(ctx));
-        servlet.addMapping("/api/");
+        servlet.addMapping("/");
         servlet.setLoadOnStartup(1);
     }
 }

@@ -21,7 +21,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Controller
 @RequestMapping(value = "/api/marks")
 public class MarkAPIController extends BaseController<Mark> {
-    private static final Logger LOGGER = Logger.getLogger(MarkAPIController.class);
+
+    private static Logger LOGGER = Logger.getLogger(MarkAPIController.class);
+
     private final IMarkService markService;
 
     @Autowired
@@ -47,7 +49,7 @@ public class MarkAPIController extends BaseController<Mark> {
 
     @RequestMapping(method = PUT)
     @ResponseBody
-    @Secured(RoleEnum.TEACHER)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity update(HttpServletRequest request, @RequestBody Mark mark)
             throws ControllerException {
         return createOrUpdate(markService::update, mark, "Can't update mark", LOGGER);
@@ -55,7 +57,7 @@ public class MarkAPIController extends BaseController<Mark> {
 
     @RequestMapping(value = "/{markId}", method = DELETE)
     @ResponseBody
-    @Secured(RoleEnum.TEACHER)
+    @Secured(RoleEnum.DIRECTOR_OF_STUDIES)
     public ResponseEntity delete(HttpServletRequest request, @PathVariable("markId") int markId)
             throws ControllerException {
         return delete(markService::delete, markId, "Can't delete mark", LOGGER);
@@ -72,11 +74,7 @@ public class MarkAPIController extends BaseController<Mark> {
     @RequestMapping(method = GET, params = {"subjectId", "classId", "termId"})
     @ResponseBody
     @Secured(RoleEnum.PUPIL)
-    public ResponseEntity getMarksForSubjectInClass(HttpServletRequest request,
-                                                    @RequestParam(value = "subjectId") int subjectId,
-                                                    @RequestParam(value = "classId") int classId,
-                                                    @RequestParam(value = "termId", required = false,
-                                                            defaultValue = 0 + "") int termId)
+    public ResponseEntity getMarksForSubjectInClass(HttpServletRequest request, @RequestParam(value = "subjectId") int subjectId, @RequestParam(value = "classId") int classId, @RequestParam(value = "termId", required = false, defaultValue = 0 + "") int termId)
             throws ControllerException {
         return doResponse(markService::getMarksForSubjectInClass, subjectId, classId, termId, "Cant get marks for subject in class", LOGGER);
     }
@@ -84,10 +82,7 @@ public class MarkAPIController extends BaseController<Mark> {
     @RequestMapping(method = GET, params = {"classId", "termId"})
     @ResponseBody
     @Secured(RoleEnum.PUPIL)
-    public ResponseEntity getMarksForTermOrder(HttpServletRequest request,
-                                               @RequestParam(value = "classId") int classId,
-                                               @RequestParam(value = "termId", required = false,
-                                                       defaultValue = 0 + "") int termId)
+    public ResponseEntity getMarksForTermOrder(HttpServletRequest request, @RequestParam(value = "classId") int classId, @RequestParam(value = "termId", required = false, defaultValue = 0 + "") int termId)
             throws ControllerException {
         return doResponse(markService::getMarksForTermOrderInClass, classId, termId, "Can't get marks for class in term", LOGGER);
     }
@@ -95,10 +90,7 @@ public class MarkAPIController extends BaseController<Mark> {
     @RequestMapping(method = GET, params = {"pupilId", "termId"})
     @ResponseBody
     @Secured(RoleEnum.PUPIL)
-    public ResponseEntity getMarksForPupil(HttpServletRequest request,
-                                           @RequestParam(value = "pupilId") int pupilId,
-                                           @RequestParam(value = "termId", required = false,
-                                                   defaultValue = 0 + "") int termId)
+    public ResponseEntity getMarksForPupil(HttpServletRequest request, @RequestParam(value = "pupilId") int pupilId, @RequestParam(value = "termId", required = false, defaultValue = 0 + "") int termId)
             throws ControllerException {
         return doResponse(markService::getMarksForPupil, pupilId, termId, "Cant get Marks for pupil", LOGGER);
     }

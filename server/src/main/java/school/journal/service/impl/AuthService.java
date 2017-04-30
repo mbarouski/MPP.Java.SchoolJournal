@@ -70,6 +70,9 @@ public class AuthService extends ServiceAbstractClass implements IAuthService {
             users = userRepository.query(new UserSpecificationByUsername(username), session);
             if(users.size() > 0){
                 User user = users.get(0);
+                if(user.getLocked() != 0) {
+                    throw new AuthException("User is blocked");
+                }
                 if(verifyPasswords(user.getPassHash(), password)) {
                     try {
                         String tokenValue = JWT.create().withSubject(username).sign(Algorithm.HMAC256(SECRET));

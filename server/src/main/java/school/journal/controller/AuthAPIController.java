@@ -5,14 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import school.journal.controller.util.ErrorObject;
 import school.journal.entity.Token;
 import school.journal.entity.User;
+import school.journal.entity.util.TokenInfo;
 import school.journal.entity.util.UserAuthInfo;
 import school.journal.service.IAuthService;
+import school.journal.service.IUserService;
 import school.journal.service.exception.AuthException;
 import school.journal.service.exception.ServiceException;
+import school.journal.service.impl.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,7 +32,6 @@ public class AuthAPIController {
 
     @PostMapping(value = "/login")
     @ResponseBody
-    @SuppressWarnings("unchecked")
     public ResponseEntity login(@RequestBody UserAuthInfo user) {
         Token token = null;
         ResponseEntity resultResponse = null;
@@ -40,7 +43,7 @@ public class AuthAPIController {
             resultResponse = new ResponseEntity(HttpStatus.UNAUTHORIZED);
         } catch (ServiceException exc) {
             LOGGER.error(exc);
-            resultResponse = new ResponseEntity("Can't login", HttpStatus.BAD_REQUEST);
+            resultResponse = new ResponseEntity("Login error", HttpStatus.BAD_REQUEST);
         }  catch (Exception exc) {
             LOGGER.error(exc);
             resultResponse = new ResponseEntity(new ErrorObject("Some critical error"), HttpStatus.INTERNAL_SERVER_ERROR);

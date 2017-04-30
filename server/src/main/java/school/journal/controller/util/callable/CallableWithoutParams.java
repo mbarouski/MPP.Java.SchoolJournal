@@ -1,5 +1,5 @@
 package school.journal.controller.util.callable;
 
-public interface Callable_NoParams<T> {
+public interface CallableWithoutParams<T> {
     T call() throws Exception;
 }

@@ -1,6 +1,5 @@
 package school.journal.aop;
 
-import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -20,7 +19,6 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 public class SecureBeforeMethod {
-    private static final Logger LOGGER = Logger.getLogger(SecureBeforeMethod.class);
 
     @Around("@annotation(school.journal.aop.Secured)")
     public ResponseEntity doSecure(ProceedingJoinPoint joinPoint) {
@@ -33,9 +31,7 @@ public class SecureBeforeMethod {
             if (currentUserLevel >= needLevel) {
                 try {
                     return (ResponseEntity) joinPoint.proceed();
-                } catch (Throwable exc) {
-                    LOGGER.error(exc);
-                }
+                } catch (Throwable exc) {}
             }
         }
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
