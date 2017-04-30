@@ -91,7 +91,6 @@ public class PupilService extends CRUDService<Pupil> implements IPupilService {
     }
 
     @Override
-    @SuppressWarnings("Duplicates")
     public Pupil removeFromClass(int pupilId) throws ServiceException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
