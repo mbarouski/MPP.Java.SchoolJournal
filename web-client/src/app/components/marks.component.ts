@@ -225,7 +225,19 @@ export class MarksComponent implements OnInit, AfterViewInit{
 
   getDate(td) {
     const index = td.parent().index();
-    const date = this.lessons[index - 1];
+    let date = this.lessons[index - 1];
+    if(!date) {
+      const text = td.parent().parent().parent().prev().children().first().children()[index].textContent;
+      if(text === 'Год') {
+        date = this.terms[this.terms.length - 1].end;
+      } else {
+        const term_number = text.split(' ')[0];
+        date = this.terms[(+term_number) - 1].end;
+      }
+      date = moment(date, "YYYY-MM-DD").format("DD.MM.YYYY")
+    } else {
+      date = `${date}.${this.terms[this.currentTerm - 1].start.split('-')[0]}`
+    }
     return date;
   }
 
@@ -291,7 +303,7 @@ export class MarksComponent implements OnInit, AfterViewInit{
   submitMarkForm() {
     this.validateMarkInfo();
     if(!this.isMarkInfoValid()) return;
-    this.currentMark.date = moment(`${this.currentMark.date}.2017`, 'DD-MM-YYYY').format('YYYY-MM-DD');
+    this.currentMark.date = moment(`${this.currentMark.date}`, 'DD-MM-YYYY').format('YYYY-MM-DD');
     this.marksService.setMark(this.currentMark)
       .then((mark: any) => {
         this.closeMarkModal();
