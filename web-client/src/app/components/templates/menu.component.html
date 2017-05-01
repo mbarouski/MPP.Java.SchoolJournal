@@ -27,7 +27,7 @@
 
     <div class="collapse navbar-collapse" [collapse]="isCollapsed">
       <ul class="nav navbar-nav">
-        <li><a routerLinkActive="active-link" routerLink="/profile">Профиль</a></li>
+        <li *ngIf="authService.isLogged()"><a routerLinkActive="active-link" routerLink="/profile">Профиль</a></li>
         <li *ngIf="hasNeedLevel('pupil')"><a routerLinkActive="active-link" routerLink="/schedule">Расписание</a></li>
         <li *ngIf="hasNeedLevel('director_of_studies')"><a routerLinkActive="active-link" routerLink="/fullSchedule">Полное расписание</a></li>
         <li *ngIf="hasNeedLevel('director_of_studies')"><a routerLinkActive="active-link" routerLink="/classes">Классы</a></li>

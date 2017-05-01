@@ -211,9 +211,6 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_teacher);
         }
         newMark.setTeacher(teacher);
-        if(newMark.getType() == MarkType.term || newMark.getType() == MarkType.year) {
-            newMark.setDate(null);
-        }
     }
 
     private Mark prepareMarkBeforeUpdate(Mark newMark, Session session) throws ServiceException {
@@ -337,7 +334,8 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Term firstTerm = (Term) session.get(Term.class, 1);
         Term lastTerm = termService.getCurrentTerm();
         session.close();
-        if (date.after(lastTerm.getEnd()) || date.before(firstTerm.getStart())) {
+        if ((date.after(lastTerm.getEnd()) && !date.equals(lastTerm.getEnd()))
+                || (date.before(firstTerm.getStart()) && !date.equals(firstTerm.getStart()))) {
             throw new ClassifiedServiceException(ExceptionEnum.mark_date_is_invalid);
         }
     }
