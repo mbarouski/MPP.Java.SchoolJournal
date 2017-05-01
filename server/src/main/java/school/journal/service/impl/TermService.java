@@ -19,6 +19,7 @@ import java.util.List;
 public class TermService extends CRUDService<Term> implements ITermService {
 
     private static final int MIN_VACATION_DAY_COUNT = 30;
+    public static final long MILLISECONDS_IN_DAY = 86_400_000;
 
     @Override
     public Term getCurrentTerm() throws ServiceException {
@@ -109,7 +110,7 @@ public class TermService extends CRUDService<Term> implements ITermService {
         if (terms.get(0).getStart().getYear()-terms.get(3).getEnd().getYear()>1) {
             throw new ClassifiedServiceException(ExceptionEnum.too_long_year);
         }
-        final long MILLISECONDS_IN_DAY = 86_400_000;
+
         Date date = null;
         for (Term term : terms) {
             if (date != null) {
