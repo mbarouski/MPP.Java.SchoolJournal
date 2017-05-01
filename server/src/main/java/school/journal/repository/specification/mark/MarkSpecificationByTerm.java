@@ -8,6 +8,8 @@ import school.journal.entity.enums.MarkType;
 
 import java.sql.Date;
 
+import static school.journal.service.impl.TermService.MILLISECONDS_IN_DAY;
+
 public class MarkSpecificationByTerm extends MarkSpecification {
 
     private Date dateFrom;
@@ -15,7 +17,7 @@ public class MarkSpecificationByTerm extends MarkSpecification {
 
     public MarkSpecificationByTerm(Term term) {
         this.dateFrom = term.getStart();
-        this.dateTo = term.getEnd();
+        this.dateTo = new Date(term.getEnd().getTime()+MILLISECONDS_IN_DAY);
     }
 
     @Override

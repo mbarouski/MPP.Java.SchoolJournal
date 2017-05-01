@@ -6,6 +6,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.format.datetime.joda.MillisecondInstantPrinter;
 import org.springframework.stereotype.Service;
 import school.journal.controller.util.ExceptionEnum;
 import school.journal.entity.*;
@@ -23,10 +24,13 @@ import school.journal.service.exception.ClassifiedServiceException;
 import school.journal.service.exception.ServiceException;
 import school.journal.utils.exception.ValidationException;
 
+import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import static org.hibernate.criterion.CriteriaSpecification.INNER_JOIN;
+import static school.journal.service.impl.TermService.MILLISECONDS_IN_DAY;
 import static school.journal.utils.ValidateServiceUtils.validateId;
 
 @Service("MarkService")
@@ -331,11 +335,10 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
 
     private void validateDate(Date date) throws ServiceException {
         Session session = sessionFactory.openSession();
-        Term firstTerm = (Term) session.get(Term.class, 1);
-        Term lastTerm = termService.getCurrentTerm();
-        session.close();
-        if ((date.after(lastTerm.getEnd()) && !date.equals(lastTerm.getEnd()))
-                || (date.before(firstTerm.getStart()) && !date.equals(firstTerm.getStart()))) {
+        java.sql.Date start = ((Term) session.get(Term.class, 1)).getStart();
+        java.sql.Date end = termService.getCurrentTerm().getEnd();
+        end.setTime(end.getTime() + MILLISECONDS_IN_DAY);
+        if (date.after(end) || (date.before(start))) {
             throw new ClassifiedServiceException(ExceptionEnum.mark_date_is_invalid);
         }
     }
