@@ -37,6 +37,7 @@ import {ClassesComponent} from "../components/classes.component";
 import {SubjectsComponent} from "../components/subjects.component";
 import {UsersComponent} from "../components/users.component";
 import {SchoolInfoComponent} from "../components/school-info.component";
+import {DeleteModalComponent} from "../components/small/delete-modal.component";
 
 @NgModule({
   imports: [
@@ -68,6 +69,7 @@ import {SchoolInfoComponent} from "../components/school-info.component";
     SubjectsComponent,
     UsersComponent,
     SchoolInfoComponent,
+    DeleteModalComponent,
   ],
   providers: [
     RolesService,

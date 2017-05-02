@@ -1,0 +1,15 @@
+<div bsModal #deleteModal="bs-modal" class="modal fade" aria-labelledby="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Вы уверены, что хотите удалить данную запись?</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form">
+          <button type="button" class="btn btn-danger" aria-label="Close" (click)="handleYes()">Да</button>
+          <button type="button" class="btn btn-default" aria-label="Close" (click)="noCallback()">Нет</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

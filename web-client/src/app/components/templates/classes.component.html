@@ -16,7 +16,7 @@
               <tr *ngFor="let clazz of classes" (click)="selectClass(clazz.classId)" [class.selected]="selectedClass && clazz.classId == selectedClass.classId">
                 <td>
                   {{clazz.number}} {{clazz.letterMark}}
-                  <button class="action-span btn btn-danger pull-right" (click)="selectClass(clazz.classId); deleteClass()"><i class="glyphicon glyphicon-remove"></i> Удалить класс</button>
+                  <button class="btn btn-danger pull-right" (click)="selectClass(clazz.classId); deleteClass()"><i class="glyphicon glyphicon-remove"></i> Удалить класс</button>
                 </td>
               </tr>
               </tbody>
@@ -32,7 +32,7 @@
                 <tr *ngFor="let pupil of pupils" (click)="selectPupil(pupil.userId)" [class.selected]="selectedPupil && selectedPupil.userId === pupil.userId">
                   <td>
                     <a routerLink="/profile/{{pupil.userId}}">{{pupilsService.getPupilFullName(pupil)}}</a>
-                    <button class="btn btn-danger action-span pull-right" (click)="selectPupil(pupil.userId); removeFromClass()"><i class="glyphicon glyphicon-remove"></i> Удалить из класса</button>
+                    <button class="btn btn-danger pull-right" (click)="selectPupil(pupil.userId); showModalForRemoveFromClass()"><i class="glyphicon glyphicon-remove"></i> Удалить из класса</button>
                   </td>
                 </tr>
                 </tbody>
@@ -124,7 +124,7 @@
 <!--</section>-->
 
 
-<div class="modal fade" bsModal #classModal="bs-modal" [config]="{backdrop: 'static'}"
+<div class="modal fade" bsModal #classModal="bs-modal"
      tabindex="-1" role="dialog" aria-labelledby="classForm" aria-hidden="true">
   <div *ngIf="currentClass" class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -161,7 +161,7 @@
   </div>
 </div>
 
-<div class="modal fade" bsModal #classForPupilModal="bs-modal" [config]="{backdrop: 'static'}"
+<div class="modal fade" bsModal #classForPupilModal="bs-modal"
      tabindex="-1" role="dialog" aria-labelledby="classForPupilForm" aria-hidden="true">
   <div *ngIf="classForPupil" class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -193,7 +193,7 @@
   </div>
 </div>
 
-<div class="modal fade" bsModal #classTeacherModal="bs-modal" [config]="{backdrop: 'static'}"
+<div class="modal fade" bsModal #classTeacherModal="bs-modal"
      tabindex="-1" role="dialog" aria-labelledby="classTeacherForm" aria-hidden="true">
   <div *ngIf="classTeacher" class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -224,3 +224,7 @@
     </div>
   </div>
 </div>
+
+<delete-modal [yesCallback]="yesCallbackForDeleteModalComponent"
+  [noCallback]="noCallbackForDeleteModalComponent"
+  [isActive]="isDeleteModalComponentActive"></delete-modal>

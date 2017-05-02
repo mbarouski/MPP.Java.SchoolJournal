@@ -50,6 +50,10 @@ export class ClassesComponent implements AfterViewInit{
 
   errorMessage = '';
 
+  yesCallbackForDeleteModalComponent = () => {};
+  noCallbackForDeleteModalComponent = () => {};
+  isDeleteModalComponentActive = false;
+
   tabs: any[] = [
     {title: 'Классы'},
     {title: 'Ученики, не состоящие в классе'}
@@ -117,6 +121,14 @@ export class ClassesComponent implements AfterViewInit{
 
   selectPupilWithoutClass(pupilId) {
     this.selectedPupilWithoutClass = this.getPupilWithoutClassById(pupilId);
+  }
+
+  showModalForRemoveFromClass() {
+    this.isDeleteModalComponentActive = true;
+    this.yesCallbackForDeleteModalComponent = this.removeFromClass.bind(this);
+    this.noCallbackForDeleteModalComponent = () => {
+      this.isDeleteModalComponentActive = false;
+    };
   }
 
   removeFromClass() {

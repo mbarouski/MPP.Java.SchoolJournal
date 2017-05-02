@@ -65,6 +65,14 @@ h1, h2, h3 {
   border: none;
 }
 
+.btn-default {
+  background-color: lightgrey;
+}
+
+.btn-default:hover {
+  background-color: #eeeeee;
+}
+
 .alert-danger {
   border-radius: 0;
   margin-top: 2px;
@@ -204,7 +212,7 @@ a:hover {
 }
 .lesson-date,
 .lesson-time {
-  transform: rotate(-35deg);
+  /*transform: rotate(-35deg);*/
 }
 .green {
   color: green;
@@ -285,7 +293,7 @@ td.selected a {
 }
 
 tr:hover .action-span {
-  display: inline;
+  display: inline-block;
 }
 
 @media(max-width: 768px) {
@@ -296,4 +304,8 @@ tr:hover .action-span {
 
 tr, td {
   transition: width 1s ease-in-out;
+}
+
+.selected a {
+  color: black !important;
 }
