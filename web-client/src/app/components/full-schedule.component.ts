@@ -118,12 +118,13 @@ export class FullScheduleComponent implements AfterViewInit{
     event.preventDefault();
   }
 
-  deleteSubject(event) {
-    event.event.preventDefault();
-    this.scheduleService.deleteSubjectInSchedule(event.item.subectInScheduleId)
+  deleteSubject(subectInScheduleId) {
+    this.scheduleService.deleteSubjectInSchedule(subectInScheduleId)
       .then(() => {
-        this.cellForEdit.removeClass('htooltip');
-        this.cellForEdit.empty();
+        // this.cellForEdit.removeClass('htooltip');
+        // this.cellForEdit.empty();
+        this.subjects = this.subjects.filter(s => s.subectInSchedule !== subectInScheduleId);
+        this.times = this.times;
       })
       .catch((err) => {
         if(err.status === 500) {
@@ -175,10 +176,8 @@ export class FullScheduleComponent implements AfterViewInit{
     this.subjectModal.show();
   }
 
-  openModalForEditSubject(event) {
-    event.event.preventDefault();
+  openModalForEditSubject(item) {
     this.isEdit = true;
-    let item = event.item;
     let subject = new SubjectInSchedule(item.subectInScheduleId);
     subject.dayOfWeek = item.dayOfWeek;
     subject.time = this.decorateTime(item.beginTime);
@@ -188,6 +187,18 @@ export class FullScheduleComponent implements AfterViewInit{
     subject.clazzId = item.clazz.classId;
     this.currentSubject = subject;
     this.subjectModal.show();
+  }
+
+  yesCallbackForDeleteModalComponent = () => {};
+  noCallbackForDeleteModalComponent = () => {};
+  isDeleteModalComponentActive = false;
+
+  showModalForDeleteSubject(subjectInScheduleId) {
+    this.isDeleteModalComponentActive = true;
+    this.yesCallbackForDeleteModalComponent = this.deleteSubject.bind(this, subjectInScheduleId);
+    this.noCallbackForDeleteModalComponent = () => {
+      this.isDeleteModalComponentActive = false;
+    };
   }
 
   validateSubject() {

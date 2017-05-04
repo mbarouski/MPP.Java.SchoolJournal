@@ -130,6 +130,18 @@ export class SubjectsComponent implements AfterViewInit{
     }
   }
 
+  yesCallbackForDeleteModalComponent = () => {};
+  noCallbackForDeleteModalComponent = () => {};
+  isDeleteModalComponentActive = false;
+
+  showModalForDeleteSubject() {
+    this.isDeleteModalComponentActive = true;
+    this.yesCallbackForDeleteModalComponent = this.deleteSubject.bind(this);
+    this.noCallbackForDeleteModalComponent = () => {
+      this.isDeleteModalComponentActive = false;
+    };
+  }
+
   deleteSubject() {
     this.subjectsService.deleteSubject(this.selectedSubject.subjectId)
       .then(() => {

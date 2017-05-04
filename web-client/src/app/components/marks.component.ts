@@ -331,6 +331,18 @@ export class MarksComponent implements OnInit, AfterViewInit{
       });
   }
 
+  yesCallbackForDeleteModalComponent = () => {};
+  noCallbackForDeleteModalComponent = () => {};
+  isDeleteModalComponentActive = false;
+
+  showModalForDeleteMark(markId) {
+    this.isDeleteModalComponentActive = true;
+    this.yesCallbackForDeleteModalComponent = this.deleteMark.bind(this, markId);
+    this.noCallbackForDeleteModalComponent = () => {
+      this.isDeleteModalComponentActive = false;
+    };
+  }
+
   generateClass(mark) {
     if(!mark || mark.type === 'simple') return '';
     return `${mark.type}-mark`;
@@ -363,11 +375,10 @@ export class MarksComponent implements OnInit, AfterViewInit{
     event.preventDefault();
   }
 
-  deleteMark(event) {
-    this.marksService.deleteMark(event.item.markId)
+  deleteMark(markId) {
+    this.marksService.deleteMark(markId)
       .then(() => {
-        this.cellForEdit.text('');
-        const index = this.marks.indexOf(this.marks.find(mark => mark.markId == event.item.markId));
+        const index = this.marks.indexOf(this.marks.find(mark => mark.markId == markId));
         this.marks.splice(index, 1);
       })
       .catch((err) => {

@@ -131,6 +131,14 @@ export class ClassesComponent implements AfterViewInit{
     };
   }
 
+  showModalForDeleteClass() {
+    this.isDeleteModalComponentActive = true;
+    this.yesCallbackForDeleteModalComponent = this.deleteClass.bind(this);
+    this.noCallbackForDeleteModalComponent = () => {
+      this.isDeleteModalComponentActive = false;
+    };
+  }
+
   removeFromClass() {
     if(!this.selectedPupil) return;
     this.pupilsService.removeFromClass(this.selectedPupil.userId)

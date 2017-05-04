@@ -311,21 +311,25 @@ tr, td {
 }
 
 .context-menu-delete {
-  content: '#xe014';
-  float: right;
-  display: none;
+  /*content: '#xe014';*/
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  position: relative;
 }
 
 .context-menu-edit {
-  content: '#x270f';
-  float: right;
-  display: none;
+  /*content: '#x270f';*/
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  position: relative;
 }
 
-.context-menu-delete:hover {
-  display: block;
-}
+/*td:hover .context-menu-delete{*/
+  /*display: block;*/
+/*}*/
 
-.context-menu-edit:hover {
-  display: block;
-}
+/*td:hover .context-menu-edit{*/
+  /*display: block;*/
+/*}*/

@@ -16,7 +16,7 @@
               <tr *ngFor="let clazz of classes" (click)="selectClass(clazz.classId)" [class.selected]="selectedClass && clazz.classId == selectedClass.classId">
                 <td>
                   {{clazz.number}} {{clazz.letterMark}}
-                  <button class="btn btn-danger pull-right" (click)="selectClass(clazz.classId); deleteClass()"><i class="glyphicon glyphicon-remove"></i> Удалить класс</button>
+                  <button class="btn btn-danger pull-right" (click)="selectClass(clazz.classId); showModalForDeleteClass()"><i class="glyphicon glyphicon-remove"></i> Удалить класс</button>
                 </td>
               </tr>
               </tbody>
