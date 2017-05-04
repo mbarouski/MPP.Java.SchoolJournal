@@ -4,7 +4,7 @@ html {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Russo One', sans-serif;
 }
 
 p, a, td, div, span, blockquote, th, cite {
@@ -56,7 +56,7 @@ h1, h2, h3 {
 
 .navbar-inverse .navbar-brand {
   color: yellow;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Russo One', sans-serif;
 }
 
 .btn {
@@ -308,4 +308,24 @@ tr, td {
 
 .selected a {
   color: black !important;
+}
+
+.context-menu-delete {
+  content: '#xe014';
+  float: right;
+  display: none;
+}
+
+.context-menu-edit {
+  content: '#x270f';
+  float: right;
+  display: none;
+}
+
+.context-menu-delete:hover {
+  display: block;
+}
+
+.context-menu-edit:hover {
+  display: block;
 }

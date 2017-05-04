@@ -35,35 +35,41 @@
             <td><a routerLink="/profile/{{pupil.userId}}" >{{pupilsService.getPupilFullName(pupil)}}</a></td>
             <td *ngFor="let lesson of lessons"
                 class="mark-td {{generateClass(getMarkForLessonAndPupil(lesson, pupil.userId))}}">
+              <i class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForLessonAndPupil(lesson, pupil.userId), $event)"
                    (contextmenu)="openContextMenu($event, getMarkForLessonAndPupil(lesson, pupil.userId).markId)"
                    class="mark-input">{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
 
             <td class="mark-td term-mark">
+              <i class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(1, pupil.userId), $event, 'term')"
                    (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(1, pupil.userId).markId)"
                    class="mark-input">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
               </div>
             </td>
             <td class="mark-td term-mark">
+              <i class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(2, pupil.userId), $event, 'term')"
                    (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(2, pupil.userId).markId)"
                    class="mark-input">{{decorateMark(getMarkForTermAndPupil(2, pupil.userId))}}
               </div>
             </td>
             <td class="mark-td term-mark">
+              <i class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(3, pupil.userId), $event, 'term')"
                    (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(3, pupil.userId).markId)"
                    class="mark-input">{{decorateMark(getMarkForTermAndPupil(3, pupil.userId))}}
               </div>
             </td>
             <td class="mark-td term-mark">
+              <i class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(4, pupil.userId), $event, 'term')"
                    (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(4, pupil.userId).markId)"
                    class="mark-input">{{decorateMark(getMarkForTermAndPupil(4, pupil.userId))}}
               </div>
             </td>
             <td class="mark-td year-mark">
+              <i class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForYearAndPupil(pupil.userId), $event, 'year')"
                    (contextmenu)="openContextMenu($event, getMarkForYearAndPupil(pupil.userId).markId)"
                    class="mark-input">{{decorateMark(getMarkForYearAndPupil(pupil.userId))}}
@@ -94,10 +100,10 @@
           <div *ngIf="errorMessage" class="alert alert-danger">
             <div>{{errorMessage}}</div>
           </div>
-          <div class="form-group">
+          <div *ngIf="currentMark.type !== 'term' && currentMark.type !== 'year'" class="form-group">
             <label>Тип</label>
-            <select [disabled]="currentMark.type == 'term' || currentMark.type == 'year'" class="form-control" [(ngModel)]="currentMark.type" name="type">
-              <option *ngFor="let type of markTypes" value="{{type.short}}">{{type.rus}}</option>
+            <select class="form-control" [(ngModel)]="currentMark.type" name="type">
+              <option *ngFor="let type of getMarkTypes()" value="{{type.short}}">{{type.rus}}</option>
             </select>
             <div *ngIf="validationError.type.status" class="alert alert-danger">
               <div>{{validationError.type.message}}</div>
@@ -112,7 +118,7 @@
               <div>{{validationError.pupil.message}}</div>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="currentMark.type !== 'apsent'">
             <label>Значение</label>
             <input class="form-control" type="number" max="10" min="2" [(ngModel)]="currentMark.value" name="value">
           </div>

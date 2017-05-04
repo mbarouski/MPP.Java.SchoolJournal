@@ -216,29 +216,29 @@ export class MarksComponent implements OnInit, AfterViewInit{
     if(!this.marks.length) return;
     if(!this.terms.length) return;
     return this.marks.find(m => m.pupil.userId == +pupilId && m.type === 'term'
-      && moment(m.date).isBetween(moment(this.terms[term-1].start), moment(this.terms[term-1].end)));
+      && m.termNumber === +term);
   }
 
   getMarkForYearAndPupil(pupilId) {
-    return this.marks.find(m => m.pupilId == +pupilId && m.type === 'year');
+    return this.marks.find(m => m.pupil.userId == +pupilId && m.type === 'year');
   }
 
   getDate(td) {
     const index = td.parent().index();
     let date = this.lessons[index - 1];
-    if(!date) {
-      const text = td.parent().parent().parent().prev().children().first().children()[index].textContent;
-      if(text === 'Год') {
-        date = this.terms[this.terms.length - 1].end;
-      } else {
-        const term_number = text.split(' ')[0];
-        date = this.terms[(+term_number) - 1].end;
-      }
-      date = moment(date, "YYYY-MM-DD").format("DD.MM.YYYY")
-    } else {
-      date = `${date}.${this.terms[this.currentTerm - 1].start.split('-')[0]}`
-    }
+    date = `${date}.${this.terms[this.currentTerm - 1].start.split('-')[0]}`;
     return date;
+  }
+
+  getTermNumber(td) {
+    const index = td.parent().index();
+    const text = td.parent().parent().parent().prev().children().first().children()[index].textContent;
+    if(text === 'Год') {
+      return 0;
+    } else {
+      const term_number = text.split(' ')[0];
+      return +term_number;
+    }
   }
 
   setCurrentMark(mark, event, initType) {
@@ -254,6 +254,9 @@ export class MarksComponent implements OnInit, AfterViewInit{
     if(initType) {
       currentMark.type = initType;
       this.currentMarkType = initType;
+      currentMark.termNumber = this.getTermNumber(this.cellForEdit);
+    } else {
+      currentMark.type = this.markTypes[0].short;
     }
     this.currentMark = currentMark;
     this.openMarkModal();
@@ -303,7 +306,13 @@ export class MarksComponent implements OnInit, AfterViewInit{
   submitMarkForm() {
     this.validateMarkInfo();
     if(!this.isMarkInfoValid()) return;
-    this.currentMark.date = moment(`${this.currentMark.date}`, 'DD-MM-YYYY').format('YYYY-MM-DD');
+    if(!['year', 'term'].includes(this.currentMark.type)) {
+      this.currentMark.date = moment(`${this.currentMark.date}`, 'DD.MM.YYYY').format('YYYY-MM-DD');
+    } else if(this.currentMark.type === 'apsent') {
+      this.currentMark.value = 0;
+    } else {
+      this.currentMark.date = null;
+    }
     this.marksService.setMark(this.currentMark)
       .then((mark: any) => {
         this.closeMarkModal();
@@ -368,6 +377,10 @@ export class MarksComponent implements OnInit, AfterViewInit{
           this.errorMessage = err._body;
         }
       });
+  }
+
+  getMarkTypes() {
+    return !['year', 'term'].includes(this.currentMark.type) ?  this.markTypes.filter(t => !['year', 'term'].includes(t.short)) : this.markTypes;
   }
 
 }

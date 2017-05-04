@@ -199,8 +199,16 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
     }
 
     private void checkMarkBeforeCreate(Mark newMark, Session session) throws ServiceException {
-        validateDate(newMark.getDate());
-        validateValue(newMark.getValue());
+        if(newMark.getType() == MarkType.year || newMark.getType() == MarkType.term) {
+            newMark.setDate(null);
+        } else {
+            validateDate(newMark.getDate());
+        }
+        if(newMark.getType() != MarkType.apsent) {
+            validateValue(newMark.getValue());
+        } else {
+            newMark.setValue(0);
+        }
         Pupil pupil = (Pupil) session.get(Pupil.class, newMark.getPupilId());
         if (pupil == null) {
             throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_pupil);
@@ -215,10 +223,10 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         if (teacher == null) {
             throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_teacher);
         }
-        if (newMark.getType() == year) {
-            newMark.setTermNumber(null);
-        } else if (newMark.getTermNumber() > 4 || newMark.getTermNumber() < 0) {
+        if (newMark.getType() == term && (newMark.getTermNumber() > 4 || newMark.getTermNumber() < 0)) {
             throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_term);
+        } else {
+            newMark.setTermNumber(0);
         }
         newMark.setTeacher(teacher);
     }

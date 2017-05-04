@@ -18,10 +18,10 @@
             </type>
         </property>
         <property name="date">
-            <column name="date" sql-type="date"/>
+            <column name="date" sql-type="date" not-null="false"/>
         </property>
         <property name="termNumber">
-            <column name="term_number" sql-type="int"/>
+            <column name="term_number" sql-type="int" not-null="false"/>
         </property>
         <many-to-one name="pupil" class="school.journal.entity.Pupil" fetch="join" lazy="false">
             <column name="pupil_id"/>

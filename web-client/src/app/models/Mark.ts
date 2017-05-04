@@ -6,6 +6,7 @@ export class Mark {
   pupilId: number;
   subjectId: number;
   teacherId: number;
+  termNumber: number;
 
   constructor(id) {
     this.markId = id;

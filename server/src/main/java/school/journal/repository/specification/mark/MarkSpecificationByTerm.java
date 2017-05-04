@@ -35,8 +35,8 @@ public class MarkSpecificationByTerm extends MarkSpecification {
 
     @Override
     public boolean specified(Mark mark) {
-        return mark.getTermNumber().intValue() == termNumber
-                || mark.getType() == MarkType.term
+        return (mark.getTermNumber().intValue() == termNumber
+                && mark.getType() == MarkType.term)
                 || mark.getType() == year;
 
 //        Date date = mark.getDate();
