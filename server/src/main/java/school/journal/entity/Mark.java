@@ -17,6 +17,15 @@ public class Mark {
     private Teacher teacher;
     private Integer subjectId;
     private Integer teacherId;
+    private Integer termNumber;
+
+    public Integer getTermNumber() {
+        return termNumber;
+    }
+
+    public void setTermNumber(Integer termNumber) {
+        this.termNumber = termNumber;
+    }
 
     public Integer getMarkId() {
         return markId;

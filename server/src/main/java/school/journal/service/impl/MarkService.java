@@ -26,10 +26,11 @@ import school.journal.utils.exception.ValidationException;
 
 import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.hibernate.criterion.CriteriaSpecification.INNER_JOIN;
+import static school.journal.entity.enums.MarkType.term;
+import static school.journal.entity.enums.MarkType.year;
 import static school.journal.service.impl.TermService.MILLISECONDS_IN_DAY;
 import static school.journal.utils.ValidateServiceUtils.validateId;
 
@@ -98,7 +99,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Transaction transaction = session.beginTransaction();
         List<Mark> list;
         try {
-            list = repository.query(new MarkSpecificationByTerm(termService.getCurrentTerm()), session);
+            list = repository.query(new MarkSpecificationByTerm(termService.getCurrentTerm().getNumber()), session);
             transaction.commit();
         } catch (RepositoryException exc) {
             transaction.rollback();
@@ -128,7 +129,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         Transaction transaction = session.beginTransaction();
         Term term = (termId != 0) ? (Term) session.get(Term.class, termId) : termService.getCurrentTerm();
         Criteria criteria = session.createCriteria(Mark.class);
-        criteria.add(new MarkSpecificationByTerm(term).toCriteria());
+        criteria.add(new MarkSpecificationByTerm(term.getNumber()).toCriteria());
         criteria.createCriteria("subject", INNER_JOIN).add(new SubjectSpecificationBySubjectId(subjectId).toCriteria());
         criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByClassId(classId).toCriteria());
         criteria.addOrder(Order.asc("pupil")).addOrder(Order.asc("date"));
@@ -155,7 +156,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         try {
             Term term = (termId != 0) ? (Term) session.get(Term.class, termId) : termService.getCurrentTerm();
             Criteria criteria = session.createCriteria(Mark.class);
-            criteria.add(new MarkSpecificationByTerm(term).toCriteria());
+            criteria.add(new MarkSpecificationByTerm(term.getNumber()).toCriteria());
             criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByClassId(classId).toCriteria());
             criteria.addOrder(Order.asc("classId")).addOrder(Order.asc("pupil.pupilId")).addOrder(Order.asc("date"));
             markList = (List<Mark>) criteria.list();
@@ -183,7 +184,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         try {
             Term term = (termId != 0) ? (Term) session.get(Term.class, termId) : termService.getCurrentTerm();
             Criteria criteria = session.createCriteria(Mark.class);
-            criteria.add(new MarkSpecificationByTerm(term).toCriteria());
+            criteria.add(new MarkSpecificationByTerm(term.getNumber()).toCriteria());
             criteria.createCriteria("pupil", INNER_JOIN).add(new PupilSpecificationByPupilId(pupilId).toCriteria());
             criteria.addOrder(Order.asc("pupil")).addOrder(Order.asc("date"));
             markList = (List<Mark>) criteria.list();
@@ -214,6 +215,11 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         if (teacher == null) {
             throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_teacher);
         }
+        if (newMark.getType() == year) {
+            newMark.setTermNumber(null);
+        } else if (newMark.getTermNumber() > 4 || newMark.getTermNumber() < 0) {
+            throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_term);
+        }
         newMark.setTeacher(teacher);
     }
 
@@ -233,6 +239,11 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
             }
             if (newMark.getType() != null) {
                 mark.setType(newMark.getType());
+            }
+            if (newMark.getType() == year){
+                mark.setTermNumber(null);
+            } else if (newMark.getTermNumber() > 4 || newMark.getTermNumber() < 0) {
+                throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_term);
             }
             return mark;
         } catch (RepositoryException exc) {
@@ -333,7 +344,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
     }
 
-    private void validateDate(Date date) throws ServiceException {
+    private void validateDate(java.sql.Date date) throws ServiceException {
         Session session = sessionFactory.openSession();
         java.sql.Date start = ((Term) session.get(Term.class, 1)).getStart();
         java.sql.Date end = termService.getCurrentTerm().getEnd();
