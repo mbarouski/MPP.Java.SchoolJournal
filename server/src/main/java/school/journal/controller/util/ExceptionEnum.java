@@ -71,7 +71,7 @@ public enum ExceptionEnum {
     username_not_valid("Имя пользователя некорректно."),
     password_is_null("Пароль пуст"),
     email_not_valid("Неверно задан email-адрес"),
-
+    mark_has_wrong_term("Неверно задана четверть"),
     not_classified("Не классифицируемая ошибка");
 
     String value;

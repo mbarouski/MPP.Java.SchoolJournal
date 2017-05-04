@@ -20,6 +20,9 @@
         <property name="date">
             <column name="date" sql-type="date"/>
         </property>
+        <property name="termNumber">
+            <column name="term_number" sql-type="int"/>
+        </property>
         <many-to-one name="pupil" class="school.journal.entity.Pupil" fetch="join" lazy="false">
             <column name="pupil_id"/>
         </many-to-one>
