@@ -34,39 +34,39 @@
           <tr *ngFor="let pupil of pupils">
             <td><a routerLink="/profile/{{pupil.userId}}" >{{pupilsService.getPupilFullName(pupil)}}</a></td>
             <td *ngFor="let lesson of lessons"
-                class="mark-td {{generateClass(getMarkForLessonAndPupil(lesson, pupil.userId))}}">
+                class="mark-td {{generateClass(getMarkForLessonAndPupil(lesson, pupil.userId))}} mark-input">
               <i *ngIf="getMarkForLessonAndPupil(lesson, pupil.userId)" (click)="showModalForDeleteMark(getMarkForLessonAndPupil(lesson, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForLessonAndPupil(lesson, pupil.userId), $event)"
-                   class="mark-input">{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
+                   class="mark-div">{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
 
-            <td class="mark-td term-mark">
+            <td class="mark-td term-mark mark-input">
               <i *ngIf="getMarkForTermAndPupil(1, pupil.userId)" (click)="showModalForDeleteMark(getMarkForTermAndPupil(1, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(1, pupil.userId), $event, 'term')"
-                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
               </div>
             </td>
-            <td class="mark-td term-mark">
+            <td class="mark-td term-mark mark-input">
               <i *ngIf="getMarkForTermAndPupil(2, pupil.userId)" (click)="showModalForDeleteMark(getMarkForTermAndPupil(2, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(2, pupil.userId), $event, 'term')"
-                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(2, pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForTermAndPupil(2, pupil.userId))}}
               </div>
             </td>
-            <td class="mark-td term-mark">
+            <td class="mark-td term-mark mark-input">
               <i *ngIf="getMarkForTermAndPupil(3, pupil.userId)" (click)="showModalForDeleteMark(getMarkForTermAndPupil(3, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(3, pupil.userId), $event, 'term')"
-                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(3, pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForTermAndPupil(3, pupil.userId))}}
               </div>
             </td>
-            <td class="mark-td term-mark">
+            <td class="mark-td term-mark mark-input">
               <i *ngIf="getMarkForTermAndPupil(4, pupil.userId)" (click)="showModalForDeleteMark(getMarkForTermAndPupil(4, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(4, pupil.userId), $event, 'term')"
-                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(4, pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForTermAndPupil(4, pupil.userId))}}
               </div>
             </td>
-            <td class="mark-td year-mark">
+            <td class="mark-td year-mark mark-input">
               <i *ngIf="getMarkForYearAndPupil(pupil.userId)" (click)="showModalForDeleteMark(getMarkForYearAndPupil(pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForYearAndPupil(pupil.userId), $event, 'year')"
-                   class="mark-input">{{decorateMark(getMarkForYearAndPupil(pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForYearAndPupil(pupil.userId))}}
               </div>
             </td>
           </tr>

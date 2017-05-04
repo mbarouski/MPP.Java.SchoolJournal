@@ -6,6 +6,7 @@ import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
 import {User} from "../models/User";
 
+const _ = require('lodash');
 
 @Injectable()
 export class UsersService {
@@ -29,6 +30,7 @@ export class UsersService {
           return Observable.throw(err);
         })
         .subscribe((users) => {
+          users = _.sortBy(users, (user) => user.username);
           this.usersSubject.next(users);
           resolve(users);
         });

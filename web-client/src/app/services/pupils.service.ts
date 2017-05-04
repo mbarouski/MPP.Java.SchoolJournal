@@ -5,7 +5,7 @@ import {Http, URLSearchParams} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
 import {HttpUtil} from "./http.util";
-
+const _ = require('lodash');
 
 @Injectable()
 export class PupilsService {
@@ -47,6 +47,7 @@ export class PupilsService {
           return Observable.throw(err);
         })
         .subscribe((pupils) => {
+          pupils = _.sortBy(pupils, (pupil) => this.getPupilFullName(pupil));
           resolve(pupils);
         });
     });
@@ -65,6 +66,7 @@ export class PupilsService {
           return Observable.throw(err);
         })
         .subscribe((pupils) => {
+          pupils = _.sortBy(pupils, (pupil) => this.getPupilFullName(pupil));
           resolve(pupils);
         });
     });
@@ -72,7 +74,7 @@ export class PupilsService {
 
   getPupilFullName(pupil) {
     if (!pupil) return;
-    return `${pupil.firstName} ${pupil.pathronymic} ${pupil.lastName}`;
+    return `${pupil.lastName} ${pupil.firstName} ${pupil.pathronymic}`;
   }
 
   removeFromClass(id) {

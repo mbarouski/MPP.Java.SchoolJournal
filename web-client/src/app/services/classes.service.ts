@@ -30,7 +30,7 @@ export class ClassesService {
           return Observable.throw(err);
         })
         .subscribe((classes) => {
-          _.sortBy(classes, (c) => `${c.number} ${c.letterMark}`);
+          classes = _.sortBy(classes, (c) => `${c.number} ${c.letterMark}`);
           this.classes = classes;
           this.classesSubject.next(classes);
           resolve(classes);

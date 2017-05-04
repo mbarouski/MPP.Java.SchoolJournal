@@ -4,6 +4,7 @@ import {Http, URLSearchParams} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
 
+const _ = require('lodash');
 
 @Injectable()
 export class SubjectsService {
@@ -29,6 +30,7 @@ export class SubjectsService {
           return Observable.throw(err);
         })
         .subscribe((subjects) => {
+          subjects = _.sortBy(subjects, (subject) => subject.name);
           this.subjects = subjects;
           this.subjectsSubject.next(subjects);
           resolve(subjects);
