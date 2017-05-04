@@ -225,7 +225,7 @@ public class MarkService extends CRUDService<Mark> implements IMarkService {
         }
         if (newMark.getType() == term && (newMark.getTermNumber() > 4 || newMark.getTermNumber() < 0)) {
             throw new ClassifiedServiceException(ExceptionEnum.mark_has_wrong_term);
-        } else {
+        } else if (newMark.getType() != term) {
             newMark.setTermNumber(0);
         }
         newMark.setTeacher(teacher);
