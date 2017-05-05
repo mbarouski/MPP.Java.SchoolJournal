@@ -79,7 +79,8 @@ public class ClassAPIController extends BaseController<Clazz> {
     public ResponseEntity getMarksForClass(HttpServletRequest request)
             throws ControllerException {
         try {
-            generationService.generateMarksDocument(DocumentType.CSV, 1, 1);
+//            generationService.generateMarksDocument(DocumentType.CSV, 1, 1);
+            generationService.generateClassPupilListDocument(DocumentType.PDF, 1);
         } catch (ServiceException exc) {}
         return null;
     }
