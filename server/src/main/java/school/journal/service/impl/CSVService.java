@@ -3,6 +3,7 @@ package school.journal.service.impl;
 import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import school.journal.entity.Clazz;
 import school.journal.entity.Pupil;
 import school.journal.entity.Teacher;
 import school.journal.repository.impl.TeacherRepository;
@@ -46,7 +47,11 @@ public class CSVService implements IDocumentGenerationService {
     @Override
     public OutputStream createPupilClassListWithFormerTeacherDocument(int classId) throws ServiceException {
         List<Pupil> pupils = pupilService.getListOfPupils(classId);
-//        Teacher teacher = teacherRepository.query(new TeacherSpecificationByClassId(classId));
+        Teacher teacher = teacherService.getFormTeacher(classId);
+        Clazz clazz = classService.getOne(classId);
+        if (teacher!=null){
+
+        }
 
 
 
