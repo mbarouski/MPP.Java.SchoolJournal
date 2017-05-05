@@ -10,6 +10,9 @@ import school.journal.aop.Secured;
 import school.journal.controller.exception.ControllerException;
 import school.journal.entity.Clazz;
 import school.journal.entity.enums.RoleEnum;
+import school.journal.service.document.generation.DocumentType;
+import school.journal.service.document.generation.IGenerationService;
+import school.journal.service.exception.ServiceException;
 import school.journal.service.impl.ClassService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +68,20 @@ public class ClassAPIController extends BaseController<Clazz> {
     public ResponseEntity getOne(HttpServletRequest request, @PathVariable("classId") int classId)
             throws ControllerException {
         return getOne(classService::getOne, classId, "Can't get class by id", LOGGER);
+    }
+
+    @Autowired
+    @Qualifier("GenerationService")
+    private IGenerationService generationService;
+
+    @RequestMapping(value = "/getMarksForClass", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity getMarksForClass(HttpServletRequest request)
+            throws ControllerException {
+        try {
+            generationService.generateMarksDocument(DocumentType.CSV, 1, 1);
+        } catch (ServiceException exc) {}
+        return null;
     }
 }
 
