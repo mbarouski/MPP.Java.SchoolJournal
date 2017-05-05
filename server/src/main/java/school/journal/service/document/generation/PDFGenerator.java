@@ -17,7 +17,7 @@ import java.util.List;
 @Service("PDFGenerator")
 public class PDFGenerator implements IGenerator {
     @Override
-    public OutputStream generateClassPupilListDocument(Teacher teacher, Clazz clazz, List<Pupil> pupilList) throws ServiceException {
+    public OutputStream generateClassPupilListDocument(OutputStream os, Teacher teacher, Clazz clazz, List<Pupil> pupilList) throws ServiceException {
         String tempFileName = MD5Generator.generate(((new java.util.Date()).getTime()) + "") + ".pdf";
         PdfDocument pdfDocument = new PdfDocument();
         try {
@@ -30,22 +30,22 @@ public class PDFGenerator implements IGenerator {
     }
 
     @Override
-    public OutputStream generateTeacherScheduleDocument(Teacher teacher, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
+    public OutputStream generateTeacherScheduleDocument(OutputStream os, Teacher teacher, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
         return null;
     }
 
     @Override
-    public OutputStream generateClassScheduleDocument(Clazz clazz, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
+    public OutputStream generateClassScheduleDocument(OutputStream os, Clazz clazz, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
         return null;
     }
 
     @Override
-    public OutputStream generateFullScheduleDocument(List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
+    public OutputStream generateFullScheduleDocument(OutputStream os, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
         return null;
     }
 
     @Override
-    public OutputStream generateMarksDocument(Subject subject, List<Mark> markList, List<Pupil> pupilList, Clazz clazz, List<Date> lessonDateList) throws ServiceException {
+    public OutputStream generateMarksDocument(OutputStream os, Subject subject, List<Mark> markList, List<Pupil> pupilList, Clazz clazz, List<Date> lessonDateList) throws ServiceException {
         return null;
     }
 }
