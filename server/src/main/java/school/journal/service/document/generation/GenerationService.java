@@ -28,7 +28,7 @@ public class GenerationService implements IGenerationService{
 
     {
         GENERATOR_MAP.put(DocumentType.CSV, null);
-        GENERATOR_MAP.put(DocumentType.PDF, null);
+        GENERATOR_MAP.put(DocumentType.PDF, PDF_GENERATOR);
         GENERATOR_MAP.put(DocumentType.XLSX, null);
     }
 
