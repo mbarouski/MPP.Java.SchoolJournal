@@ -30,8 +30,9 @@
           <tbody>
           <tr *ngFor="let teacher of teachers">
             <td>{{teachersService.getTeacherFullName(teacher)}}</td>
-            <td class="td-subject-link" *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)"
-                (contextmenu)="openContextMenuForEdit($event, getSubjectForTeacherAndDayAndTime(teacher, dayTime), !!getSubjectForTeacherAndDayAndTime(teacher, dayTime) ? deleteMenu : addMenu)">
+            <td class="td-subject-link" *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)">
+              <i *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" (click)="openModalForEditSubject(getSubjectForTeacherAndDayAndTime(teacher, dayTime))" class="glyphicon glyphicon-edit context-menu-edit"></i>
+              <i *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" (click)="showModalForDeleteSubject(getSubjectForTeacherAndDayAndTime(teacher, dayTime).subectInScheduleId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <a class="subject-link" *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" routerLink="{{createLinkToMarks(getSubjectForTeacherAndDayAndTime(teacher, dayTime))}}">
                 <i class="glyphicon glyphicon-ok green"></i>
                 <span>{{subjectForTeacherAndDayAndTime | get:'place'}}<br> {{subjectForTeacherAndDayAndTime | get:'subject.name'}} <br> {{subjectForTeacherAndDayAndTime | get:'clazz.number'}} {{subjectForTeacherAndDayAndTime | get:'clazz.letterMark'}}</span>
@@ -60,7 +61,7 @@
   </template>
 </context-menu>
 
-<div class="modal fade" bsModal #subjectModal="bs-modal" [config]="{backdrop: 'static'}"
+<div class="modal fade" bsModal #subjectModal="bs-modal"
      tabindex="-1" role="dialog" aria-labelledby="subjectForm" aria-hidden="true">
   <div *ngIf="currentSubject" class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -133,4 +134,8 @@
     </div>
   </div>
 </div>
+
+<delete-modal [yesCallback]="yesCallbackForDeleteModalComponent"
+              [noCallback]="noCallbackForDeleteModalComponent"
+              [isActive]="isDeleteModalComponentActive"></delete-modal>
 

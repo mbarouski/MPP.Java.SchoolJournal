@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import school.journal.interceptor.AuthInterceptor;
+import school.journal.interceptor.CorsInterceptor;
 
 @Configuration
 @EnableWebMvc
@@ -29,9 +30,15 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         return new AuthInterceptor();
     }
 
+//    @Bean
+//    public CorsInterceptor createCorsInterceptor() {
+//        return new CorsInterceptor();
+//    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(createAuthInterceptor()).excludePathPatterns("/api/auth/login");
+//        registry.addInterceptor(createCorsInterceptor());
     }
 
     @Override

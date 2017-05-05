@@ -6,6 +6,7 @@ import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
 import {HttpUtil} from "./http.util";
 
+const _ = require('lodash');
 
 @Injectable()
 export class TeachersService {
@@ -29,6 +30,7 @@ export class TeachersService {
         return Observable.throw(err);
       })
       .subscribe((teachers) => {
+        teachers = _.sortBy(teachers, (teacher) => this.getTeacherFullName(teacher));
         this.teachers = teachers;
         this.teachersSubject.next(teachers);
       });
@@ -59,7 +61,7 @@ export class TeachersService {
   }
 
   getTeacherFullName(teacher): string {
-    return teacher ? `${teacher.firstName} ${teacher.pathronymic} ${teacher.lastName}` : '';
+    return teacher ? `${teacher.lastName} ${teacher.firstName} ${teacher.pathronymic}` : '';
   }
 
   getTeacherNameList() {

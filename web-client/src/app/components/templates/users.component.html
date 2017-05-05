@@ -26,7 +26,7 @@
             <td>{{decorateRole(user.role.name)}}</td>
             <td>
               <button href="#" class="btn btn-success" (click)="selectUser(user.userId); openModalForChangeUserRole()"><i class="glyphicon glyphicon-user"></i> Изменить роль</button>
-              <button href="#" class="btn btn-danger" (click)="selectUser(user.userId); deleteUser()"><i class="glyphicon glyphicon-remove"></i></button>
+              <button href="#" class="btn btn-danger" (click)="selectUser(user.userId); showModalForDeleteUser()"><i class="glyphicon glyphicon-remove"></i></button>
             </td>
           </tr>
           </tbody>
@@ -44,7 +44,7 @@
 </section>
 
 
-<div class="modal fade" bsModal #userModal="bs-modal" [config]="{backdrop: 'static'}"
+<div class="modal fade" bsModal #userModal="bs-modal"
      tabindex="-1" role="dialog" aria-labelledby="userForm" aria-hidden="true">
   <div *ngIf="currentUser" class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -83,7 +83,7 @@
   </div>
 </div>
 
-<div class="modal fade" bsModal #userRoleModal="bs-modal" [config]="{backdrop: 'static'}"
+<div class="modal fade" bsModal #userRoleModal="bs-modal"
      tabindex="-1" role="dialog" aria-labelledby="userRoleForm" aria-hidden="true">
   <div *ngIf="currentRole" class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -151,3 +151,7 @@
     </div>
   </div>
 </div>
+
+<delete-modal [yesCallback]="yesCallbackForDeleteModalComponent"
+              [noCallback]="noCallbackForDeleteModalComponent"
+              [isActive]="isDeleteModalComponentActive"></delete-modal>

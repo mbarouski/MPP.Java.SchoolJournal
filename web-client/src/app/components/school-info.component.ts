@@ -69,7 +69,6 @@ export class SchoolInfoComponent  {
   }
 
   openTermModal() {
-    debugger
     this.startDate = moment(this.selectedTerm.start, 'YYYY:MM:DD');
     this.endDate = moment(this.selectedTerm.end, 'YYYY:MM:DD');
     this.currentTerm = new Term(this.selectedTerm.termId);
@@ -145,7 +144,6 @@ export class SchoolInfoComponent  {
   }
 
   submitForLessonForm() {
-    debugger
     this.currentLesson.startTime = moment(this.startTime).format('HH:mm:ss');
     this.currentLesson.endTime = moment(this.endTime).format('HH:mm:ss');
     this.validateLesson();

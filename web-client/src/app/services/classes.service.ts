@@ -5,6 +5,7 @@ import {Http, URLSearchParams} from "@angular/http";
 import {APP_CONFIG} from "../configs/app.config";
 import {AuthService} from "./auth.service";
 
+const _ = require('lodash');
 
 @Injectable()
 export class ClassesService {
@@ -29,6 +30,7 @@ export class ClassesService {
           return Observable.throw(err);
         })
         .subscribe((classes) => {
+          classes = _.sortBy(classes, (c) => `${c.number} ${c.letterMark}`);
           this.classes = classes;
           this.classesSubject.next(classes);
           resolve(classes);

@@ -4,7 +4,7 @@ html {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Russo One', sans-serif;
 }
 
 p, a, td, div, span, blockquote, th, cite {
@@ -56,13 +56,21 @@ h1, h2, h3 {
 
 .navbar-inverse .navbar-brand {
   color: yellow;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Russo One', sans-serif;
 }
 
 .btn {
   border-radius: 0;
   margin: 2px;
   border: none;
+}
+
+.btn-default {
+  background-color: lightgrey;
+}
+
+.btn-default:hover {
+  background-color: #eeeeee;
 }
 
 .alert-danger {
@@ -204,7 +212,7 @@ a:hover {
 }
 .lesson-date,
 .lesson-time {
-  transform: rotate(-35deg);
+  /*transform: rotate(-35deg);*/
 }
 .green {
   color: green;
@@ -285,7 +293,7 @@ td.selected a {
 }
 
 tr:hover .action-span {
-  display: inline;
+  display: inline-block;
 }
 
 @media(max-width: 768px) {
@@ -297,3 +305,31 @@ tr:hover .action-span {
 tr, td {
   transition: width 1s ease-in-out;
 }
+
+.selected a {
+  color: black !important;
+}
+
+.context-menu-delete {
+  /*content: '#xe014';*/
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  position: relative;
+}
+
+.context-menu-edit {
+  /*content: '#x270f';*/
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  position: relative;
+}
+
+/*td:hover .context-menu-delete{*/
+  /*display: block;*/
+/*}*/
+
+/*td:hover .context-menu-edit{*/
+  /*display: block;*/
+/*}*/

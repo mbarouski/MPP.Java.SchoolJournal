@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-class CorsInterceptor extends HandlerInterceptorAdapter{
+public class CorsInterceptor extends HandlerInterceptorAdapter{
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {

@@ -228,6 +228,18 @@ export class UsersComponent implements AfterViewInit{
     }
   }
 
+  yesCallbackForDeleteModalComponent = () => {};
+  noCallbackForDeleteModalComponent = () => {};
+  isDeleteModalComponentActive = false;
+
+  showModalForDeleteUser() {
+    this.isDeleteModalComponentActive = true;
+    this.yesCallbackForDeleteModalComponent = this.deleteUser.bind(this);
+    this.noCallbackForDeleteModalComponent = () => {
+      this.isDeleteModalComponentActive = false;
+    };
+  }
+
   validatePathronymic() {
     const pathronymic = this.currentTeacherPupil.pathronymic;
     if(!pathronymic) {

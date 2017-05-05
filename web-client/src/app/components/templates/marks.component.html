@@ -34,39 +34,39 @@
           <tr *ngFor="let pupil of pupils">
             <td><a routerLink="/profile/{{pupil.userId}}" >{{pupilsService.getPupilFullName(pupil)}}</a></td>
             <td *ngFor="let lesson of lessons"
-                class="mark-td {{generateClass(getMarkForLessonAndPupil(lesson, pupil.userId))}}">
+                class="mark-td {{generateClass(getMarkForLessonAndPupil(lesson, pupil.userId))}} mark-input">
+              <i *ngIf="getMarkForLessonAndPupil(lesson, pupil.userId)" (click)="showModalForDeleteMark(getMarkForLessonAndPupil(lesson, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForLessonAndPupil(lesson, pupil.userId), $event)"
-                   (contextmenu)="openContextMenu($event, getMarkForLessonAndPupil(lesson, pupil.userId).markId)"
-                   class="mark-input">{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
+                   class="mark-div">{{decorateMark(getMarkForLessonAndPupil(lesson, pupil.userId))}}</div></td>
 
-            <td class="mark-td term-mark">
+            <td class="mark-td term-mark mark-input">
+              <i *ngIf="getMarkForTermAndPupil(1, pupil.userId)" (click)="showModalForDeleteMark(getMarkForTermAndPupil(1, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(1, pupil.userId), $event, 'term')"
-                   (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(1, pupil.userId).markId)"
-                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForTermAndPupil(1, pupil.userId))}}
               </div>
             </td>
-            <td class="mark-td term-mark">
+            <td class="mark-td term-mark mark-input">
+              <i *ngIf="getMarkForTermAndPupil(2, pupil.userId)" (click)="showModalForDeleteMark(getMarkForTermAndPupil(2, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(2, pupil.userId), $event, 'term')"
-                   (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(2, pupil.userId).markId)"
-                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(2, pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForTermAndPupil(2, pupil.userId))}}
               </div>
             </td>
-            <td class="mark-td term-mark">
+            <td class="mark-td term-mark mark-input">
+              <i *ngIf="getMarkForTermAndPupil(3, pupil.userId)" (click)="showModalForDeleteMark(getMarkForTermAndPupil(3, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(3, pupil.userId), $event, 'term')"
-                   (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(3, pupil.userId).markId)"
-                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(3, pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForTermAndPupil(3, pupil.userId))}}
               </div>
             </td>
-            <td class="mark-td term-mark">
+            <td class="mark-td term-mark mark-input">
+              <i *ngIf="getMarkForTermAndPupil(4, pupil.userId)" (click)="showModalForDeleteMark(getMarkForTermAndPupil(4, pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForTermAndPupil(4, pupil.userId), $event, 'term')"
-                   (contextmenu)="openContextMenu($event, getMarkForTermAndPupil(4, pupil.userId).markId)"
-                   class="mark-input">{{decorateMark(getMarkForTermAndPupil(4, pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForTermAndPupil(4, pupil.userId))}}
               </div>
             </td>
-            <td class="mark-td year-mark">
+            <td class="mark-td year-mark mark-input">
+              <i *ngIf="getMarkForYearAndPupil(pupil.userId)" (click)="showModalForDeleteMark(getMarkForYearAndPupil(pupil.userId).markId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
               <div (click)="setCurrentMark(getMarkForYearAndPupil(pupil.userId), $event, 'year')"
-                   (contextmenu)="openContextMenu($event, getMarkForYearAndPupil(pupil.userId).markId)"
-                   class="mark-input">{{decorateMark(getMarkForYearAndPupil(pupil.userId))}}
+                   class="mark-div">{{decorateMark(getMarkForYearAndPupil(pupil.userId))}}
               </div>
             </td>
           </tr>
@@ -79,7 +79,7 @@
   </div>
 </section>
 
-<div class="modal fade" bsModal #markModal="bs-modal" [config]="{backdrop: 'static'}"
+<div class="modal fade" bsModal #markModal="bs-modal"
      tabindex="-1" role="dialog" aria-labelledby="markForm" aria-hidden="true">
   <div *ngIf="currentMark" class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -94,10 +94,10 @@
           <div *ngIf="errorMessage" class="alert alert-danger">
             <div>{{errorMessage}}</div>
           </div>
-          <div class="form-group">
+          <div *ngIf="currentMark.type !== 'term' && currentMark.type !== 'year'" class="form-group">
             <label>Тип</label>
-            <select [disabled]="currentMark.type == 'term' || currentMark.type == 'year'" class="form-control" [(ngModel)]="currentMark.type" name="type">
-              <option *ngFor="let type of markTypes" value="{{type.short}}">{{type.rus}}</option>
+            <select class="form-control" [(ngModel)]="currentMark.type" name="type">
+              <option *ngFor="let type of getMarkTypes()" value="{{type.short}}">{{type.rus}}</option>
             </select>
             <div *ngIf="validationError.type.status" class="alert alert-danger">
               <div>{{validationError.type.message}}</div>
@@ -112,7 +112,7 @@
               <div>{{validationError.pupil.message}}</div>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="currentMark.type !== 'apsent'">
             <label>Значение</label>
             <input class="form-control" type="number" max="10" min="2" [(ngModel)]="currentMark.value" name="value">
           </div>
@@ -136,3 +136,7 @@
     <p>Удалить</p>
   </template>
 </context-menu>
+
+<delete-modal [yesCallback]="yesCallbackForDeleteModalComponent"
+              [noCallback]="noCallbackForDeleteModalComponent"
+              [isActive]="isDeleteModalComponentActive"></delete-modal>
