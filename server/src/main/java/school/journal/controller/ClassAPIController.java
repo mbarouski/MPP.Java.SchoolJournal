@@ -16,6 +16,8 @@ import school.journal.service.exception.ServiceException;
 import school.journal.service.impl.ClassService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @CrossOrigin
 @Controller
@@ -76,11 +78,12 @@ public class ClassAPIController extends BaseController<Clazz> {
 
     @RequestMapping(value = "/getMarksForClass", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getMarksForClass(HttpServletRequest request)
+    public ResponseEntity getMarksForClass(HttpServletRequest request, HttpServletResponse response)
             throws ControllerException {
         try {
-            generationService.generateMarksDocument(DocumentType.CSV, 1, 1);
-        } catch (ServiceException exc) {}
+//            generationService.generateMarksDocument(DocumentType.CSV, 1, 1);
+            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.PDF, 1);
+        } catch (ServiceException | IOException exc) {}
         return null;
     }
 }

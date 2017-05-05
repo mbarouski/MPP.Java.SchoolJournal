@@ -22,9 +22,13 @@ import java.util.List;
 public class GenerationService implements IGenerationService{
     private HashMap<DocumentType, IGenerator> GENERATOR_MAP = new HashMap<>();
 
+    @Qualifier("PDFGenerator")
+    @Autowired
+    private IGenerator PDF_GENERATOR;
+
     {
         GENERATOR_MAP.put(DocumentType.CSV, null);
-        GENERATOR_MAP.put(DocumentType.PDF, null);
+        GENERATOR_MAP.put(DocumentType.PDF, PDF_GENERATOR);
         GENERATOR_MAP.put(DocumentType.XLSX, null);
     }
 
@@ -61,7 +65,7 @@ public class GenerationService implements IGenerationService{
     private ISubjectInScheduleService subjectInScheduleService;
 
     @Override
-    public OutputStream generateClassPupilListDocument(DocumentType documentType, int classId) throws ServiceException {
+    public OutputStream generateClassPupilListDocument(OutputStream os, DocumentType documentType, int classId) throws ServiceException {
         Clazz clazz = classService.getOne(classId);
         List<Pupil> pupilList = pupilService.getListOfPupils(classId);
         List<Teacher> teacherList = teacherService.getListOfTeachersForClass(classId);
@@ -72,38 +76,38 @@ public class GenerationService implements IGenerationService{
             }
         }
         IGenerator generator = GENERATOR_MAP.get(documentType);
-        return generator.generateClassPupilListDocument(teacher, clazz, pupilList);
+        return generator.generateClassPupilListDocument(os, teacher, clazz, pupilList);
     }
 
     @Override
-    public OutputStream generateTeacherScheduleDocument(DocumentType documentType, int teacherId)
+    public OutputStream generateTeacherScheduleDocument(OutputStream os, DocumentType documentType, int teacherId)
             throws ServiceException {
         Teacher teacher = teacherService.getOne(teacherId);
         List<SubjectInSchedule> subjectInScheduleList = subjectInScheduleService.getTeacherSchedule(teacherId);
         List<LessonTime> lessonTimeList = lessonTimeService.getLessonTimeList();
         IGenerator generator = GENERATOR_MAP.get(documentType);
-        return generator.generateTeacherScheduleDocument(teacher, subjectInScheduleList, lessonTimeList);
+        return generator.generateTeacherScheduleDocument(os, teacher, subjectInScheduleList, lessonTimeList);
     }
 
     @Override
-    public OutputStream generateClassScheduleDocument(DocumentType documentType, int classId) throws ServiceException {
+    public OutputStream generateClassScheduleDocument(OutputStream os, DocumentType documentType, int classId) throws ServiceException {
         Clazz clazz = classService.getOne(classId);
         List<SubjectInSchedule> subjectInScheduleList = subjectInScheduleService.getPupilSchedule(classId);
         List<LessonTime> lessonTimeList = lessonTimeService.getLessonTimeList();
         IGenerator generator = GENERATOR_MAP.get(documentType);
-        return generator.generateClassScheduleDocument(clazz, subjectInScheduleList, lessonTimeList);
+        return generator.generateClassScheduleDocument(os, clazz, subjectInScheduleList, lessonTimeList);
     }
 
     @Override
-    public OutputStream generateFullScheduleDocument(DocumentType documentType) throws ServiceException {
+    public OutputStream generateFullScheduleDocument(OutputStream os, DocumentType documentType) throws ServiceException {
         List<SubjectInSchedule> subjectInScheduleList = subjectInScheduleService.read();
         List<LessonTime> lessonTimeList = lessonTimeService.getLessonTimeList();
         IGenerator generator = GENERATOR_MAP.get(documentType);
-        return generator.generateFullScheduleDocument(subjectInScheduleList, lessonTimeList);
+        return generator.generateFullScheduleDocument(os, subjectInScheduleList, lessonTimeList);
     }
 
     @Override
-    public OutputStream generateMarksDocument(DocumentType documentType, int subjectId, int classId)
+    public OutputStream generateMarksDocument(OutputStream os, DocumentType documentType, int subjectId, int classId)
             throws ServiceException {
         Clazz clazz = classService.getOne(classId);
         Subject subject = subjectService.getOne(subjectId);
@@ -113,7 +117,7 @@ public class GenerationService implements IGenerationService{
         List<LessonTime> lessonTimeList = lessonTimeService.getLessonTimeList();
         List<SubjectInSchedule> subjectInScheduleList = getSubjectInScheduleForSubjectAndClass(subjectId, classId);
         IGenerator generator = GENERATOR_MAP.get(documentType);
-        return generator.generateMarksDocument(subject, markList, pupilList, clazz, getLessonDateList(subjectInScheduleList));
+        return generator.generateMarksDocument(os, subject, markList, pupilList, clazz, getLessonDateList(subjectInScheduleList));
     }
 
     private List<SubjectInSchedule> getSubjectInScheduleForSubjectAndClass(int subjectId, int classId)
