@@ -165,13 +165,14 @@ export class FullScheduleComponent implements AfterViewInit{
   }
 
   openModalForAddSubject(event) {
-    event.event.preventDefault();
+    this.cellForEdit = $(event.currentTarget);
+    event.preventDefault();
     this.isEdit = false;
     let teacherName = $(this.cellForEdit.parent().children()[0]).text();
     let subject = new SubjectInSchedule(0);
-    subject.teacherId = this.teachersService.getTeacherByFullName(teacherName).userId;
-    subject.dayOfWeek = this.days[Math.floor((this.cellForEdit.index() - 1) / this.times.length)].short;
-    subject.time = this.times[(this.cellForEdit.index() - 1) % this.times.length];
+    // subject.teacherId = this.teachersService.getTeacherByFullName(teacherName).userId;
+    // subject.dayOfWeek = this.days[Math.floor((this.cellForEdit.index() - 1) / this.times.length)].short;
+    // subject.time = this.times[(this.cellForEdit.index() - 1) % this.times.length];
     this.currentSubject = subject;
     this.subjectModal.show();
   }

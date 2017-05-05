@@ -33,6 +33,7 @@
             <td class="td-subject-link" *ngFor="let dayTime of times | dayTimePipe" [class.htooltip]="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)">
               <i *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" (click)="openModalForEditSubject(getSubjectForTeacherAndDayAndTime(teacher, dayTime))" class="glyphicon glyphicon-edit context-menu-edit"></i>
               <i *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" (click)="showModalForDeleteSubject(getSubjectForTeacherAndDayAndTime(teacher, dayTime).subectInScheduleId)" class="glyphicon glyphicon-remove context-menu-delete"></i>
+              <i *ngIf="!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" (click)="openModalForAddSubject($event)" class="glyphicon glyphicon-plus context-menu-add"></i>
               <a class="subject-link" *ngIf="!!getSubjectForTeacherAndDayAndTime(teacher, dayTime)" routerLink="{{createLinkToMarks(getSubjectForTeacherAndDayAndTime(teacher, dayTime))}}">
                 <i class="glyphicon glyphicon-ok green"></i>
                 <span>{{subjectForTeacherAndDayAndTime | get:'place'}}<br> {{subjectForTeacherAndDayAndTime | get:'subject.name'}} <br> {{subjectForTeacherAndDayAndTime | get:'clazz.number'}} {{subjectForTeacherAndDayAndTime | get:'clazz.letterMark'}}</span>
@@ -96,7 +97,7 @@
           </div>
           <div class="form-group">
             <label>Учитель</label>
-            <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.teacherId" name="teacher">
+            <select class="form-control" [(ngModel)]="currentSubject.teacherId" name="teacher">
               <option *ngFor="let teacher of teachers" value="{{teacher.userId}}">{{teachersService.getTeacherFullName(teacher)}}</option>
             </select>
             <div *ngIf="validationError.teacher.status" class="alert alert-danger">
@@ -112,7 +113,7 @@
           </div>
           <div class="form-group">
             <label>День</label>
-            <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.dayOfWeek" name="day">
+            <select class="form-control" [(ngModel)]="currentSubject.dayOfWeek" name="day">
               <option *ngFor="let day of days" value="{{day.short}}">{{day.rus}}</option>
             </select>
             <div *ngIf="validationError.day.status" class="alert alert-danger">
@@ -121,7 +122,7 @@
           </div>
           <div class="form-group">
             <label>Время начала</label>
-            <select class="form-control" [disabled]="!isEdit" [(ngModel)]="currentSubject.time" name="time">
+            <select class="form-control" [(ngModel)]="currentSubject.time" name="time">
               <option *ngFor="let time of times" value="{{time}}">{{time}}</option>
             </select>
             <div *ngIf="validationError.time.status" class="alert alert-danger">

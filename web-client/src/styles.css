@@ -318,6 +318,18 @@ tr, td {
   position: relative;
 }
 
+.context-menu-add {
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  position: relative;
+  display: none;
+}
+
+td:hover .context-menu-add {
+  display: block;
+}
+
 .context-menu-edit {
   /*content: '#x270f';*/
   cursor: pointer;
