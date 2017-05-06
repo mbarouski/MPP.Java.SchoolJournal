@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 import school.journal.entity.*;
+import school.journal.entity.enums.DayOfWeekEnum;
 import school.journal.service.document.generation.enums.WeekDay;
 import school.journal.service.exception.ServiceException;
 
@@ -19,6 +20,7 @@ import java.util.*;
 import static java.lang.String.format;
 import static school.journal.entity.enums.MarkType.term;
 import static school.journal.entity.enums.MarkType.year;
+import static school.journal.service.document.generation.enums.WeekDay.sunday;
 
 
 @Service("CSVService")
@@ -28,13 +30,14 @@ public class CSVService implements IGenerator {
 
     private static String EMPTY = "";
 
-    private final static String CLASS_SCHEDULE_HEADER = "Расписание для класса:";
-    private static final String TEACHER_SCHEDULE_HEADER = "Расписание преподавателя";
-    private final static String FULL_SCHEDULE_HEADER = "Полное расписание:";
-    private final static String FORM_TEACHER_HEADER = "Классный руководитель:";
-    private static int WORK_DAY_COUNT = 6;
     private final static DateTimeFormatter DTF_FOR_TIME = DateTimeFormat.forPattern("HH:mm");
     private final static DateTimeFormatter DTF_FOR_DATE = DateTimeFormat.forPattern("MM:dd");
+    private final static Date YEAR_MARK_DATE_STUB = new Date(5);
+    private final static Date TERM_1_MARK_DATE_STUB = new Date(1);
+    private final static Date TERM_2_MARK_DATE_STUB = new Date(2);
+    private final static Date TERM_3_MARK_DATE_STUB = new Date(3);
+    private final static Date TERM_4_MARK_DATE_STUB = new Date(4);
+    private final static String PHONE_NUMBER_FORMAT = "tel:%s";
 
     private static CSVWriter createSimpleWriter(OutputStream os) {
         final Character SEPARATOR = ';';
@@ -45,7 +48,7 @@ public class CSVService implements IGenerator {
     private String formatSubjectInSchedule(SubjectInSchedule schedule) {
         final String SCHEDULE_FORMAT = "%1s %2s %3s ";
         return format(SCHEDULE_FORMAT,
-                formatClass(schedule.getClazz()),
+                formatClass(schedule.getClazz(), false),
                 formatSubject(schedule.getSubject()),
                 schedule.getPlace());
     }
@@ -63,15 +66,16 @@ public class CSVService implements IGenerator {
     }
 
     private String formatTeacher(Teacher teacher) {
-        final String TEACHER_FORMAT = "%1s %2s %3s ";
+        final String teacherFormat = "%1s %2s %3s ";
         return teacher != null
-                ? format(TEACHER_FORMAT, teacher.getLastName(), teacher.getFirstName(), teacher.getPathronymic())
+                ? format(teacherFormat, teacher.getLastName(), teacher.getFirstName(), teacher.getPathronymic())
                 : EMPTY;
     }
 
-    private String formatClass(Clazz clazz) {
-        final String CLASS_HEADER_FORMAT = "Класс %1d \"%2s\"";
-        return format(CLASS_HEADER_FORMAT, clazz.getNumber(), clazz.getLetterMark());
+    private String formatClass(Clazz clazz, boolean full) {
+        final String classLabel = !full ? EMPTY : "Класс";
+        final String classHeaderFormat = "%1s %2d \"%3s\"";
+        return format(classHeaderFormat, classLabel, clazz.getNumber(), clazz.getLetterMark());
     }
 
     private String formatMark(Mark mark) {
@@ -80,6 +84,8 @@ public class CSVService implements IGenerator {
         } else {
             switch (mark.getType()) {
                 case simple:
+                case term:
+                case year:
                     return format("%d", mark.getValue());
                 case apsent:
                     return " Н ";
@@ -87,10 +93,6 @@ public class CSVService implements IGenerator {
                     return format("%d(%s)", mark.getValue(), "К");
                 case self:
                     return format("%d(%s)", mark.getValue(), "С");
-                case term:
-                    return format("%d(%s)", mark.getValue(), "Ч");
-                case year:
-                    return format("%d(%s)", mark.getValue(), "Г");
                 default:
                     return EMPTY;
             }
@@ -110,7 +112,7 @@ public class CSVService implements IGenerator {
                 pupil.getLastName(),
                 pupil.getFirstName(),
                 pupil.getPathronymic(),
-                pupil.getPhoneNumber()};
+                String.format(PHONE_NUMBER_FORMAT, pupil.getPhoneNumber())};
     }
 
     private String[] wrapTeacher(Teacher teacher) {
@@ -120,85 +122,45 @@ public class CSVService implements IGenerator {
                 teacher.getLastName(),
                 teacher.getFirstName(),
                 teacher.getPathronymic(),
-                teacher.getPhoneNumber()
-        };
+                String.format(PHONE_NUMBER_FORMAT, teacher.getPhoneNumber())};
     }
 
     private String[] wrapClass(Clazz clazz) {
-        return new String[]{formatClass(clazz)};
+        return new String[]{formatClass(clazz, true)};
     }
 
     private String[] wrapSubject(SubjectInSchedule sis) {
         return new String[]{
                 sis.getSubject().getName(),
-                formatClass(sis.getClazz()),
+                formatClass(sis.getClazz(), false),
                 formatTime(sis.getBeginTime()),
                 sis.getPlace()
         };
-    }
-
-    private String[] wrapLessonDates(List<Date> lessonDates) {
-        String[] wrappedDates = new String[lessonDates.size()];
-        for (int i = 0; i < wrappedDates.length; i++) {
-            wrappedDates[i] = formatDate(lessonDates.get(i));
-        }
-        return wrappedDates;
     }
 
     private List<List<String[]>> wrapScheduleDaily(List<SubjectInSchedule> subjectInScheduleList) {
         List<List<String[]>> lists = new LinkedList<>();
         for (WeekDay weekDay :
                 WeekDay.values()) {
-            if (weekDay != WeekDay.sunday) {
+            if (weekDay != sunday) {
                 lists.add(wrapDayScheduleToDay(weekDay, subjectInScheduleList));
             }
         }
         return lists;
     }
 
+
     private List<String[]> wrapDayScheduleToDay(WeekDay weekDay, List<SubjectInSchedule> subjectInSchedules) {
         List<SubjectInSchedule> daySubjects = getDaySchedule(weekDay, subjectInSchedules);
         ArrayList<String[]> day = new ArrayList<>();
         day.add(new String[]{weekDay.getValue()});
+        day.add(wrapScheduleLegend());
         daySubjects.forEach(subjectInSchedule -> day.add(wrapSubject(subjectInSchedule)));
         return day;
     }
 
-    private String[] wrapPupilMarks(Pupil pupil, List<Mark> marks, List<Date> dates) {
-        int cellsForPupil = 1;
-        int daysCount = marks.size();
-        int specialMarkCount = 5;
-        int rowCellsTotal = cellsForPupil + daysCount + specialMarkCount;
-        String[] pupilRow = new String[rowCellsTotal];
-        pupilRow[0] = formatPupil(pupil);
-        int indexInRow = 1;
-        int indexInMarks = 0;
-        for (Date date : dates) {
-            Mark mark = marks.get(indexInMarks);
-            if (mark.getDate() != null) {
-                if (mark.getDate().equals(date)) {
-                    pupilRow[indexInRow++] = formatMark(mark);
-                    indexInMarks++;
-                } else if (mark.getDate().after(date)) {
-                    pupilRow[indexInRow++] = EMPTY;
-                } else {
-                    indexInMarks++;
-                    if (mark.getType() == year) {
-                        pupilRow[daysCount + specialMarkCount] = formatMark(mark);
-                    } else if (mark.getType() == term) {
-                        pupilRow[daysCount + mark.getTermNumber() - 1] = formatMark(mark);
-                    }
-                }
-            } else {
-                if (mark.getType() == year) {
-                    pupilRow[daysCount + specialMarkCount] = formatMark(mark);
-                } else if (mark.getType() == term) {
-                    pupilRow[daysCount + mark.getTermNumber() - 1] = formatMark(mark);
-                }
-                indexInMarks++;
-            }
-        }
-        return pupilRow;
+    private String[] wrapScheduleLegend() {
+        return new String[]{"Предмет", "Класс", "Время начала занятия", "Место проведения занятия"};
     }
 
     private List<SubjectInSchedule> getDaySchedule(WeekDay weekDay, List<SubjectInSchedule> subjectInSchedules) {
@@ -209,186 +171,259 @@ public class CSVService implements IGenerator {
         return list;
     }
 
-    private String[] wrapFullScheduleDayName(WeekDay weekDay, int count) {
-        String[] day = new String[count];
-        final int DAY_LABEL = 0;
-        for (int i = 0; i < count; i++) {
-            day[i] = i == DAY_LABEL ? weekDay.getValue() : EMPTY;
-        }
-        return day;
-    }
-
-    private String[] wrapFullScheduleDayList(int lesson_in_day_count) {
-        String[] dayTimes = new String[lesson_in_day_count * WORK_DAY_COUNT];
-        for (WeekDay weekDay : WeekDay.values()) {
-            if (weekDay != WeekDay.sunday) {
-                System.arraycopy(wrapFullScheduleDayName(weekDay, lesson_in_day_count), 0, dayTimes, (weekDay.ordinal() - 1) * lesson_in_day_count, lesson_in_day_count);
-            }
-        }
-        return dayTimes;
-    }
-
-    private String[] wrapFullScheduleDayLessonTimes(List<LessonTime> lessonTimeList) {
-        String[] lesson = new String[lessonTimeList.size()];
-        for (int i = 0; i < lesson.length; i++) {
-            lesson[i] = formatTime(lessonTimeList.get(i).getStartTime());
-        }
-        return lesson;
-
-    }
-
-    private String[] wrapFullScheduleAllDayLessonTimes(List<LessonTime> lessonTimeList) {
-        final int lesson_in_day_count = lessonTimeList.size();
-        String[] allLessonTimes = new String[lesson_in_day_count * WORK_DAY_COUNT];
-        for (WeekDay weekDay : WeekDay.values()) {
-            if (weekDay != WeekDay.sunday) {
-                System.arraycopy(wrapFullScheduleDayLessonTimes(lessonTimeList), 0, allLessonTimes, getActualDayIndex(weekDay) * lesson_in_day_count, lesson_in_day_count);
-            }
-        }
-        return allLessonTimes;
-    }
-
     private String[] wrapMarkListHeader(Clazz clazz, Subject subject) {
         final String MARKS_LIST_HEADER_LIST = "Список оценок всех учеников класса ";
         final String MARKS_LIST_HEADER_SUBJECT = "Предмет:";
-        return new String[]{MARKS_LIST_HEADER_LIST, formatClass(clazz), MARKS_LIST_HEADER_SUBJECT, formatSubject(subject)};
+        return new String[]{MARKS_LIST_HEADER_LIST, formatClass(clazz, true), MARKS_LIST_HEADER_SUBJECT, formatSubject(subject)};
     }
 
-    private int getActualDayIndex(WeekDay weekDay) {
-        return weekDay.ordinal() - 1;
+    private Map<Pupil, Map<Date, Mark>> mapMarkDatePupil(List<Pupil> pupils, List<Mark> marks) {
+        Map<Pupil, Map<Date, Mark>> map = new HashMap<>();
+        for (Pupil pupil : pupils) {
+            map.put(pupil, mapMarksDate(filterMarksForPupil(pupil, marks)));
+        }
+        return map;
     }
 
-    private void tryAddToTeacherSchedule(List<SubjectInSchedule> teacherSchedule, Teacher teacher, SubjectInSchedule subjectInSchedule) {
-        if (subjectInSchedule.getTeacher().getUserId().intValue() == teacher.getUserId().intValue()) {
-            teacherSchedule.add(subjectInSchedule);
+    private Map<Date, Mark> mapMarksDate(List<Mark> marks) {
+        Map<Date, Mark> map = new HashMap<>();
+        for (Mark mark : marks) {
+            map.put(mapMarkDate(mark), mark);
+        }
+        return map;
+    }
+
+    private Date mapMarkDate(Mark mark) {
+        if (mark.getType() == year || mark.getType() == term) {
+            if (mark.getType() == year) return YEAR_MARK_DATE_STUB;
+            else switch (mark.getTermNumber()) {
+                case 1:
+                    return TERM_1_MARK_DATE_STUB;
+                case 2:
+                    return TERM_2_MARK_DATE_STUB;
+                case 3:
+                    return TERM_3_MARK_DATE_STUB;
+                case 4:
+                    return TERM_4_MARK_DATE_STUB;
+                default:
+                    return new Date(0);
+            }
+        } else {
+            return mark.getDate();
         }
     }
 
-    private Map<Pupil, List<Mark>> organizeMarksForPupil(List<Pupil> pupils, List<Mark> marks) {
-        Map<Pupil, List<Mark>> pupilMarkMap = new HashMap<>();
-        pupils.forEach(pupil -> pupilMarkMap.put(pupil, getMarksForPupil(pupil, marks)));
-        return pupilMarkMap;
-    }
-
-    private List<Mark> getMarksForPupil(Pupil pupil, List<Mark> marks) {
-        List<Mark> markList = new ArrayList<>();
-        marks.forEach(mark -> {
+    private List<Mark> filterMarksForPupil(Pupil pupil, List<Mark> marks) {
+        List<Mark> pupilMarks = new LinkedList<>();
+        for (Mark mark : marks) {
             if (mark.getPupil().equals(pupil)) {
-                markList.add(mark);
+                pupilMarks.add(mark);
             }
-        });
-        return markList;
+        }
+        return pupilMarks;
     }
 
-    private Map<Teacher, List<SubjectInSchedule>> organizeScheduleByTeacher(List<SubjectInSchedule> schedule) {
-        Map<Teacher, List<SubjectInSchedule>> mappedSchedule = new HashMap<>();
+    private Map<WeekDay, Map<Teacher, Map<LessonTime, SubjectInSchedule>>> mapSubjectsLessonTimeTeacherWeekDay(List<SubjectInSchedule> schedule, List<LessonTime> lessons) {
+        Map<WeekDay, Map<Teacher, Map<LessonTime, SubjectInSchedule>>> map = new HashMap<>();
+        for (WeekDay weekDay : WeekDay.values()) {
+            if (weekDay != sunday) {
+                map.put(weekDay, mapSubjectsLessonTimeTeacher(filterSubjectsForDay(weekDay, schedule), lessons));
+            }
+        }
+        return map;
+    }
+
+    private Map<Teacher, Map<LessonTime, SubjectInSchedule>> mapSubjectsLessonTimeTeacher(List<SubjectInSchedule> schedule, List<LessonTime> lessons) {
+        Map<Teacher, Map<LessonTime, SubjectInSchedule>> map = new HashMap<>();
         for (SubjectInSchedule subject : schedule) {
             Teacher teacher = subject.getTeacher();
-            if (!mappedSchedule.containsKey(teacher)) {
-                mappedSchedule.put(teacher, filterTeacherSchedule(teacher, schedule));
+            if (!map.containsKey(teacher)) {
+                map.put(teacher, mapSubjectsLessonTime(filterSubjectsForTeacher(teacher, schedule), lessons));
             }
         }
-        return mappedSchedule;
+        return map;
     }
 
-    private String fetchSubjectWithLesson(LessonTime lesson, List<SubjectInSchedule> subjects) {
-        for (SubjectInSchedule subject : subjects) {
-            if (subject.getBeginTime().equals(lesson.getStartTime())) {
-                return formatSubjectInSchedule(subject);
+    private Map<LessonTime, SubjectInSchedule> mapSubjectsLessonTime(List<SubjectInSchedule> daySchedule, List<LessonTime> lessons) {
+        Map<LessonTime, SubjectInSchedule> map = new HashMap<>();
+        for (LessonTime lesson : lessons) {
+            SubjectInSchedule subject = getFirstSubjectForLessonTime(lesson, daySchedule);
+            if (subject != null) {
+                map.put(lesson, subject);
             }
         }
-        return EMPTY;
+        return map;
     }
 
-    private String[] wrapTeacherSchedule(Teacher teacher, List<SubjectInSchedule> teachersSubjects, List<LessonTime> lessonList) {
-        int cellsForTeacher = 1;
-        int lessonsInDay = lessonList.size();
-        int rowCellsTotal = cellsForTeacher + lessonsInDay * WORK_DAY_COUNT;
-        String[] teacherSchedule = new String[rowCellsTotal];
-        teacherSchedule[0] = formatTeacher(teacher);
-        for (WeekDay weekDay : WeekDay.values()) {
-            if (weekDay != WeekDay.sunday) {
-                int destinationPosition = cellsForTeacher + getActualDayIndex(weekDay) * lessonsInDay;
-                String[] teacherDaySchedule = getTeacherDaySchedule(filterSubjectsByDay(weekDay, teachersSubjects), lessonList);
-                System.arraycopy(
-                        teacherDaySchedule, 0, teacherSchedule, destinationPosition, lessonsInDay);
-            }
-        }
-        return teacherSchedule;
-    }
-
-    private List<SubjectInSchedule> filterSubjectsByDay(WeekDay weekDay, List<SubjectInSchedule> subjectInScheduleList) {
-        List<SubjectInSchedule> daySubjects = new LinkedList<>();
-        subjectInScheduleList.forEach(subjectInSchedule -> {
-            if (weekDay.ordinal() == subjectInSchedule.getDayOfWeek().ordinal()) {
-                daySubjects.add(subjectInSchedule);
-            }
-        });
-        return daySubjects;
-    }
-
-    private List<SubjectInSchedule> filterTeacherSchedule(Teacher teacher, List<SubjectInSchedule> subjectInScheduleList) {
+    private List<SubjectInSchedule> filterSubjectsForTeacher(Teacher teacher, List<SubjectInSchedule> schedule) {
         List<SubjectInSchedule> teacherSchedule = new LinkedList<>();
-        subjectInScheduleList.forEach(subjectInSchedule -> tryAddToTeacherSchedule(teacherSchedule, teacher, subjectInSchedule));
+        for (SubjectInSchedule subject : schedule) {
+            if (teacher.equals(subject.getTeacher())) {
+                teacherSchedule.add(subject);
+            }
+        }
         return teacherSchedule;
     }
 
-    private String[] getTeacherDaySchedule(List<SubjectInSchedule> dailySubjectsOfTeacher, List<LessonTime> lessonSchedule) {
-        String[] lessons = new String[lessonSchedule.size()];
-        for (int i = 0; i < lessons.length; i++) {
-            lessons[i] = fetchSubjectWithLesson(lessonSchedule.get(i), dailySubjectsOfTeacher);
+    private List<SubjectInSchedule> filterSubjectsForDay(WeekDay weekDay, List<SubjectInSchedule> schedule) {
+        List<SubjectInSchedule> daySchedule = new LinkedList<>();
+        for (SubjectInSchedule subject : schedule) {
+            if (weekDaysEquals(weekDay, subject.getDayOfWeek())) {
+                daySchedule.add(subject);
+            }
         }
-        return lessons;
+        return daySchedule;
     }
 
-
-    private List<String[]> getFullScheduleTableHeader(List<LessonTime> lessonTimeList) {
-        final int LESSON_IN_DAY_COUNT = lessonTimeList.size();
-        List<String[]> tableHeader = new LinkedList<>();
-
-        tableHeader.add(wrapFullScheduleDayList(LESSON_IN_DAY_COUNT));
-        tableHeader.add(wrapFullScheduleAllDayLessonTimes(lessonTimeList));
-
-        return tableHeader;
+    private SubjectInSchedule getFirstSubjectForLessonTime(LessonTime lesson, List<SubjectInSchedule> schedule) {
+        SubjectInSchedule lessonSubject = null;
+        for (SubjectInSchedule subject : schedule) {
+            if (subject.getBeginTime().equals(lesson.getStartTime())) {
+                lessonSubject = subject;
+                break;
+            }
+        }
+        return lessonSubject;
     }
 
-    private List<String[]> getMarkListBody(List<Pupil> pupils, List<Mark> marks, List<Date> workDates) {
-        Map<Pupil, List<Mark>> pupilMarkMap = organizeMarksForPupil(pupils, marks);
+    private boolean weekDaysEquals(WeekDay weekDay, DayOfWeekEnum dayOfWeek) {
+        return weekDay.ordinal() == dayOfWeek.ordinal();
+    }
+
+    private List<String[]> getMarkTable(List<Pupil> pupils, List<Mark> marks, List<Date> workDates) {
+        Map<Pupil, Map<Date, Mark>> map = mapMarkDatePupil(pupils, marks);
         List<String[]> tableBody = new LinkedList<>();
-        for (Pupil pupil : pupils) {
-            tableBody.add(wrapPupilMarks(pupil, pupilMarkMap.get(pupil), workDates));
+        int pupilNameOffset = 1;
+        tableBody.add(wrapWorkDates(pupilNameOffset, workDates));
+
+        for (Pupil pupil : sortSet(pupils, getPupilComparator())) {
+            tableBody.add(wrapPupilMarks(pupil, map.get(pupil), workDates));
         }
         return tableBody;
-
-
     }
 
-    private List<String[]> getFullScheduleTableBody(List<SubjectInSchedule> schedule, List<LessonTime> lessons) {
-        Map<Teacher, List<SubjectInSchedule>> scheduleMap = organizeScheduleByTeacher(schedule);
-        List<String[]> tableBody = new LinkedList<>();
-        for (Teacher teacher : scheduleMap.keySet()) {
-            tableBody.add(wrapTeacherSchedule(teacher, scheduleMap.get(teacher), lessons));
+    private String[] wrapWorkDates(int pupilNameOffset, List<Date> dates) {
+        final String[] specialMarkDates = new String[]{"I", "II", "III", "IV", "Годовая"};
+        List<String> row = new LinkedList<>();
+        for (int i = 0; i < pupilNameOffset; i++) row.add(EMPTY);
+        dates.forEach(date -> row.add(formatDate(date)));
+        Collections.addAll(row, specialMarkDates);
+        String[] markDates = new String[row.size()];
+        return row.toArray(markDates);
+    }
+
+    private String[] wrapPupilMarks(Pupil pupil, Map<Date, Mark> map, List<Date> workDates) {
+        List<String> row = new LinkedList<>();
+        row.add(formatPupil(pupil));
+        for (Date date : workDates) {
+            row.add(formatMark(map.get(date)));
         }
-        return tableBody;
+        row.add(formatMark(map.get(TERM_1_MARK_DATE_STUB)));
+        row.add(formatMark(map.get(TERM_2_MARK_DATE_STUB)));
+        row.add(formatMark(map.get(TERM_3_MARK_DATE_STUB)));
+        row.add(formatMark(map.get(TERM_4_MARK_DATE_STUB)));
+        row.add(formatMark(map.get(YEAR_MARK_DATE_STUB)));
+
+        String[] pupilMarks = new String[row.size()];
+        return row.toArray(pupilMarks);
+    }
+
+    private Comparator<Pupil> getPupilComparator() {
+        return Comparator.comparing(Pupil::getLastName).thenComparing(Comparator.comparing(Pupil::getFirstName)).thenComparing(Comparator.comparing(Pupil::getPathronymic));
+    }
+
+    private List<String[]> getFullScheduleTable(List<SubjectInSchedule> schedule, List<LessonTime> lessons) {
+        List<String[]> table = new LinkedList<>();
+        Map<WeekDay, Map<Teacher, Map<LessonTime, SubjectInSchedule>>> map = mapSubjectsLessonTimeTeacherWeekDay(schedule, lessons);
+        for (WeekDay weekDay : sortSet(map.keySet(), getWeekDayComparator())) {
+            table.addAll(wrapFullDaySchedule(weekDay, map.get(weekDay), lessons));
+        }
+        return table;
+    }
+
+    private List<String[]> wrapFullDaySchedule(WeekDay weekDay, Map<Teacher, Map<LessonTime, SubjectInSchedule>> map, List<LessonTime> lessons) {
+        int teacherNameOffset = 1;
+        List<String[]> table = new LinkedList<>();
+        table.add(wrapDayRow(weekDay));
+        table.add(wrapLessonTimes(teacherNameOffset, lessons));
+        for (Teacher teacher : sortSet(map.keySet(), getTeacherComparator())) {
+            table.add(wrapTeacherRowSchedule(teacher, map.get(teacher), lessons));
+        }
+        return table;
+    }
+
+    private <T> SortedSet<T> sortSet(Collection<T> collection, Comparator<T> comparator) {
+        SortedSet<T> result = new TreeSet<>(comparator);
+        result.addAll(collection);
+        return result;
+    }
+
+    private String[] wrapTeacherRowSchedule(Teacher teacher, Map<LessonTime, SubjectInSchedule> map, List<LessonTime> allLessons) {
+        List<String> row = new LinkedList<>();
+        row.add(formatTeacher(teacher));
+        for (LessonTime lesson : allLessons) {
+            row.add(wrapLessonSchedule(map.get(lesson)));
+        }
+        String[] teacherDaySchedule = new String[row.size()];
+        return row.toArray(teacherDaySchedule);
+    }
+
+    private String wrapLessonSchedule(SubjectInSchedule subject) {
+        return subject != null ? formatSubjectInSchedule(subject) : EMPTY;
+    }
+
+    private Comparator<WeekDay> getWeekDayComparator() {
+        return Comparator.comparingInt(Enum::ordinal);
+    }
+
+    private String[] wrapLessonTimes(int teacherNameOffset, List<LessonTime> lessons) {
+        String[] result = new String[teacherNameOffset + lessons.size()];
+        for (int i = teacherNameOffset; i < result.length; i++) {
+            result[i] = formatLesson(lessons.get(i - teacherNameOffset));
+        }
+        return result;
+    }
+
+    private String formatLesson(LessonTime lessonTime) {
+        String LESSON_TIME_FORMAT = "%s - %s";
+        return String.format(LESSON_TIME_FORMAT, formatTime(lessonTime.getStartTime()), formatTime(lessonTime.getEndTime()));
+    }
+
+    private String[] wrapDayRow(WeekDay weekDay) {
+        return new String[]{weekDay.getValue()};
+    }
+
+
+    private Comparator<Teacher> getTeacherComparator() {
+        return Comparator.comparing(Teacher::getLastName).thenComparing(Comparator.comparing(Teacher::getFirstName)).thenComparing(Comparator.comparing(Teacher::getPathronymic));
+    }
+
+    private void flush(CSVWriter writer) {
+        try {
+            writer.flush();
+        } catch (IOException e) {
+            LOGGER.error(e);
+        }
     }
 
     @Override
     public OutputStream generateClassPupilListDocument(OutputStream os, Teacher teacher, Clazz clazz, List<Pupil> pupilList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
 
-        final String PUPIL_CLASS_HEADER = "Полный список учеников класса";
-        writer.writeNext(new String[]{PUPIL_CLASS_HEADER});
+        final String pupilClassHeader = "Полный список учеников класса";
+        final String formTeacherHeader = "Классный руководитель:";
+        final String firstName = "Имя";
+        final String lastName = "Фамилия";
+        final String patronymic = "Отчество";
+        final String phone = "Телефон";
+        writer.writeNext(new String[]{pupilClassHeader});
+        writer.writeNext(new String[]{formTeacherHeader});
         writer.writeNext(wrapTeacher(teacher));
-
-        writer.writeNext(new String[]{FORM_TEACHER_HEADER});
+        writer.writeNext(new String[]{lastName, firstName, patronymic, phone});
         writer.writeNext(wrapClass(clazz));
         pupilList.forEach(pupil -> writer.writeNext(wrapPupil(pupil)));
 
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            LOGGER.error(e);
-        }
+        flush(writer);
         return os;
     }
 
@@ -396,16 +431,13 @@ public class CSVService implements IGenerator {
     public OutputStream generateTeacherScheduleDocument(OutputStream os, Teacher teacher, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
 
-        writer.writeNext(new String[]{TEACHER_SCHEDULE_HEADER});
+        String teacherScheduleHeader = "Расписание преподавателя";
+        writer.writeNext(new String[]{teacherScheduleHeader});
         writer.writeNext(wrapTeacher(teacher));
 
         wrapScheduleDaily(subjectInScheduleList).forEach(writer::writeAll);
 
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            LOGGER.error(e);
-        }
+        flush(writer);
         return os;
     }
 
@@ -413,33 +445,26 @@ public class CSVService implements IGenerator {
     public OutputStream generateClassScheduleDocument(OutputStream os, Clazz clazz, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
 
-        writer.writeNext(new String[]{CLASS_SCHEDULE_HEADER});
+        String classScheduleHeader = "Расписание для класса:";
+        writer.writeNext(new String[]{classScheduleHeader});
         writer.writeNext(wrapClass(clazz));
 
         wrapScheduleDaily(subjectInScheduleList).forEach(writer::writeAll);
 
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            LOGGER.error(e);
-        }
+        flush(writer);
         return os;
     }
+
 
     @Override
     public OutputStream generateFullScheduleDocument(OutputStream os, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
-        writer.writeNext(new String[]{FULL_SCHEDULE_HEADER});
+        String fullScheduleHeader = "Полное расписание:";
+        writer.writeNext(new String[]{fullScheduleHeader});
 
-        writer.writeAll(getFullScheduleTableHeader(lessonTimeList));
+        writer.writeAll(getFullScheduleTable(subjectInScheduleList, lessonTimeList));
 
-        writer.writeAll(getFullScheduleTableBody(subjectInScheduleList, lessonTimeList));
-
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            LOGGER.error(e);
-        }
+        flush(writer);
         return os;
     }
 
@@ -448,15 +473,9 @@ public class CSVService implements IGenerator {
         CSVWriter writer = createSimpleWriter(os);
 
         writer.writeNext(wrapMarkListHeader(clazz, subject));
-        writer.writeNext(wrapLessonDates(lessonDateList));
+        writer.writeAll(getMarkTable(pupilList, markList, lessonDateList));
 
-        writer.writeAll(getMarkListBody(pupilList, markList, lessonDateList));
-
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            LOGGER.error(e);
-        }
+        flush(writer);
         return os;
     }
 }
