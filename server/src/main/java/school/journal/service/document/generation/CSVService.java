@@ -31,7 +31,7 @@ public class CSVService implements IGenerator {
     private static String EMPTY = "";
 
     private final static DateTimeFormatter DTF_FOR_TIME = DateTimeFormat.forPattern("HH:mm");
-    private final static DateTimeFormatter DTF_FOR_DATE = DateTimeFormat.forPattern("MM:dd");
+    private final static DateTimeFormatter DTF_FOR_DATE = DateTimeFormat.forPattern("MM.dd");
     private final static Date YEAR_MARK_DATE_STUB = new Date(5);
     private final static Date TERM_1_MARK_DATE_STUB = new Date(1);
     private final static Date TERM_2_MARK_DATE_STUB = new Date(2);
