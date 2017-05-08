@@ -398,14 +398,6 @@ public class CSVService implements IGenerator {
         return Comparator.comparing(Teacher::getLastName).thenComparing(Comparator.comparing(Teacher::getFirstName)).thenComparing(Comparator.comparing(Teacher::getPathronymic));
     }
 
-    private void flush(CSVWriter writer) {
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            LOGGER.error(e);
-        }
-    }
-
     @Override
     public OutputStream generateClassPupilListDocument(OutputStream os, Teacher teacher, Clazz clazz, List<Pupil> pupilList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
@@ -423,7 +415,6 @@ public class CSVService implements IGenerator {
         writer.writeNext(wrapClass(clazz));
         pupilList.forEach(pupil -> writer.writeNext(wrapPupil(pupil)));
 
-        flush(writer);
         return os;
     }
 
@@ -437,7 +428,6 @@ public class CSVService implements IGenerator {
 
         wrapScheduleDaily(subjectInScheduleList).forEach(writer::writeAll);
 
-        flush(writer);
         return os;
     }
 
@@ -451,7 +441,6 @@ public class CSVService implements IGenerator {
 
         wrapScheduleDaily(subjectInScheduleList).forEach(writer::writeAll);
 
-        flush(writer);
         return os;
     }
 
@@ -464,7 +453,6 @@ public class CSVService implements IGenerator {
 
         writer.writeAll(getFullScheduleTable(subjectInScheduleList, lessonTimeList));
 
-        flush(writer);
         return os;
     }
 
@@ -475,7 +463,6 @@ public class CSVService implements IGenerator {
         writer.writeNext(wrapMarkListHeader(clazz, subject));
         writer.writeAll(getMarkTable(pupilList, markList, lessonDateList));
 
-        flush(writer);
         return os;
     }
 }
