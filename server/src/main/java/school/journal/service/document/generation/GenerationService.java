@@ -8,12 +8,9 @@ import school.journal.entity.*;
 import school.journal.entity.enums.DayOfWeekEnum;
 import school.journal.service.*;
 import school.journal.service.exception.ServiceException;
-import school.journal.service.impl.ClassService;
-import school.journal.service.impl.MarkService;
 
 import java.io.OutputStream;
 import java.sql.Date;
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +18,6 @@ import java.util.List;
 @Service("GenerationService")
 public class GenerationService implements IGenerationService{
     private HashMap<DocumentType, IGenerator> GENERATOR_MAP = new HashMap<>();
-
-    private final IGenerator PDF_GENERATOR;
-    private final IGenerator CSV_GENERATOR;
 
     private final IPupilService pupilService;
 
@@ -43,8 +37,6 @@ public class GenerationService implements IGenerationService{
 
     @Autowired
     public GenerationService(@Qualifier("PDFGenerator") IGenerator PDF_GENERATOR, @Qualifier("CSVService") IGenerator CSV_GENERATOR, @Qualifier("PupilService") IPupilService pupilService, @Qualifier("TeacherService") ITeacherService teacherService, @Qualifier("SubjectService") ISubjectService subjectService, @Qualifier("MarkService") IMarkService markService, @Qualifier("ClassService") IClassService classService, @Qualifier("TermService") ITermService termService, @Qualifier("LessonTimeService") ILessonTimeService lessonTimeService, @Qualifier("SubjectInScheduleService") ISubjectInScheduleService subjectInScheduleService) {
-        this.PDF_GENERATOR = PDF_GENERATOR;
-        this.CSV_GENERATOR = CSV_GENERATOR;
         this.pupilService = pupilService;
         this.teacherService = teacherService;
         this.subjectService = subjectService;
@@ -62,13 +54,7 @@ public class GenerationService implements IGenerationService{
     public OutputStream generateClassPupilListDocument(OutputStream os, DocumentType documentType, int classId) throws ServiceException {
         Clazz clazz = classService.getOne(classId);
         List<Pupil> pupilList = pupilService.getListOfPupils(classId);
-//        List<Teacher> teacherList = teacherService.getListOfTeachersForClass(classId);
         Teacher teacher = teacherService.getFormTeacher(classId);
-//        for (Teacher t : teacherList) {
-//            if(t.getClassId() == classId){
-//                teacher = t;
-//            }
-//        }
         IGenerator generator = GENERATOR_MAP.get(documentType);
         return generator.generateClassPupilListDocument(os, teacher, clazz, pupilList);
     }
