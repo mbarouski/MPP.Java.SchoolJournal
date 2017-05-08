@@ -84,13 +84,7 @@ public class ClassAPIController extends BaseController<Clazz> {
         try {
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment;filename=mdk.csv");
-//            response.setContentType("text/pdf");
-
-//            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.CSV, 1, 1);
-//            generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.CSV);
-//            generationService.generateClassScheduleDocument(response.getOutputStream(),DocumentType.CSV,1);
-//            generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.CSV, 62);
-            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.CSV, 1);
+            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.CSV, 1, 1);
         } catch (ServiceException | IOException exc) {
         }
         return null;
