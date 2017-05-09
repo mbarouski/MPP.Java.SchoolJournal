@@ -3,6 +3,7 @@ package school.journal.controller;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -76,14 +77,16 @@ public class ClassAPIController extends BaseController<Clazz> {
     @Qualifier("GenerationService")
     private IGenerationService generationService;
 
-    @RequestMapping(value = "/getMarksForClass", method = RequestMethod.GET)
+    @RequestMapping(value = "/getMarksForClass", method = RequestMethod.GET,produces = "text/csv")
     @ResponseBody
     public ResponseEntity getMarksForClass(HttpServletRequest request, HttpServletResponse response)
             throws ControllerException {
         try {
-//            generationService.generateMarksDocument(DocumentType.CSV, 1, 1);
-            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.PDF, 1);
-        } catch (ServiceException | IOException exc) {}
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment;filename=mdk.csv");
+            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.CSV, 1, 1);
+        } catch (ServiceException | IOException exc) {
+        }
         return null;
     }
 }

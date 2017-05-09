@@ -10,4 +10,5 @@ public interface ITeacherService extends IService<Teacher> {
     Teacher changeClassOfTeacher(int teacherId, int classId) throws ServiceException;
     Teacher changeDirectorOfStudies(int teacherId, boolean isDirector) throws ServiceException;
     Teacher getOne(int teacherId) throws ServiceException;
+    Teacher getFormTeacher(int classId) throws ServiceException;
 }
