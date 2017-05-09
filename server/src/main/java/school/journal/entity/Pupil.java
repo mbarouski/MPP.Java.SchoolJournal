@@ -1,5 +1,7 @@
 package school.journal.entity;
 
+import java.text.MessageFormat;
+
 public class Pupil {
     private Integer classId;
     private String firstName;
@@ -64,6 +66,10 @@ public class Pupil {
 
     public void setCharacteristic(String characteristic) {
         this.characteristic = characteristic;
+    }
+
+    public String getFIO() {
+        return MessageFormat.format("{0} {1} {2}", lastName, firstName, pathronymic);
     }
 
     @Override

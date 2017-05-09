@@ -73,21 +73,5 @@ public class ClassAPIController extends BaseController<Clazz> {
         return getOne(classService::getOne, classId, "Can't get class by id", LOGGER);
     }
 
-    @Autowired
-    @Qualifier("GenerationService")
-    private IGenerationService generationService;
-
-    @RequestMapping(value = "/getMarksForClass", method = RequestMethod.GET,produces = "text/csv")
-    @ResponseBody
-    public ResponseEntity getMarksForClass(HttpServletRequest request, HttpServletResponse response)
-            throws ControllerException {
-        try {
-            response.setContentType("text/csv");
-            response.setHeader("Content-Disposition", "attachment;filename=mdk.csv");
-            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.CSV, 1, 1);
-        } catch (ServiceException | IOException exc) {
-        }
-        return null;
-    }
 }
 
