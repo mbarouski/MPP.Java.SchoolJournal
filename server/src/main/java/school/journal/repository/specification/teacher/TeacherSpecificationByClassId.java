@@ -13,7 +13,7 @@ public class TeacherSpecificationByClassId extends TeacherSpecification {
 
     @Override
     public Criterion toCriteria() {
-       return Restrictions.eq("class_id", classId);
+       return Restrictions.eq("classId", classId);
     }
 
     @Override

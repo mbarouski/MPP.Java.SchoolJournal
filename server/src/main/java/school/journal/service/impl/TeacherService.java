@@ -14,6 +14,7 @@ import school.journal.entity.Teacher;
 import school.journal.entity.User;
 import school.journal.repository.IRepository;
 import school.journal.repository.exception.RepositoryException;
+import school.journal.repository.specification.teacher.TeacherSpecificationByClassId;
 import school.journal.service.CRUDService;
 import school.journal.service.ITeacherService;
 import school.journal.service.exception.ClassifiedServiceException;
@@ -308,4 +309,27 @@ public class TeacherService extends CRUDService<Teacher> implements ITeacherServ
         }
         return teacher;
     }
+
+    @Override
+    public Teacher getFormTeacher(int classId) throws ServiceException {
+        Session session = null;
+        Transaction transaction = null;
+        List<Teacher> teachers;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            teachers = repository.query(new TeacherSpecificationByClassId(classId), session);
+            transaction.commit();
+        } catch (RepositoryException exc) {
+            transaction.rollback();
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return teachers.size() > 0 ? teachers.get(0) : null;
+    }
+
 }

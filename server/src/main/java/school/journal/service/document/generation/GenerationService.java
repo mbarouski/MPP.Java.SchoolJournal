@@ -50,7 +50,6 @@ public class GenerationService implements IGenerationService{
         GENERATOR_MAP.put(DocumentType.XLSX, EXCEL_GENERATOR);
     }
 
-
     @Override
     public OutputStream generateClassPupilListDocument(OutputStream os, DocumentType documentType, int classId) throws ServiceException {
         Clazz clazz = classService.getOne(classId);

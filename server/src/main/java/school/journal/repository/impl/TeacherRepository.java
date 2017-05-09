@@ -3,6 +3,7 @@ package school.journal.repository.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Component;
 import school.journal.entity.Teacher;
 import school.journal.entity.User;
@@ -39,6 +40,7 @@ public class TeacherRepository extends RepositoryAbstractClass<Teacher> {
         if((specification != null) && ((criterion = specification.toCriteria()) != null)){
             criteria.add(criterion);
         }
+        criteria.addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).addOrder(Order.asc("pathronymic"));
         return criteria.list();
     }
 
