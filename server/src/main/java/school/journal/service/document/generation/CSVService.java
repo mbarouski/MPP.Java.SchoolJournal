@@ -414,7 +414,12 @@ public class CSVService implements IGenerator {
         writer.writeNext(new String[]{lastName, firstName, patronymic, phone});
         writer.writeNext(wrapClass(clazz));
         pupilList.forEach(pupil -> writer.writeNext(wrapPupil(pupil)));
-
+        try {
+            writer.flush();
+        } catch (IOException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         return os;
     }
 
@@ -428,6 +433,12 @@ public class CSVService implements IGenerator {
 
         wrapScheduleDaily(subjectInScheduleList).forEach(writer::writeAll);
 
+        try {
+            writer.flush();
+        } catch (IOException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         return os;
     }
 
@@ -440,7 +451,12 @@ public class CSVService implements IGenerator {
         writer.writeNext(wrapClass(clazz));
 
         wrapScheduleDaily(subjectInScheduleList).forEach(writer::writeAll);
-
+        try {
+            writer.flush();
+        } catch (IOException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         return os;
     }
 
@@ -452,7 +468,12 @@ public class CSVService implements IGenerator {
         writer.writeNext(new String[]{fullScheduleHeader});
 
         writer.writeAll(getFullScheduleTable(subjectInScheduleList, lessonTimeList));
-
+        try {
+            writer.flush();
+        } catch (IOException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         return os;
     }
 
@@ -463,6 +484,12 @@ public class CSVService implements IGenerator {
         writer.writeNext(wrapMarkListHeader(clazz, subject));
         writer.writeAll(getMarkTable(pupilList, markList, lessonDateList));
 
+        try {
+            writer.flush();
+        } catch (IOException exc) {
+            LOGGER.error(exc);
+            throw new ServiceException(exc);
+        }
         return os;
     }
 }
