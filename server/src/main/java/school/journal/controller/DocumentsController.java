@@ -26,15 +26,15 @@ public class DocumentsController {
     private IGenerationService generationService;
 
     //XLS-----------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/getClassPupilsList/{classId}/xls", method = RequestMethod.GET, produces = "application/xls")
+    @RequestMapping(value = "/getClassPupilsList/{classId}/xls", method = RequestMethod.GET, produces = "application/xlsx")
     @ResponseBody
     public ResponseEntity getClassPupilsListXSLDocument(HttpServletRequest request, HttpServletResponse response,
                                                         @PathVariable("classId") int classId) throws ControllerException {
         ResponseEntity responseEntity = null;
         try {
-            response.setContentType("application/xls");
-            response.setHeader("Content-Disposition", "attachment;filename=pupils.xls");
-            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.PDF, classId);
+            response.setContentType("application/xlsx");
+            response.setHeader("Content-Disposition", "attachment;filename=pupils.xlsx");
+            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.XLSX, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -42,15 +42,15 @@ public class DocumentsController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "/getClassSchedule/{classId}/xls", method = RequestMethod.GET, produces = "application/xls")
+    @RequestMapping(value = "/getClassSchedule/{classId}/xls", method = RequestMethod.GET, produces = "application/xlsx")
     @ResponseBody
     public ResponseEntity getClassScheduleXSLDocument(HttpServletRequest request, HttpServletResponse response,
                                                       @PathVariable("classId") int classId) throws ControllerException {
         ResponseEntity responseEntity = null;
         try {
-            response.setContentType("application/xls");
-            response.setHeader("Content-Disposition", "attachment;filename=class_schedule.xls");
-            generationService.generateClassScheduleDocument(response.getOutputStream(), DocumentType.PDF, classId);
+            response.setContentType("application/xlsx");
+            response.setHeader("Content-Disposition", "attachment;filename=class_schedule.xlsx");
+            generationService.generateClassScheduleDocument(response.getOutputStream(), DocumentType.XLSX, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -58,15 +58,15 @@ public class DocumentsController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "/getTeacherSchedule/{teacherId}/xls", method = RequestMethod.GET, produces = "application/xls")
+    @RequestMapping(value = "/getTeacherSchedule/{teacherId}/xls", method = RequestMethod.GET, produces = "application/xlsx")
     @ResponseBody
     public ResponseEntity getTeacherScheduleXSLDocument(HttpServletRequest request, HttpServletResponse response,
                                                         @PathVariable("teacherId") int teacherId) throws ControllerException {
         ResponseEntity responseEntity = null;
         try {
-            response.setContentType("application/xls");
-            response.setHeader("Content-Disposition", "attachment;filename=teacher_schedule.xls");
-            generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.PDF, teacherId);
+            response.setContentType("application/xlsx");
+            response.setHeader("Content-Disposition", "attachment;filename=teacher_schedule.xlsx");
+            generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.XLSX, teacherId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -75,15 +75,15 @@ public class DocumentsController {
     }
 
 
-    @RequestMapping(value = "/getFullSchedule/xls", method = RequestMethod.GET, produces = "application/xls")
+    @RequestMapping(value = "/getFullSchedule/xls", method = RequestMethod.GET, produces = "application/xlsx")
     @ResponseBody
     public ResponseEntity getFullScheduleXSLDocument(HttpServletRequest request, HttpServletResponse response)
             throws ControllerException {
         ResponseEntity responseEntity = null;
         try {
-            response.setContentType("application/xls");
-            response.setHeader("Content-Disposition", "attachment;filename=full_schedule.xls");
-            generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.PDF);
+            response.setContentType("application/xlsx");
+            response.setHeader("Content-Disposition", "attachment;filename=full_schedule.xlsx");
+            generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.XLSX);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -93,7 +93,7 @@ public class DocumentsController {
 
 
     @RequestMapping(value = "/getMarks/class/{classId}/subject/{subjectId}/xls",
-            method = RequestMethod.GET, produces = "application/xls")
+            method = RequestMethod.GET, produces = "application/xlsx")
     @ResponseBody
     public ResponseEntity getMarksXSLDocument(HttpServletRequest request, HttpServletResponse response,
                                               @PathVariable("classId") int classId,
@@ -101,9 +101,9 @@ public class DocumentsController {
             throws ControllerException {
         ResponseEntity responseEntity = null;
         try {
-            response.setContentType("application/xls");
-            response.setHeader("Content-Disposition", "attachment;filename=marks.xls");
-            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.PDF, subjectId, classId);
+            response.setContentType("application/xlsx");
+            response.setHeader("Content-Disposition", "attachment;filename=marks.xlsx");
+            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.XLSX, subjectId, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);

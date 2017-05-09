@@ -2,6 +2,17 @@
   <div class="row">
     <div class="col-md-12 col-md-offset-0">
       <h1>Полное расписание</h1>
+
+      <div class="actions">
+        <div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-info" (click)="savePDF()">.PDF</button>
+            <button type="button" class="btn btn-info" (click)="saveCSV()">.CSV</button>
+            <button type="button" class="btn btn-info" (click)="saveXLS()">.XLSX</button>
+          </div>
+        </div>
+      </div><br>
+
       <div class="alert alert-success" role="alert">
         <p>Для добавления, удаления, редактирования занятия нажмите правой кнопкой мыши по ячейке в таблице.</p>
       </div>

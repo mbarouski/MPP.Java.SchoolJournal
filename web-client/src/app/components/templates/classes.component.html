@@ -23,6 +23,15 @@
             </table>
             <div *ngIf="selectedClass">
               <h1>Ученики {{selectedClass.number}} {{selectedClass.letterMark}} класса</h1>
+              <div class="actions">
+                <div>
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info" (click)="savePDF()">.PDF</button>
+                    <button type="button" class="btn btn-info" (click)="saveCSV()">.CSV</button>
+                    <button type="button" class="btn btn-info" (click)="saveXLS()">.XLSX</button>
+                  </div>
+                </div>
+              </div><br>
               <!--<div class="actions start">-->
                 <!--<button href="#" [disabled]="!selectedPupil" (click)="removeFromClass()" class="btn btn-danger ">Удалить из класса</button>-->
               <!--</div>-->

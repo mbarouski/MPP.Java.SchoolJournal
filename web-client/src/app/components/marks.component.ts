@@ -1,4 +1,4 @@
-import {Component, AfterViewInit, OnInit, ViewChild} from '@angular/core';
+import {Component, AfterViewInit, OnInit, ViewChild, Inject} from '@angular/core';
 import {AuthService} from "../services/auth.service";
 import {Router, Params, ActivatedRoute} from "@angular/router";
 import {MarksService} from "../services/marks.service";
@@ -12,6 +12,8 @@ import {SchoolInfoService} from "../services/school-info.service";
 import MARK_TYPES from "./constants/marks.constants";
 import {ModalDirective} from "ng2-bootstrap";
 import {ContextMenuComponent, ContextMenuService} from "angular2-contextmenu";
+import {APP_CONFIG} from "../configs/app.config";
+import {DocsService} from "../services/docs.service";
 
 declare let moment: any;
 
@@ -41,6 +43,9 @@ export class MarksComponent implements OnInit, AfterViewInit{
     dateFormat: 'yyyy-mm-dd',
   };
 
+  classId: Number;
+  subjectId: Number;
+
   @ViewChild('markModal') public markModal: ModalDirective;
   @ViewChild(ContextMenuComponent) public deleteMenu: ContextMenuComponent;
 
@@ -67,7 +72,8 @@ export class MarksComponent implements OnInit, AfterViewInit{
               private scheduleService: ScheduleService,
               private activatedRoute: ActivatedRoute,
               private schoolInfoService: SchoolInfoService,
-              private contextMenuService: ContextMenuService) {
+              private contextMenuService: ContextMenuService,
+              private docsService: DocsService) {
     marksService.marksSubject.subscribe(marks => {
       this.marks = marks;
       if(!this.subject) {
@@ -392,6 +398,21 @@ export class MarksComponent implements OnInit, AfterViewInit{
 
   getMarkTypes() {
     return !['year', 'term'].includes(this.currentMark.type) ?  this.markTypes.filter(t => !['year', 'term'].includes(t.short)) : this.markTypes;
+  }
+
+  savePDF() {
+    this.docsService.download(`/getMarks/class/${this.subject.clazz.classId}/subject/${this.subject.subject.subjectId}/pdf`,
+      'application/pdf');
+  }
+
+  saveXLS() {
+    this.docsService.download(`/getMarks/class/${this.subject.clazz.classId}/subject/${this.subject.subject.subjectId}/xls`,
+      'application/xls');
+  }
+
+  saveCSV() {
+    this.docsService.download(`/getMarks/class/${this.subject.clazz.classId}/subject/${this.subject.subject.subjectId}/csv`,
+      'text/csv');
   }
 
 }

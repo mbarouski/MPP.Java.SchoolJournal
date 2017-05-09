@@ -8,6 +8,7 @@ import {Router} from "@angular/router";
 import {PupilsService} from "../services/pupils.service";
 import {ModalDirective} from "ng2-bootstrap";
 import {Class} from "../models/Class";
+import {DocsService} from "../services/docs.service";
 
 @Component({
   moduleId: module.id,
@@ -67,7 +68,8 @@ export class ClassesComponent implements AfterViewInit{
               private authService: AuthService,
               private classesService: ClassesService,
               private teachersService: TeachersService,
-              private pupilsService: PupilsService){
+              private pupilsService: PupilsService,
+              private docsService: DocsService){
     classesService.classesSubject.subscribe(classes => {
       this.classes = classes;
     });
@@ -337,4 +339,18 @@ export class ClassesComponent implements AfterViewInit{
     this.tabs[index].active = true;
   }
 
+  savePDF() {
+    this.docsService.download(`/getClassPupilsList/${this.selectedClass.classId}/pdf`,
+      'application/pdf');
+  }
+
+  saveXLS() {
+    this.docsService.download(`/getClassPupilsList/${this.selectedClass.classId}/xls`,
+      'application/xls');
+  }
+
+  saveCSV() {
+    this.docsService.download(`/getClassPupilsList/${this.selectedClass.classId}/csv`,
+      'text/csv');
+  }
 }
