@@ -10,7 +10,6 @@ import school.journal.entity.enums.DayOfWeekEnum;
 import school.journal.entity.enums.MarkType;
 import school.journal.service.exception.ServiceException;
 
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -89,8 +88,8 @@ public class ExcelGeneratorService implements IGenerator {
         sheet.setColumnWidth(0, 256*8);
         sheet.setColumnWidth(1, 256*40);
         sheet.setColumnWidth(2, 256*35);
-        String file = "C:\\Users\\Mr.Blacky\\Desktop\\pupilList.xls";
-        output(file,workbook);
+
+        output(os,workbook);
         return null;
     }
 
@@ -198,8 +197,8 @@ public class ExcelGeneratorService implements IGenerator {
         }
 
         sheet.setColumnWidth(0, 256*16);
-        String file = "C:\\Users\\Mr.Blacky\\Desktop\\teacherSchedule+"+teacher.getLastName()+".xls";
-        output(file,workbook);
+
+        output(os,workbook);
         return null;
     }
 
@@ -302,8 +301,8 @@ public class ExcelGeneratorService implements IGenerator {
         }
 
         sheet.setColumnWidth(0, 256*16);
-        String file = "C:\\Users\\Mr.Blacky\\Desktop\\classSchedule+"+clazz.getNumber()+clazz.getLetterMark()+".xls";
-        output(file,workbook);
+
+        output(os,workbook);
         return null;
     }
 
@@ -405,8 +404,8 @@ public class ExcelGeneratorService implements IGenerator {
         }
 
         sheet.setColumnWidth(0, 256*20);
-        String file = "C:\\Users\\Mr.Blacky\\Desktop\\fullSchedule.xls";
-        output(file,workbook);
+
+        output(os,workbook);
         return null;
     }
 
@@ -520,8 +519,7 @@ public class ExcelGeneratorService implements IGenerator {
 
         }
 
-        String file = "C:\\Users\\Mr.Blacky\\Desktop\\Marks.xls";
-        output(file,workbook);
+        output(os,workbook);
         return null;
     }
 
@@ -624,12 +622,9 @@ public class ExcelGeneratorService implements IGenerator {
         cell.setCellStyle(style);
     }
 
-    private void output(String fileName,XSSFWorkbook workbook){
-        if(workbook instanceof XSSFWorkbook) fileName += "x";
+    private void output(OutputStream os,XSSFWorkbook workbook){
         try {
-            FileOutputStream out = new FileOutputStream(fileName);
-            workbook.write(out);
-            out.close();
+            workbook.write(os);
             workbook.close();
         }
         catch (Exception e){
