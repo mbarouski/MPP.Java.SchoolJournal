@@ -32,6 +32,7 @@ public class GenerationService implements IGenerationService{
 
     public GenerationService(@Qualifier("PDFGenerator") IGenerator PDF_GENERATOR,
                              @Qualifier("CSVService") IGenerator CSV_GENERATOR,
+                             @Qualifier("XLSGenerator") IGenerator XLS_GENERATOR,
                              @Qualifier("PupilService") IPupilService pupilService,
                              @Qualifier("TeacherService") ITeacherService teacherService,
                              @Qualifier("SubjectService") ISubjectService subjectService,
@@ -50,7 +51,7 @@ public class GenerationService implements IGenerationService{
         this.subjectInScheduleService = subjectInScheduleService;
         GENERATOR_MAP.put(DocumentType.CSV, CSV_GENERATOR);
         GENERATOR_MAP.put(DocumentType.PDF, PDF_GENERATOR);
-        GENERATOR_MAP.put(DocumentType.XLSX, EXCEL_GENERATOR);
+        GENERATOR_MAP.put(DocumentType.XLSX, XLS_GENERATOR);
     }
 
     @Override
@@ -66,6 +67,7 @@ public class GenerationService implements IGenerationService{
     public OutputStream generateTeacherScheduleDocument(OutputStream os, DocumentType documentType, int teacherId)
             throws ServiceException {
         Teacher teacher = teacherService.getOne(teacherId);
+        if(teacher == null) throw new ServiceException("Teacher not found");
         List<SubjectInSchedule> subjectInScheduleList = subjectInScheduleService.getTeacherSchedule(teacherId);
         List<LessonTime> lessonTimeList = lessonTimeService.getLessonTimeList();
         IGenerator generator = GENERATOR_MAP.get(documentType);

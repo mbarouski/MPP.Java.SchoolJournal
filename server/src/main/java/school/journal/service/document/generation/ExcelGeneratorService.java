@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Service("ExcelGenerator")
+@Service("XLSGenerator")
 public class ExcelGeneratorService implements IGenerator {
 
     short borderColor = IndexedColors.BLACK.getIndex();

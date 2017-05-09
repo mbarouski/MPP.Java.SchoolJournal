@@ -59,7 +59,7 @@ public class DocumentsController {
     @RequestMapping(value = "/getClassSchedule/{classId}/pdf", method = RequestMethod.GET, produces = "application/pdf")
     @ResponseBody
     public ResponseEntity getClassSchedulePDFDocument(HttpServletRequest request, HttpServletResponse response,
-                                                        @PathVariable("classId") int classId) throws ControllerException {
+                                                      @PathVariable("classId") int classId) throws ControllerException {
         ResponseEntity responseEntity = null;
         try {
             response.setContentType("application/pdf");
@@ -71,4 +71,53 @@ public class DocumentsController {
         return responseEntity;
     }
 
+    @RequestMapping(value = "/getTeacherSchedule/{teacherId}/pdf", method = RequestMethod.GET, produces = "application/pdf")
+    @ResponseBody
+    public ResponseEntity getTeacherSchedulePDFDocument(HttpServletRequest request, HttpServletResponse response,
+                                                      @PathVariable("teacherId") int teacherId) throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("application/pdf");
+            generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.PDF, teacherId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/getFullSchedule/pdf", method = RequestMethod.GET, produces = "application/pdf")
+    @ResponseBody
+    public ResponseEntity getFullSchedulePDFDocument(HttpServletRequest request, HttpServletResponse response)
+            throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("application/pdf");
+            generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.PDF);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/getMarks/class/{classId}/subject/{subjectId}/pdf",
+            method = RequestMethod.GET, produces = "application/pdf")
+    @ResponseBody
+    public ResponseEntity getTeacherSchedulePDFDocument(HttpServletRequest request, HttpServletResponse response,
+                                                        @PathVariable("classId") int classId,
+                                                        @PathVariable("subjectId") int subjectId)
+            throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("application/pdf");
+            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.PDF, subjectId, classId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
 }

@@ -10,6 +10,7 @@ import school.journal.entity.enums.DayOfWeekEnum;
 import school.journal.service.document.generation.enums.WeekDay;
 import school.journal.service.exception.ServiceException;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.Date;
