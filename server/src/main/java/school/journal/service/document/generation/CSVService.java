@@ -10,7 +10,6 @@ import school.journal.entity.enums.DayOfWeekEnum;
 import school.journal.service.document.generation.enums.WeekDay;
 import school.journal.service.exception.ServiceException;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.Date;
@@ -462,7 +461,7 @@ public class CSVService implements IGenerator {
 
 
     @Override
-    public OutputStream generateFullScheduleDocument(OutputStream os, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
+    public OutputStream generateFullScheduleDocument(OutputStream os, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList,List<Teacher> teacherList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
         String fullScheduleHeader = "Полное расписание:";
         writer.writeNext(new String[]{fullScheduleHeader});

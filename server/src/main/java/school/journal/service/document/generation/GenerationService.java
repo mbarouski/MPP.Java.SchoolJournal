@@ -29,6 +29,7 @@ public class GenerationService implements IGenerationService{
     private final ISubjectInScheduleService subjectInScheduleService;
 
     @Autowired
+
     public GenerationService(@Qualifier("PDFGenerator") IGenerator PDF_GENERATOR,
                              @Qualifier("CSVService") IGenerator CSV_GENERATOR,
                              @Qualifier("PupilService") IPupilService pupilService,
@@ -49,7 +50,7 @@ public class GenerationService implements IGenerationService{
         this.subjectInScheduleService = subjectInScheduleService;
         GENERATOR_MAP.put(DocumentType.CSV, CSV_GENERATOR);
         GENERATOR_MAP.put(DocumentType.PDF, PDF_GENERATOR);
-        GENERATOR_MAP.put(DocumentType.XLSX, null);
+        GENERATOR_MAP.put(DocumentType.XLSX, EXCEL_GENERATOR);
     }
 
     @Override
@@ -84,8 +85,9 @@ public class GenerationService implements IGenerationService{
     public OutputStream generateFullScheduleDocument(OutputStream os, DocumentType documentType) throws ServiceException {
         List<SubjectInSchedule> subjectInScheduleList = subjectInScheduleService.read();
         List<LessonTime> lessonTimeList = lessonTimeService.getLessonTimeList();
+        List<Teacher> teacherList = teacherService.read();
         IGenerator generator = GENERATOR_MAP.get(documentType);
-        return generator.generateFullScheduleDocument(os, subjectInScheduleList, lessonTimeList);
+        return generator.generateFullScheduleDocument(os, subjectInScheduleList, lessonTimeList,teacherList);
     }
 
     @Override
