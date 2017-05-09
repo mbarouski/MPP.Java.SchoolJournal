@@ -25,22 +25,179 @@ public class DocumentsController {
     @Qualifier("GenerationService")
     private IGenerationService generationService;
 
-//    @RequestMapping(value = "/getMarksForClass", method = RequestMethod.GET,produces = "text/csv")
-//    @ResponseBody
-//    public ResponseEntity getMarksForClass(HttpServletRequest request, HttpServletResponse response)
-//            throws ControllerException {
-//        ResponseEntity responseEntity = null;
-//        try {
-//            response.setContentType("text/csv");
-//            response.setHeader("Content-Disposition", "attachment;filename=mdk.csv");
-//            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.CSV, 1, 1);
-//            responseEntity = new ResponseEntity(HttpStatus.OK);
-//        } catch (ServiceException | IOException exc) {
-//            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
-//        }
-//        return responseEntity;
-//    }
+    //XLS-----------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/getClassPupilsList/{classId}/xls", method = RequestMethod.GET, produces = "application/xls")
+    @ResponseBody
+    public ResponseEntity getClassPupilsListXSLDocument(HttpServletRequest request, HttpServletResponse response,
+                                                        @PathVariable("classId") int classId) throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("application/xls");
+            response.setHeader("Content-Disposition", "attachment;filename=pupils.xls");
+            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.PDF, classId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
 
+    @RequestMapping(value = "/getClassSchedule/{classId}/xls", method = RequestMethod.GET, produces = "application/xls")
+    @ResponseBody
+    public ResponseEntity getClassScheduleXSLDocument(HttpServletRequest request, HttpServletResponse response,
+                                                      @PathVariable("classId") int classId) throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("application/xls");
+            response.setHeader("Content-Disposition", "attachment;filename=class_schedule.xls");
+            generationService.generateClassScheduleDocument(response.getOutputStream(), DocumentType.PDF, classId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/getTeacherSchedule/{teacherId}/xls", method = RequestMethod.GET, produces = "application/xls")
+    @ResponseBody
+    public ResponseEntity getTeacherScheduleXSLDocument(HttpServletRequest request, HttpServletResponse response,
+                                                        @PathVariable("teacherId") int teacherId) throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("application/xls");
+            response.setHeader("Content-Disposition", "attachment;filename=teacher_schedule.xls");
+            generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.PDF, teacherId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/getFullSchedule/xls", method = RequestMethod.GET, produces = "application/xls")
+    @ResponseBody
+    public ResponseEntity getFullScheduleXSLDocument(HttpServletRequest request, HttpServletResponse response)
+            throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("application/xls");
+            response.setHeader("Content-Disposition", "attachment;filename=full_schedule.xls");
+            generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.PDF);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/getMarks/class/{classId}/subject/{subjectId}/xls",
+            method = RequestMethod.GET, produces = "application/xls")
+    @ResponseBody
+    public ResponseEntity getMarksXSLDocument(HttpServletRequest request, HttpServletResponse response,
+                                              @PathVariable("classId") int classId,
+                                              @PathVariable("subjectId") int subjectId)
+            throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("application/xls");
+            response.setHeader("Content-Disposition", "attachment;filename=marks.xls");
+            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.PDF, subjectId, classId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+    //CSV-----------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/getClassPupilsList/{classId}/csv", method = RequestMethod.GET, produces = "text/csv")
+    @ResponseBody
+    public ResponseEntity getClassPupilsListCSVDocument(HttpServletRequest request, HttpServletResponse response,
+                                                        @PathVariable("classId") int classId) throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment;filename=pupils.csv");
+            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.PDF, classId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/getClassSchedule/{classId}/csv", method = RequestMethod.GET, produces = "text/csv")
+    @ResponseBody
+    public ResponseEntity getClassScheduleCSVDocument(HttpServletRequest request, HttpServletResponse response,
+                                                      @PathVariable("classId") int classId) throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment;filename=class_schedule.csv");
+            generationService.generateClassScheduleDocument(response.getOutputStream(), DocumentType.PDF, classId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/getTeacherSchedule/{teacherId}/csv", method = RequestMethod.GET, produces = "text/csv")
+    @ResponseBody
+    public ResponseEntity getTeacherScheduleCSVDocument(HttpServletRequest request, HttpServletResponse response,
+                                                        @PathVariable("teacherId") int teacherId) throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment;filename=teacher_schedule.csv");
+            generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.PDF, teacherId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/getFullSchedule/csv", method = RequestMethod.GET, produces = "text/csv")
+    @ResponseBody
+    public ResponseEntity getFullScheduleCSVDocument(HttpServletRequest request, HttpServletResponse response)
+            throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment;filename=full_schedule.csv");
+            generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.PDF);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/getMarks/class/{classId}/subject/{subjectId}/csv",
+            method = RequestMethod.GET, produces = "text/csv")
+    @ResponseBody
+    public ResponseEntity getMarksCSVDocument(HttpServletRequest request, HttpServletResponse response,
+                                   @PathVariable("classId") int classId,
+                                   @PathVariable("subjectId") int subjectId)
+            throws ControllerException {
+        ResponseEntity responseEntity = null;
+        try {
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment;filename=marks.csv");
+            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.PDF, subjectId, classId);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (ServiceException | IOException exc) {
+            responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+    //PDF-----------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/getClassPupilsList/{classId}/pdf", method = RequestMethod.GET, produces = "application/pdf")
     @ResponseBody
     public ResponseEntity getClassPupilsListPDFDocument(HttpServletRequest request, HttpServletResponse response,
@@ -48,6 +205,7 @@ public class DocumentsController {
         ResponseEntity responseEntity = null;
         try {
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=pupils.pdf");
             generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.PDF, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
@@ -63,6 +221,7 @@ public class DocumentsController {
         ResponseEntity responseEntity = null;
         try {
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=class_schedule.pdf");
             generationService.generateClassScheduleDocument(response.getOutputStream(), DocumentType.PDF, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
@@ -78,6 +237,7 @@ public class DocumentsController {
         ResponseEntity responseEntity = null;
         try {
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=teacher_schedule.pdf");
             generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.PDF, teacherId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
@@ -94,6 +254,7 @@ public class DocumentsController {
         ResponseEntity responseEntity = null;
         try {
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=full_schedule.pdf");
             generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.PDF);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
@@ -106,13 +267,14 @@ public class DocumentsController {
     @RequestMapping(value = "/getMarks/class/{classId}/subject/{subjectId}/pdf",
             method = RequestMethod.GET, produces = "application/pdf")
     @ResponseBody
-    public ResponseEntity getTeacherSchedulePDFDocument(HttpServletRequest request, HttpServletResponse response,
+    public ResponseEntity getMarksPDFDocument(HttpServletRequest request, HttpServletResponse response,
                                                         @PathVariable("classId") int classId,
                                                         @PathVariable("subjectId") int subjectId)
             throws ControllerException {
         ResponseEntity responseEntity = null;
         try {
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=marks.pdf");
             generationService.generateMarksDocument(response.getOutputStream(), DocumentType.PDF, subjectId, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
