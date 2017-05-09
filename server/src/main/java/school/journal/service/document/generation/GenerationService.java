@@ -20,23 +20,25 @@ public class GenerationService implements IGenerationService{
     private HashMap<DocumentType, IGenerator> GENERATOR_MAP = new HashMap<>();
 
     private final IPupilService pupilService;
-
     private final ITeacherService teacherService;
-
     private final ISubjectService subjectService;
-
     private final IMarkService markService;
-
     private final IClassService classService;
-
     private final ITermService termService;
-
     private final ILessonTimeService lessonTimeService;
-
     private final ISubjectInScheduleService subjectInScheduleService;
 
     @Autowired
-    public GenerationService(@Qualifier("PDFGenerator") IGenerator PDF_GENERATOR, @Qualifier("CSVService") IGenerator CSV_GENERATOR, @Qualifier("PupilService") IPupilService pupilService, @Qualifier("TeacherService") ITeacherService teacherService, @Qualifier("SubjectService") ISubjectService subjectService, @Qualifier("MarkService") IMarkService markService, @Qualifier("ClassService") IClassService classService, @Qualifier("TermService") ITermService termService, @Qualifier("LessonTimeService") ILessonTimeService lessonTimeService, @Qualifier("SubjectInScheduleService") ISubjectInScheduleService subjectInScheduleService) {
+    public GenerationService(@Qualifier("PDFGenerator") IGenerator PDF_GENERATOR,
+                             @Qualifier("CSVService") IGenerator CSV_GENERATOR,
+                             @Qualifier("PupilService") IPupilService pupilService,
+                             @Qualifier("TeacherService") ITeacherService teacherService,
+                             @Qualifier("SubjectService") ISubjectService subjectService,
+                             @Qualifier("MarkService") IMarkService markService,
+                             @Qualifier("ClassService") IClassService classService,
+                             @Qualifier("TermService") ITermService termService,
+                             @Qualifier("LessonTimeService") ILessonTimeService lessonTimeService,
+                             @Qualifier("SubjectInScheduleService") ISubjectInScheduleService subjectInScheduleService) {
         this.pupilService = pupilService;
         this.teacherService = teacherService;
         this.subjectService = subjectService;
