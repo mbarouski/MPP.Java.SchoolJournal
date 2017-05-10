@@ -113,90 +113,103 @@ public class ExcelGeneratorService implements IGenerator {
 
         int rowNum = 0;
 
-        Row headerRow = sheet.createRow(rowNum++);
-        headerRow.setHeightInPoints(40);
-        Cell cell = headerRow.createCell(0);
-        String alphabet = "ABCDEFGHI";
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$" + alphabet.charAt(lessonDays.size()) + "$1"));
 
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 20);
-        CellStyle style = workbook.createCellStyle();
 
-        style.setFont(headerFont);
-        setAligmentToCellStyle(HorizontalAlignment.LEFT,VerticalAlignment.CENTER,style);
-        cell.setCellValue("Расписание учителя " + teacher.getLastName()+ " " +
-                teacher.getFirstName() + " " + teacher.getPathronymic());
-        cell.setCellStyle(style);
-        rowNum++;
-
-        style = workbook.createCellStyle();
-        setAligmentToCellStyle(HorizontalAlignment.CENTER,VerticalAlignment.CENTER,style);
-        setBordersToCellStyle(true,true,true,true,style,borderColor);
-        Row titleRow = sheet.createRow(rowNum);
-        createCellWithValue(titleRow, "Время", 0,style);
-        for(int i = 0; i < lessonDays.size();i++){
-            createCellWithValue(titleRow, lessonDays.get(i).name(), i + 1,style);
-            sheet.setColumnWidth(i+1, 256*35);
-        }
-        rowNum++;
-        SubjectInSchedule minSubjectTime = subjectInScheduleList.get(0);
-        for (int i = 1; i < subjectInScheduleList.size(); i++ ){
-            if(minSubjectTime.getBeginTime().getTime() > subjectInScheduleList.get(i).getBeginTime().getTime()){
-                minSubjectTime = subjectInScheduleList.get(i);
-            }
-        }
-
-        SubjectInSchedule maxSubjectTime = subjectInScheduleList.get(0);
-        for (int i = 1; i < subjectInScheduleList.size(); i++ ){
-            if(maxSubjectTime.getBeginTime().getTime() < subjectInScheduleList.get(i).getBeginTime().getTime()){
-                maxSubjectTime = subjectInScheduleList.get(i);
-            }
-        }
-
-        int startIndex = 0;
-        int endIndex = 0;
-        for(int i = 0; i < lessonTimeList.size(); i++){
-            if(lessonTimeList.get(i).getStartTime().getTime() == minSubjectTime.getBeginTime().getTime()){
-                startIndex = i;
-            }
-            if(lessonTimeList.get(i).getStartTime().getTime() == maxSubjectTime.getBeginTime().getTime()){
-                endIndex = i;
-            }
-        }
-
-        for (int i = startIndex; i < endIndex + 1; i++){
-            style = workbook.createCellStyle();
+        if(subjectInScheduleList.size() == 0){
+            CellStyle style = workbook.createCellStyle();
             setAligmentToCellStyle(HorizontalAlignment.CENTER,VerticalAlignment.CENTER,style);
             setBordersToCellStyle(true,true,true,true,style,borderColor);
             style.setWrapText(true);
-            Row timeRow = sheet.createRow(rowNum);
-            createCellWithValue(timeRow,lessonTimeList.get(i).getStartTime().toString() + "-"+
-                                        lessonTimeList.get(i).getEndTime().toString(),0,style);
+            Row titleRow = sheet.createRow(rowNum);
+            createCellWithValue(titleRow,"У данного учителя отсутсвуют предметы",0,style);
+            sheet.setColumnWidth(0, 256*30);
+        }
+        else {
+            Row headerRow = sheet.createRow(rowNum++);
+            headerRow.setHeightInPoints(40);
+            Cell cell = headerRow.createCell(0);
+            String alphabet = "ABCDEFGHI";
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$" + alphabet.charAt(lessonDays.size()) + "$1"));
 
-            fillTableWithEmptyValue(workbook,lessonDays.size(),timeRow);
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setFontHeightInPoints((short) 20);
+            CellStyle style = workbook.createCellStyle();
 
-            List<SubjectInSchedule> scheduleList = new ArrayList<>();
-            for(SubjectInSchedule subjectInSchedule : subjectInScheduleList){
-                if(subjectInSchedule.getBeginTime().getTime() == lessonTimeList.get(i).getStartTime().getTime()){
-                    scheduleList.add(subjectInSchedule);
+            style.setFont(headerFont);
+            setAligmentToCellStyle(HorizontalAlignment.LEFT,VerticalAlignment.CENTER,style);
+            cell.setCellValue("Расписание учителя " + teacher.getLastName()+ " " +
+                    teacher.getFirstName() + " " + teacher.getPathronymic());
+            cell.setCellStyle(style);
+            rowNum++;
+            style = workbook.createCellStyle();
+            setAligmentToCellStyle(HorizontalAlignment.CENTER,VerticalAlignment.CENTER,style);
+            setBordersToCellStyle(true,true,true,true,style,borderColor);
+            Row titleRow = sheet.createRow(rowNum);
+            createCellWithValue(titleRow, "Время", 0,style);
+            for(int i = 0; i < lessonDays.size();i++){
+                createCellWithValue(titleRow, lessonDays.get(i).name(), i + 1,style);
+                sheet.setColumnWidth(i+1, 256*35);
+            }
+            rowNum++;
+            SubjectInSchedule minSubjectTime = subjectInScheduleList.get(0);
+            for (int i = 1; i < subjectInScheduleList.size(); i++ ){
+                if(minSubjectTime.getBeginTime().getTime() > subjectInScheduleList.get(i).getBeginTime().getTime()){
+                    minSubjectTime = subjectInScheduleList.get(i);
                 }
             }
-            for (SubjectInSchedule subject : scheduleList){
 
-                createCellWithValue(timeRow,
-                                    subject.getSubject().getName() + ", " +
+            SubjectInSchedule maxSubjectTime = subjectInScheduleList.get(0);
+            for (int i = 1; i < subjectInScheduleList.size(); i++ ){
+                if(maxSubjectTime.getBeginTime().getTime() < subjectInScheduleList.get(i).getBeginTime().getTime()){
+                    maxSubjectTime = subjectInScheduleList.get(i);
+                }
+            }
+
+            int startIndex = 0;
+            int endIndex = 0;
+            for(int i = 0; i < lessonTimeList.size(); i++){
+                if(lessonTimeList.get(i).getStartTime().getTime() == minSubjectTime.getBeginTime().getTime()){
+                    startIndex = i;
+                }
+                if(lessonTimeList.get(i).getStartTime().getTime() == maxSubjectTime.getBeginTime().getTime()){
+                    endIndex = i;
+                }
+            }
+
+            for (int i = startIndex; i < endIndex + 1; i++){
+                style = workbook.createCellStyle();
+                setAligmentToCellStyle(HorizontalAlignment.CENTER,VerticalAlignment.CENTER,style);
+                setBordersToCellStyle(true,true,true,true,style,borderColor);
+                style.setWrapText(true);
+                Row timeRow = sheet.createRow(rowNum);
+                createCellWithValue(timeRow,lessonTimeList.get(i).getStartTime().toString() + "-"+
+                        lessonTimeList.get(i).getEndTime().toString(),0,style);
+
+                fillTableWithEmptyValue(workbook,lessonDays.size(),timeRow);
+
+                List<SubjectInSchedule> scheduleList = new ArrayList<>();
+                for(SubjectInSchedule subjectInSchedule : subjectInScheduleList){
+                    if(subjectInSchedule.getBeginTime().getTime() == lessonTimeList.get(i).getStartTime().getTime()){
+                        scheduleList.add(subjectInSchedule);
+                    }
+                }
+                for (SubjectInSchedule subject : scheduleList){
+
+                    createCellWithValue(timeRow,
+                            subject.getSubject().getName() + ", " +
                                     subject.getPlace() + ", " +
                                     String.valueOf(subject.getClazz().getNumber()) +
                                     subject.getClazz().getLetterMark(),
-                                    subject.getDayOfWeek().getValue() ,
-                                    style);
+                            subject.getDayOfWeek().getValue() ,
+                            style);
+                }
+                rowNum++;
             }
-            rowNum++;
+
+            sheet.setColumnWidth(0, 256*16);
         }
 
-        sheet.setColumnWidth(0, 256*16);
 
         output(os,workbook);
         return null;
