@@ -109,6 +109,7 @@ public class PDFGenerator implements IGenerator {
             Font font = createFont();
             Document doc = new Document(PageSize.A4.rotate());
             PdfWriter writer = PdfWriter.getInstance(doc, os);
+            writer.setEncryption("".getBytes(), "".getBytes(), PdfWriter.ALLOW_PRINTING, PdfWriter.ENCRYPTION_AES_128);
             writer.setPageEvent(new Watermark());
             doc.open();
             doc.add(generateParagraph(font,
@@ -181,7 +182,7 @@ public class PDFGenerator implements IGenerator {
         Document doc = new Document();
         PdfWriter writer = PdfWriter.getInstance(doc, os);
         writer.setPageEvent(new Watermark());
-//        writer.setEncryption("123".getBytes(), "321".getBytes(), PdfWriter.ALLOW_PRINTING, PdfWriter.ENCRYPTION_AES_128);
+        writer.setEncryption("".getBytes(), "".getBytes(), PdfWriter.ALLOW_PRINTING, PdfWriter.ENCRYPTION_AES_128);
         return doc;
     }
 

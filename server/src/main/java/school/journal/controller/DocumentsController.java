@@ -120,7 +120,7 @@ public class DocumentsController {
         try {
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment;filename=pupils.csv");
-            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.PDF, classId);
+            generationService.generateClassPupilListDocument(response.getOutputStream(), DocumentType.CSV, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -136,7 +136,7 @@ public class DocumentsController {
         try {
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment;filename=class_schedule.csv");
-            generationService.generateClassScheduleDocument(response.getOutputStream(), DocumentType.PDF, classId);
+            generationService.generateClassScheduleDocument(response.getOutputStream(), DocumentType.CSV, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -152,7 +152,7 @@ public class DocumentsController {
         try {
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment;filename=teacher_schedule.csv");
-            generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.PDF, teacherId);
+            generationService.generateTeacherScheduleDocument(response.getOutputStream(), DocumentType.CSV, teacherId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -169,7 +169,7 @@ public class DocumentsController {
         try {
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment;filename=full_schedule.csv");
-            generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.PDF);
+            generationService.generateFullScheduleDocument(response.getOutputStream(), DocumentType.CSV);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -189,7 +189,7 @@ public class DocumentsController {
         try {
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment;filename=marks.csv");
-            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.PDF, subjectId, classId);
+            generationService.generateMarksDocument(response.getOutputStream(), DocumentType.CSV, subjectId, classId);
             responseEntity = new ResponseEntity(HttpStatus.OK);
         } catch (ServiceException | IOException exc) {
             responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
