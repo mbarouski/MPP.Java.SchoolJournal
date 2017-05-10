@@ -306,19 +306,28 @@ public class PDFGenerator implements IGenerator {
             throws DocumentException {
         int i = 0;
         while(i < lessonDateList.size()) {
-            int columnCount = lessonDateList.size() - ((int)Math.floor(lessonDateList.size() / 10));
+            int columnCount = (lessonDateList.size() - i);
             columnCount = columnCount > 8 ? 8 : columnCount;
 
             PdfPTable table = new PdfPTable(1 + columnCount);
             table.setSpacingBefore(4f);
             table.setWidthPercentage(100f);
 
+            table.addCell(new PdfPCell());
+
+            for(int j = 0; j < columnCount; j++) {
+                Date date = lessonDateList.get(i + j);
+                PdfPCell dateCell = new PdfPCell();
+                dateCell.addElement(generateParagraph(font, date.toString()));
+                table.addCell(dateCell);
+            }
+
             for(Pupil pupil : pupilList) {
                 PdfPCell pupilCell = new PdfPCell();
                 pupilCell.addElement(generateParagraph(font, pupil.getFIO()));
                 table.addCell(pupilCell);
 
-                for(int j = 0; j < 8; j++) {
+                for(int j = 0; j < columnCount; j++) {
                     Date date = lessonDateList.get(i + j);
                     PdfPCell markCell = new PdfPCell();
                     Mark mark = getMarkByPupilAndDay(markList, pupil.getUserId(), date);
@@ -329,7 +338,7 @@ public class PDFGenerator implements IGenerator {
                     table.addCell(markCell);
                 }
             }
-            i += 8;
+            i += columnCount;
             doc.add(table);
             doc.newPage();
         }
