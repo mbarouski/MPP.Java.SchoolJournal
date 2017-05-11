@@ -1,5 +1,7 @@
 package school.journal.entity;
 
+import java.text.MessageFormat;
+
 public class Teacher {
     private String phoneNumber;
     private Integer classId;
@@ -73,6 +75,10 @@ public class Teacher {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
+    }
+
+    public String getFIO() {
+        return MessageFormat.format("{0} {1} {2}", lastName, firstName, pathronymic);
     }
 
     @Override

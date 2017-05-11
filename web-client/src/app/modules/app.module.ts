@@ -38,6 +38,7 @@ import {SubjectsComponent} from "../components/subjects.component";
 import {UsersComponent} from "../components/users.component";
 import {SchoolInfoComponent} from "../components/school-info.component";
 import {DeleteModalComponent} from "../components/small/delete-modal.component";
+import {DocsService} from "../services/docs.service";
 
 @NgModule({
   imports: [
@@ -83,7 +84,8 @@ import {DeleteModalComponent} from "../components/small/delete-modal.component";
     ClassesService,
     SubjectsService,
     { provide: APP_CONFIG, useValue: AppConfig },
-    ContextMenuService
+    ContextMenuService,
+    DocsService,
   ],
   bootstrap:    [
     AppComponent

@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {ScheduleService} from "../services/schedule.service";
 import {PupilsService} from "../services/pupils.service";
 import DAYS from "./constants/schedule.constants";
+import {DocsService} from "../services/docs.service";
 
 declare let moment: any;
 
@@ -24,7 +25,8 @@ export class ScheduleComponent implements AfterViewInit{
   constructor(private authService: AuthService,
               private router: Router,
               private scheduleService: ScheduleService,
-              private pupilsService: PupilsService) {
+              private pupilsService: PupilsService,
+              private docsService: DocsService) {
     this.days = DAYS;
   }
 
@@ -93,5 +95,25 @@ export class ScheduleComponent implements AfterViewInit{
 
   decorateTime(strTime) {
     return moment(strTime, 'HH:mm:ss').format('HH:mm');
+  }
+
+
+  isPupilRole() {
+    return this.authService.role === 'pupil';
+  }
+
+  savePDF() {
+    this.docsService.download(`/${ this.isPupilRole() ? 'getClassSchedule' : 'getTeacherSchedule' }/${this.authService.user.userId}/pdf`,
+      'application/pdf');
+  }
+
+  saveXLS() {
+    this.docsService.download(`/${ this.isPupilRole() ? 'getClassSchedule' : 'getTeacherSchedule' }/${this.authService.user.userId}/xls`,
+      'application/xls');
+  }
+
+  saveCSV() {
+    this.docsService.download(`/${ this.isPupilRole() ? 'getClassSchedule' : 'getTeacherSchedule' }/${this.authService.user.userId}/csv`,
+      'text/csv');
   }
 }

@@ -7,6 +7,16 @@
 <section *ngIf="schedule">
   <div class="container">
     <div class="row">
+      <div class="actions">
+        <div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-info" (click)="savePDF()">.PDF</button>
+            <button type="button" class="btn btn-info" (click)="saveCSV()">.CSV</button>
+            <button type="button" class="btn btn-info" (click)="saveXLS()">.XLSX</button>
+          </div>
+        </div>
+      </div><br>
+
       <div *ngFor="let day of days" class="col-md-6">
         <h3>{{day.rus}}</h3>
         <table *ngIf="schedule[day.short]" class="table table-hover">

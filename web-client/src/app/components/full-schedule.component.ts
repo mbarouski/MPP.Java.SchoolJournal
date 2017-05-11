@@ -12,6 +12,7 @@ import {SubjectInSchedule} from "../models/SubjectInSchedule";
 import DAYS from "./constants/schedule.constants";
 import {ClassesService} from "../services/classes.service";
 import {SubjectsService} from "../services/subjects.service";
+import {DocsService} from "../services/docs.service";
 
 declare let moment: any;
 declare let $: JQueryStatic;
@@ -62,7 +63,8 @@ export class FullScheduleComponent implements AfterViewInit{
               private contextMenuService: ContextMenuService,
               private teachersService: TeachersService,
               private classesService: ClassesService,
-              private subjectsService: SubjectsService) {
+              private subjectsService: SubjectsService,
+              private docsService: DocsService) {
     // this.times = schoolInfoService.timesForSubjects;
     schoolInfoService.timesSubject.subscribe(times => this.times = times.map(time => this.decorateTime(time.startTime)));
     teachersService.teachersSubject.subscribe(teachers => {
@@ -308,6 +310,23 @@ export class FullScheduleComponent implements AfterViewInit{
 
   createLinkToMarks(subject) {
     return `/marks/${subject.subectInScheduleId}`;
+  }
+
+
+
+  savePDF() {
+    this.docsService.download(`/getFullSchedule/pdf`,
+      'application/pdf');
+  }
+
+  saveXLS() {
+    this.docsService.download(`/getFullSchedule/xls`,
+      'application/xls');
+  }
+
+  saveCSV() {
+    this.docsService.download(`/getFullSchedule/csv`,
+      'text/csv');
   }
 
 }
