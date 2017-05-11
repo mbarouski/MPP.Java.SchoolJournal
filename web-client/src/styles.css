@@ -318,17 +318,32 @@ tr, td {
   position: relative;
 }
 
+
 .context-menu-edit {
   /*content: '#x270f';*/
   cursor: pointer;
   right: 0;
   top: 0;
   position: relative;
+
 }
 
 /*td:hover .context-menu-delete{*/
   /*display: block;*/
 /*}*/
+
+
+  display: none;
+}
+
+td:hover .context-menu-add {
+  display: block;
+}
+
+/*td:hover .context-menu-delete{*/
+  /*display: block;*/
+/*}*/
+
 
 /*td:hover .context-menu-edit{*/
   /*display: block;*/
