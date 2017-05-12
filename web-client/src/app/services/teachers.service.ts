@@ -57,7 +57,7 @@ export class TeachersService {
   getTeacherByFullName(fullName) {
     return this.teachers.find((teacher) => {
       return this.getTeacherFullName(teacher) === fullName;
-    });f
+    });
   }
 
   getTeacherFullName(teacher): string {

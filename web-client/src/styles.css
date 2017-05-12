@@ -332,7 +332,7 @@ tr, td {
   /*display: block;*/
 /*}*/
 
-
+td .context-menu-add {
   display: none;
 }
 
