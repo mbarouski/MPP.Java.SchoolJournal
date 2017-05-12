@@ -153,7 +153,7 @@ public class CSVService implements IGenerator {
     private List<String[]> wrapDayScheduleToDay(WeekDay weekDay, List<SubjectInSchedule> subjectInSchedules) {
         List<SubjectInSchedule> daySubjects = getDaySchedule(weekDay, subjectInSchedules);
         ArrayList<String[]> day = new ArrayList<>();
-        day.add(new String[]{weekDay.getValue()});
+//        day.add(new String[]{weekDay.getValue()});
         day.add(wrapScheduleLegend());
         daySubjects.forEach(subjectInSchedule -> day.add(wrapSubject(subjectInSchedule)));
         return day;
@@ -344,7 +344,7 @@ public class CSVService implements IGenerator {
     private List<String[]> wrapFullDaySchedule(WeekDay weekDay, Map<Teacher, Map<LessonTime, SubjectInSchedule>> map, List<LessonTime> lessons) {
         int teacherNameOffset = 1;
         List<String[]> table = new LinkedList<>();
-        table.add(wrapDayRow(weekDay));
+//        table.add(wrapDayRow(weekDay));
         table.add(wrapLessonTimes(teacherNameOffset, lessons));
         for (Teacher teacher : sortSet(map.keySet(), getTeacherComparator())) {
             table.add(wrapTeacherRowSchedule(teacher, map.get(teacher), lessons));
@@ -402,17 +402,17 @@ public class CSVService implements IGenerator {
     public OutputStream generateClassPupilListDocument(OutputStream os, Teacher teacher, Clazz clazz, List<Pupil> pupilList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
 
-        final String pupilClassHeader = "Полный список учеников класса";
-        final String formTeacherHeader = "Классный руководитель:";
+//        final String pupilClassHeader = "Полный список учеников класса";
+//        final String formTeacherHeader = "Классный руководитель:";
         final String firstName = "Имя";
         final String lastName = "Фамилия";
         final String patronymic = "Отчество";
         final String phone = "Телефон";
-        writer.writeNext(new String[]{pupilClassHeader});
-        writer.writeNext(new String[]{formTeacherHeader});
-        writer.writeNext(wrapTeacher(teacher));
+//        writer.writeNext(new String[]{pupilClassHeader});
+//        writer.writeNext(new String[]{formTeacherHeader});
+//        writer.writeNext(wrapTeacher(teacher));
         writer.writeNext(new String[]{lastName, firstName, patronymic, phone});
-        writer.writeNext(wrapClass(clazz));
+//        writer.writeNext(wrapClass(clazz));
         pupilList.forEach(pupil -> writer.writeNext(wrapPupil(pupil)));
         try {
             writer.flush();
@@ -427,9 +427,9 @@ public class CSVService implements IGenerator {
     public OutputStream generateTeacherScheduleDocument(OutputStream os, Teacher teacher, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
 
-        String teacherScheduleHeader = "Расписание преподавателя";
-        writer.writeNext(new String[]{teacherScheduleHeader});
-        writer.writeNext(wrapTeacher(teacher));
+//        String teacherScheduleHeader = "Расписание преподавателя";
+//        writer.writeNext(new String[]{teacherScheduleHeader});
+//        writer.writeNext(wrapTeacher(teacher));
 
         wrapScheduleDaily(subjectInScheduleList).forEach(writer::writeAll);
 
@@ -446,9 +446,9 @@ public class CSVService implements IGenerator {
     public OutputStream generateClassScheduleDocument(OutputStream os, Clazz clazz, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
 
-        String classScheduleHeader = "Расписание для класса:";
-        writer.writeNext(new String[]{classScheduleHeader});
-        writer.writeNext(wrapClass(clazz));
+//        String classScheduleHeader = "Расписание для класса:";
+//        writer.writeNext(new String[]{classScheduleHeader});
+//        writer.writeNext(wrapClass(clazz));
 
         wrapScheduleDaily(subjectInScheduleList).forEach(writer::writeAll);
         try {
@@ -464,8 +464,8 @@ public class CSVService implements IGenerator {
     @Override
     public OutputStream generateFullScheduleDocument(OutputStream os, List<SubjectInSchedule> subjectInScheduleList, List<LessonTime> lessonTimeList,List<Teacher> teacherList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
-        String fullScheduleHeader = "Полное расписание:";
-        writer.writeNext(new String[]{fullScheduleHeader});
+//        String fullScheduleHeader = "Полное расписание:";
+//        writer.writeNext(new String[]{fullScheduleHeader});
 
         writer.writeAll(getFullScheduleTable(subjectInScheduleList, lessonTimeList));
         try {
@@ -481,7 +481,7 @@ public class CSVService implements IGenerator {
     public OutputStream generateMarksDocument(OutputStream os, Subject subject, List<Mark> markList, List<Pupil> pupilList, Clazz clazz, List<Date> lessonDateList) throws ServiceException {
         CSVWriter writer = createSimpleWriter(os);
 
-        writer.writeNext(wrapMarkListHeader(clazz, subject));
+//        writer.writeNext(wrapMarkListHeader(clazz, subject));
         writer.writeAll(getMarkTable(pupilList, markList, lessonDateList));
 
         try {
